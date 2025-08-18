@@ -74,8 +74,6 @@ if __name__ == '__main__':
     rets.cumsum().plot()
     plt.ylabel("Cumulative Log Return")
     
-
-
     long_trades, short_trades, all_trades = get_trades_from_signal(eth_data, eth_data['sig'])
 
     long_tr = long_trades['return']
