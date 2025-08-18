@@ -98,6 +98,47 @@ def beta_r2_traded_on_ref(traded_close: pd.Series, ref_close: pd.Series) -> tupl
 # -----------------------
 # Backtest one ordered pair
 # -----------------------
+def calculate_max_drawdown(cumulative_returns: pd.Series) -> float:
+    """Calculate maximum drawdown from cumulative returns."""
+    if len(cumulative_returns) == 0:
+        return np.nan
+    
+    cumulative = np.exp(cumulative_returns.cumsum())
+    peak = cumulative.cummax()
+    drawdown = (cumulative - peak) / peak
+    return float(drawdown.min())
+
+def calculate_sharpe_ratio(returns: pd.Series, risk_free_rate: float = 0.0) -> float:
+    """Calculate Sharpe ratio from returns."""
+    if len(returns) == 0 or returns.std() == 0:
+        return np.nan
+    
+    excess_returns = returns - risk_free_rate / 252  # Assuming daily returns
+    return float(excess_returns.mean() / returns.std() * np.sqrt(252))
+
+def calculate_exit_hour_stats(traded_df: pd.DataFrame) -> tuple[float, float]:
+    """Calculate mean and std of exit hours from trades."""
+    # Get trades using the existing function
+    try:
+        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
+        
+        if len(all_trades) == 0:
+            return np.nan, np.nan
+        
+        # Extract exit hours (0-23)
+        exit_hours = all_trades['exit_time'].dt.hour
+        
+        if len(exit_hours) == 0:
+            return np.nan, np.nan
+            
+        mean_exit_hour = float(exit_hours.mean())
+        std_exit_hour = float(exit_hours.std())
+        
+        return mean_exit_hour, std_exit_hour
+        
+    except Exception as e:
+        return np.nan, np.nan
+
 def run_pair(reference_name: str,
              traded_name: str,
              ref_df: pd.DataFrame,
@@ -110,17 +151,21 @@ def run_pair(reference_name: str,
       intermarket_diff = cmma(traded) - cmma(reference)
       signal on intermarket_diff -> trade TRaded only
       rets = signal * next_return(traded)
-    Report Profit Factor + Total Return, plus Beta/R^2 (Traded~Reference).
+    Report all required metrics: Profit Factor, Total Return, Number of Trades, 
+    Max DrawDown, Sharpe Ratio, plus Beta/R^2 (Traded~Reference).
     """
     ref_df, traded_df = align_frames(ref_df, traded_df)
     if len(ref_df) < MIN_OVERLAP:
         return {
-            "reference": reference_name,
-            "traded": traded_name,
-            "profit_factor": np.nan,
-            "total_return": np.nan,
-            "beta": np.nan,
-            "r2": np.nan,
+            "Reference Coin": reference_name,
+            "Trading Coin": traded_name,
+            "Number of Trades": 0,
+            "Profit Factor": np.nan,
+            "Total Cummulative Return": np.nan,
+            "Max DrawDown": np.nan,
+            "Sharpe Ratio": np.nan,
+            "Mean Exit Hour": np.nan,
+            "STD Exit Hour": np.nan,
         }
 
     # next_return on traded asset (log-return 1-step ahead)
@@ -138,24 +183,36 @@ def run_pair(reference_name: str,
     rets = traded_df["sig"] * traded_df["next_return"]
     rets = rets.replace([np.inf, -np.inf], np.nan).dropna()
 
+    # Calculate number of trades (position changes)
+    signal_changes = traded_df["sig"].diff().fillna(0)
+    num_trades = int((signal_changes != 0).sum())
+
     # profit factor
     gains = rets[rets > 0].sum()
     losses = rets[rets < 0].abs().sum()
     profit_factor = np.inf if losses == 0 and gains > 0 else (gains / losses if losses > 0 else np.nan)
 
     total_return = rets.cumsum().iloc[-1] if len(rets) else np.nan
-
-    # beta & r2
-    beta, r2 = beta_r2_traded_on_ref(traded_df["close"], ref_df["close"])
+    
+    # Max drawdown
+    max_drawdown = calculate_max_drawdown(rets)
+    
+    # Sharpe ratio
+    sharpe_ratio = calculate_sharpe_ratio(rets)
+    
+    # Exit hour statistics
+    mean_exit_hour, std_exit_hour = calculate_exit_hour_stats(traded_df)
 
     return {
-        "reference": reference_name,
-        "traded": traded_name,
-        "threshold": threshold,
-        "profit_factor": float(profit_factor) if pd.notna(profit_factor) else np.nan,
-        "total_return": float(total_return) if pd.notna(total_return) else np.nan,
-        "beta": beta,
-        "r2": r2,
+        "Reference Coin": reference_name,
+        "Trading Coin": traded_name,
+        "Number of Trades": num_trades,
+        "Profit Factor": float(profit_factor) if pd.notna(profit_factor) else np.nan,
+        "Total Cummulative Return": float(total_return) if pd.notna(total_return) else np.nan,
+        "Max DrawDown": float(max_drawdown) if pd.notna(max_drawdown) else np.nan,
+        "Sharpe Ratio": float(sharpe_ratio) if pd.notna(sharpe_ratio) else np.nan,
+        "Mean Exit Hour": float(mean_exit_hour) if pd.notna(mean_exit_hour) else np.nan,
+        "STD Exit Hour": float(std_exit_hour) if pd.notna(std_exit_hour) else np.nan,
     }
 
 def extract_coin_name(filename: str) -> str:

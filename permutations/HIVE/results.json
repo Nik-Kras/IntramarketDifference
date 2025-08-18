@@ -1,0 +1,950 @@
+{
+  "trading_coin": "HIVE",
+  "results": [
+    {
+      "reference_coin": "1INCH",
+      "algo_profit_factor": 0.9346930209136756,
+      "algo_drawdown": -0.9841151597861216,
+      "profit_factor_quantile": 92.4,
+      "drawdown_quantile": 25.200000000000003
+    },
+    {
+      "reference_coin": "AAVE",
+      "algo_profit_factor": 0.943954315042597,
+      "algo_drawdown": -0.9729627240856004,
+      "profit_factor_quantile": 94.2,
+      "drawdown_quantile": 14.199999999999989
+    },
+    {
+      "reference_coin": "ADA",
+      "algo_profit_factor": 0.8961759407081911,
+      "algo_drawdown": -0.9989331012752088,
+      "profit_factor_quantile": 87.60000000000001,
+      "drawdown_quantile": 72.2
+    },
+    {
+      "reference_coin": "ALGO",
+      "algo_profit_factor": 0.9185712082324664,
+      "algo_drawdown": -0.9940028463572904,
+      "profit_factor_quantile": 91.0,
+      "drawdown_quantile": 42.4
+    },
+    {
+      "reference_coin": "ANKR",
+      "algo_profit_factor": 0.8559720800064791,
+      "algo_drawdown": -0.9997758562539304,
+      "profit_factor_quantile": 73.8,
+      "drawdown_quantile": 91.2
+    },
+    {
+      "reference_coin": "ARDR",
+      "algo_profit_factor": 0.8806550685432004,
+      "algo_drawdown": -0.998313760662014,
+      "profit_factor_quantile": 83.4,
+      "drawdown_quantile": 64.6
+    },
+    {
+      "reference_coin": "ARPA",
+      "algo_profit_factor": 0.9241336650473644,
+      "algo_drawdown": -0.992334925508129,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 37.0
+    },
+    {
+      "reference_coin": "ASR",
+      "algo_profit_factor": 0.978806878906712,
+      "algo_drawdown": -0.9100410446890594,
+      "profit_factor_quantile": 97.60000000000001,
+      "drawdown_quantile": 3.3999999999999915
+    },
+    {
+      "reference_coin": "ATM",
+      "algo_profit_factor": 0.9799246285639795,
+      "algo_drawdown": -0.9123448548911944,
+      "profit_factor_quantile": 97.60000000000001,
+      "drawdown_quantile": 3.799999999999997
+    },
+    {
+      "reference_coin": "ATOM",
+      "algo_profit_factor": 0.9277820224982856,
+      "algo_drawdown": -0.9919985773024768,
+      "profit_factor_quantile": 92.0,
+      "drawdown_quantile": 36.4
+    },
+    {
+      "reference_coin": "AUDIO",
+      "algo_profit_factor": 0.9177988164662012,
+      "algo_drawdown": -0.996095465806833,
+      "profit_factor_quantile": 91.0,
+      "drawdown_quantile": 50.199999999999996
+    },
+    {
+      "reference_coin": "AVA",
+      "algo_profit_factor": 0.9255678315310792,
+      "algo_drawdown": -0.9950931342607956,
+      "profit_factor_quantile": 91.80000000000001,
+      "drawdown_quantile": 45.599999999999994
+    },
+    {
+      "reference_coin": "AVAX",
+      "algo_profit_factor": 0.9222820037556476,
+      "algo_drawdown": -0.9917757664795206,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 35.2
+    },
+    {
+      "reference_coin": "AXS",
+      "algo_profit_factor": 0.9503497403416208,
+      "algo_drawdown": -0.967728454048615,
+      "profit_factor_quantile": 94.80000000000001,
+      "drawdown_quantile": 11.399999999999991
+    },
+    {
+      "reference_coin": "BAL",
+      "algo_profit_factor": 0.9151152711402792,
+      "algo_drawdown": -0.9961661440171472,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 50.599999999999994
+    },
+    {
+      "reference_coin": "BAND",
+      "algo_profit_factor": 0.9227608216298924,
+      "algo_drawdown": -0.9945222819393942,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 44.4
+    },
+    {
+      "reference_coin": "BAT",
+      "algo_profit_factor": 0.9207716535930088,
+      "algo_drawdown": -0.9897605207009796,
+      "profit_factor_quantile": 91.2,
+      "drawdown_quantile": 31.39999999999999
+    },
+    {
+      "reference_coin": "BCH",
+      "algo_profit_factor": 0.8683181579340544,
+      "algo_drawdown": -0.9997587829497032,
+      "profit_factor_quantile": 77.80000000000001,
+      "drawdown_quantile": 91.0
+    },
+    {
+      "reference_coin": "BEL",
+      "algo_profit_factor": 0.8970290702715706,
+      "algo_drawdown": -0.9991373450367678,
+      "profit_factor_quantile": 87.80000000000001,
+      "drawdown_quantile": 76.0
+    },
+    {
+      "reference_coin": "BNB",
+      "algo_profit_factor": 0.9141912518580996,
+      "algo_drawdown": -0.997755631102828,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 60.8
+    },
+    {
+      "reference_coin": "BNT",
+      "algo_profit_factor": 0.9368494070791415,
+      "algo_drawdown": -0.984841216120892,
+      "profit_factor_quantile": 92.80000000000001,
+      "drawdown_quantile": 26.0
+    },
+    {
+      "reference_coin": "BTC",
+      "algo_profit_factor": 0.9129431850209714,
+      "algo_drawdown": -0.9960660485943962,
+      "profit_factor_quantile": 90.2,
+      "drawdown_quantile": 49.8
+    },
+    {
+      "reference_coin": "CELO",
+      "algo_profit_factor": 0.9696877811264698,
+      "algo_drawdown": -0.9624568294952764,
+      "profit_factor_quantile": 97.4,
+      "drawdown_quantile": 10.599999999999994
+    },
+    {
+      "reference_coin": "CELR",
+      "algo_profit_factor": 0.9193384784038918,
+      "algo_drawdown": -0.9928587441210884,
+      "profit_factor_quantile": 91.2,
+      "drawdown_quantile": 38.8
+    },
+    {
+      "reference_coin": "CHR",
+      "algo_profit_factor": 0.9450719501131478,
+      "algo_drawdown": -0.9869705233879996,
+      "profit_factor_quantile": 94.4,
+      "drawdown_quantile": 28.39999999999999
+    },
+    {
+      "reference_coin": "CHZ",
+      "algo_profit_factor": 0.8912448162089199,
+      "algo_drawdown": -0.9983719243712266,
+      "profit_factor_quantile": 85.80000000000001,
+      "drawdown_quantile": 65.6
+    },
+    {
+      "reference_coin": "CKB",
+      "algo_profit_factor": 0.9606490545924286,
+      "algo_drawdown": -0.940974283482381,
+      "profit_factor_quantile": 96.2,
+      "drawdown_quantile": 5.599999999999994
+    },
+    {
+      "reference_coin": "COMP",
+      "algo_profit_factor": 0.8965420748068277,
+      "algo_drawdown": -0.999018436550336,
+      "profit_factor_quantile": 87.80000000000001,
+      "drawdown_quantile": 73.4
+    },
+    {
+      "reference_coin": "COS",
+      "algo_profit_factor": 0.9618274765134636,
+      "algo_drawdown": -0.9517989412430944,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 7.3999999999999915
+    },
+    {
+      "reference_coin": "COTI",
+      "algo_profit_factor": 0.9679799184140768,
+      "algo_drawdown": -0.904699102258397,
+      "profit_factor_quantile": 97.0,
+      "drawdown_quantile": 3.3999999999999915
+    },
+    {
+      "reference_coin": "CRV",
+      "algo_profit_factor": 0.9299001368135758,
+      "algo_drawdown": -0.9895517524580636,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 31.39999999999999
+    },
+    {
+      "reference_coin": "CTK",
+      "algo_profit_factor": 0.9847155316608258,
+      "algo_drawdown": -0.9204423705883684,
+      "profit_factor_quantile": 98.0,
+      "drawdown_quantile": 3.799999999999997
+    },
+    {
+      "reference_coin": "CTSI",
+      "algo_profit_factor": 0.900823719479601,
+      "algo_drawdown": -0.9981415430208332,
+      "profit_factor_quantile": 88.4,
+      "drawdown_quantile": 63.8
+    },
+    {
+      "reference_coin": "CTXC",
+      "algo_profit_factor": 0.971872239068986,
+      "algo_drawdown": -0.9369107417760146,
+      "profit_factor_quantile": 97.4,
+      "drawdown_quantile": 5.199999999999989
+    },
+    {
+      "reference_coin": "DASH",
+      "algo_profit_factor": 0.905745609799996,
+      "algo_drawdown": -0.996912564042612,
+      "profit_factor_quantile": 89.4,
+      "drawdown_quantile": 54.4
+    },
+    {
+      "reference_coin": "DATA",
+      "algo_profit_factor": 0.917520769935835,
+      "algo_drawdown": -0.995519515191511,
+      "profit_factor_quantile": 90.80000000000001,
+      "drawdown_quantile": 47.199999999999996
+    },
+    {
+      "reference_coin": "DCR",
+      "algo_profit_factor": 0.9485058077564263,
+      "algo_drawdown": -0.9674100214091104,
+      "profit_factor_quantile": 94.60000000000001,
+      "drawdown_quantile": 11.399999999999991
+    },
+    {
+      "reference_coin": "DENT",
+      "algo_profit_factor": 0.925885807500931,
+      "algo_drawdown": -0.9966130801693724,
+      "profit_factor_quantile": 91.80000000000001,
+      "drawdown_quantile": 52.199999999999996
+    },
+    {
+      "reference_coin": "DGB",
+      "algo_profit_factor": 0.8696948376622374,
+      "algo_drawdown": -0.9997361307088684,
+      "profit_factor_quantile": 78.60000000000001,
+      "drawdown_quantile": 90.2
+    },
+    {
+      "reference_coin": "DIA",
+      "algo_profit_factor": 0.9115163628406608,
+      "algo_drawdown": -0.9970779962037232,
+      "profit_factor_quantile": 90.0,
+      "drawdown_quantile": 55.599999999999994
+    },
+    {
+      "reference_coin": "DOGE",
+      "algo_profit_factor": 0.9169714539275065,
+      "algo_drawdown": -0.9963524913513438,
+      "profit_factor_quantile": 90.80000000000001,
+      "drawdown_quantile": 51.0
+    },
+    {
+      "reference_coin": "DOT",
+      "algo_profit_factor": 0.9221537327175628,
+      "algo_drawdown": -0.9916395286403626,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 35.2
+    },
+    {
+      "reference_coin": "DUSK",
+      "algo_profit_factor": 0.9231275726244044,
+      "algo_drawdown": -0.996065268262141,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 49.8
+    },
+    {
+      "reference_coin": "EGLD",
+      "algo_profit_factor": 0.8945300751117622,
+      "algo_drawdown": -0.9990996494792106,
+      "profit_factor_quantile": 86.4,
+      "drawdown_quantile": 75.2
+    },
+    {
+      "reference_coin": "ENJ",
+      "algo_profit_factor": 0.8813133174087391,
+      "algo_drawdown": -0.9991354670932436,
+      "profit_factor_quantile": 83.60000000000001,
+      "drawdown_quantile": 76.0
+    },
+    {
+      "reference_coin": "EOS",
+      "algo_profit_factor": 0.9305889848122312,
+      "algo_drawdown": -0.9855050903440252,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 26.39999999999999
+    },
+    {
+      "reference_coin": "ETC",
+      "algo_profit_factor": 0.9525097485089864,
+      "algo_drawdown": -0.965939475329928,
+      "profit_factor_quantile": 95.4,
+      "drawdown_quantile": 11.0
+    },
+    {
+      "reference_coin": "ETH",
+      "algo_profit_factor": 0.8958259751632036,
+      "algo_drawdown": -0.9985803653661418,
+      "profit_factor_quantile": 86.80000000000001,
+      "drawdown_quantile": 67.4
+    },
+    {
+      "reference_coin": "FET",
+      "algo_profit_factor": 0.9253213277300232,
+      "algo_drawdown": -0.9943443334236606,
+      "profit_factor_quantile": 91.80000000000001,
+      "drawdown_quantile": 43.599999999999994
+    },
+    {
+      "reference_coin": "FIL",
+      "algo_profit_factor": 0.8977173028170885,
+      "algo_drawdown": -0.998357433747108,
+      "profit_factor_quantile": 88.0,
+      "drawdown_quantile": 65.4
+    },
+    {
+      "reference_coin": "FIO",
+      "algo_profit_factor": 0.9476087953867556,
+      "algo_drawdown": -0.976667613783754,
+      "profit_factor_quantile": 94.60000000000001,
+      "drawdown_quantile": 17.0
+    },
+    {
+      "reference_coin": "FIRO",
+      "algo_profit_factor": 0.8983982670162066,
+      "algo_drawdown": -0.9985139510385036,
+      "profit_factor_quantile": 88.0,
+      "drawdown_quantile": 66.6
+    },
+    {
+      "reference_coin": "FLM",
+      "algo_profit_factor": 0.8859106492059703,
+      "algo_drawdown": -0.9994357702099248,
+      "profit_factor_quantile": 85.0,
+      "drawdown_quantile": 80.8
+    },
+    {
+      "reference_coin": "FUN",
+      "algo_profit_factor": 0.9610232596341473,
+      "algo_drawdown": -0.9243258845378324,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 4.199999999999989
+    },
+    {
+      "reference_coin": "GRT",
+      "algo_profit_factor": 0.937357539326392,
+      "algo_drawdown": -0.9811058468049622,
+      "profit_factor_quantile": 93.0,
+      "drawdown_quantile": 21.599999999999994
+    },
+    {
+      "reference_coin": "HARD",
+      "algo_profit_factor": 0.9735190522941672,
+      "algo_drawdown": -0.9090647148956298,
+      "profit_factor_quantile": 97.60000000000001,
+      "drawdown_quantile": 3.3999999999999915
+    },
+    {
+      "reference_coin": "HBAR",
+      "algo_profit_factor": 0.9144683609801164,
+      "algo_drawdown": -0.993192302175136,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 39.599999999999994
+    },
+    {
+      "reference_coin": "HOT",
+      "algo_profit_factor": 0.9003550628923852,
+      "algo_drawdown": -0.9982028961476588,
+      "profit_factor_quantile": 88.4,
+      "drawdown_quantile": 64.0
+    },
+    {
+      "reference_coin": "ICX",
+      "algo_profit_factor": 0.9077631036050932,
+      "algo_drawdown": -0.9954050097682484,
+      "profit_factor_quantile": 89.4,
+      "drawdown_quantile": 46.4
+    },
+    {
+      "reference_coin": "INJ",
+      "algo_profit_factor": 0.9254606381187754,
+      "algo_drawdown": -0.9960454175643292,
+      "profit_factor_quantile": 91.80000000000001,
+      "drawdown_quantile": 49.4
+    },
+    {
+      "reference_coin": "IOST",
+      "algo_profit_factor": 0.915038687124052,
+      "algo_drawdown": -0.994358744288678,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 43.599999999999994
+    },
+    {
+      "reference_coin": "IOTA",
+      "algo_profit_factor": 0.9097826624287896,
+      "algo_drawdown": -0.9971781594825492,
+      "profit_factor_quantile": 89.80000000000001,
+      "drawdown_quantile": 57.0
+    },
+    {
+      "reference_coin": "IOTX",
+      "algo_profit_factor": 0.9025944723432076,
+      "algo_drawdown": -0.9983039819699816,
+      "profit_factor_quantile": 89.0,
+      "drawdown_quantile": 64.6
+    },
+    {
+      "reference_coin": "JST",
+      "algo_profit_factor": 0.9135887075324703,
+      "algo_drawdown": -0.9957656691828338,
+      "profit_factor_quantile": 90.2,
+      "drawdown_quantile": 48.199999999999996
+    },
+    {
+      "reference_coin": "JUV",
+      "algo_profit_factor": 0.961195794580488,
+      "algo_drawdown": -0.9537154905202128,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 7.799999999999997
+    },
+    {
+      "reference_coin": "KAVA",
+      "algo_profit_factor": 0.914973294295829,
+      "algo_drawdown": -0.9951189617321864,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 45.599999999999994
+    },
+    {
+      "reference_coin": "KMD",
+      "algo_profit_factor": 0.9287230124390686,
+      "algo_drawdown": -0.9881706911059976,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 29.599999999999994
+    },
+    {
+      "reference_coin": "KNC",
+      "algo_profit_factor": 0.9428583693408222,
+      "algo_drawdown": -0.9736781236619884,
+      "profit_factor_quantile": 94.2,
+      "drawdown_quantile": 14.599999999999994
+    },
+    {
+      "reference_coin": "KSM",
+      "algo_profit_factor": 0.911999367867914,
+      "algo_drawdown": -0.9971278198649351,
+      "profit_factor_quantile": 90.2,
+      "drawdown_quantile": 56.4
+    },
+    {
+      "reference_coin": "LINK",
+      "algo_profit_factor": 0.9179462803733288,
+      "algo_drawdown": -0.9934569506247716,
+      "profit_factor_quantile": 91.0,
+      "drawdown_quantile": 40.8
+    },
+    {
+      "reference_coin": "LRC",
+      "algo_profit_factor": 0.9483698192466846,
+      "algo_drawdown": -0.9767420526293832,
+      "profit_factor_quantile": 94.60000000000001,
+      "drawdown_quantile": 17.0
+    },
+    {
+      "reference_coin": "LSK",
+      "algo_profit_factor": 0.8759116714040462,
+      "algo_drawdown": -0.9989951904321308,
+      "profit_factor_quantile": 81.2,
+      "drawdown_quantile": 73.2
+    },
+    {
+      "reference_coin": "LTC",
+      "algo_profit_factor": 0.9520809457735384,
+      "algo_drawdown": -0.9781669936258136,
+      "profit_factor_quantile": 95.2,
+      "drawdown_quantile": 18.19999999999999
+    },
+    {
+      "reference_coin": "LTO",
+      "algo_profit_factor": 0.9216938079481922,
+      "algo_drawdown": -0.9943003094836576,
+      "profit_factor_quantile": 91.4,
+      "drawdown_quantile": 43.4
+    },
+    {
+      "reference_coin": "MANA",
+      "algo_profit_factor": 0.9153247014058824,
+      "algo_drawdown": -0.993357571925766,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 40.4
+    },
+    {
+      "reference_coin": "MBL",
+      "algo_profit_factor": 0.8622571088416793,
+      "algo_drawdown": -0.9994939794221052,
+      "profit_factor_quantile": 76.2,
+      "drawdown_quantile": 82.6
+    },
+    {
+      "reference_coin": "MDT",
+      "algo_profit_factor": 0.9364506286428442,
+      "algo_drawdown": -0.9840955219021008,
+      "profit_factor_quantile": 92.80000000000001,
+      "drawdown_quantile": 25.200000000000003
+    },
+    {
+      "reference_coin": "MKR",
+      "algo_profit_factor": 0.8980689356580039,
+      "algo_drawdown": -0.998867689300688,
+      "profit_factor_quantile": 88.0,
+      "drawdown_quantile": 71.0
+    },
+    {
+      "reference_coin": "MTL",
+      "algo_profit_factor": 0.9095801038571087,
+      "algo_drawdown": -0.9937986554426383,
+      "profit_factor_quantile": 89.80000000000001,
+      "drawdown_quantile": 41.4
+    },
+    {
+      "reference_coin": "NEAR",
+      "algo_profit_factor": 0.9445923149088548,
+      "algo_drawdown": -0.9779121574252062,
+      "profit_factor_quantile": 94.2,
+      "drawdown_quantile": 18.19999999999999
+    },
+    {
+      "reference_coin": "NEO",
+      "algo_profit_factor": 0.9233365835494388,
+      "algo_drawdown": -0.9953736874999886,
+      "profit_factor_quantile": 91.60000000000001,
+      "drawdown_quantile": 46.199999999999996
+    },
+    {
+      "reference_coin": "NKN",
+      "algo_profit_factor": 0.8896209653425533,
+      "algo_drawdown": -0.9990910321590754,
+      "profit_factor_quantile": 85.2,
+      "drawdown_quantile": 75.2
+    },
+    {
+      "reference_coin": "NMR",
+      "algo_profit_factor": 0.9174368755460964,
+      "algo_drawdown": -0.9950077619274752,
+      "profit_factor_quantile": 90.80000000000001,
+      "drawdown_quantile": 45.199999999999996
+    },
+    {
+      "reference_coin": "NULS",
+      "algo_profit_factor": 0.946194863679264,
+      "algo_drawdown": -0.9846271097900476,
+      "profit_factor_quantile": 94.60000000000001,
+      "drawdown_quantile": 25.39999999999999
+    },
+    {
+      "reference_coin": "OGN",
+      "algo_profit_factor": 0.9533941370456848,
+      "algo_drawdown": -0.9766135130097758,
+      "profit_factor_quantile": 95.60000000000001,
+      "drawdown_quantile": 17.0
+    },
+    {
+      "reference_coin": "OG",
+      "algo_profit_factor": 0.997326565254409,
+      "algo_drawdown": -0.9009173867064424,
+      "profit_factor_quantile": 98.60000000000001,
+      "drawdown_quantile": 3.0
+    },
+    {
+      "reference_coin": "ONE",
+      "algo_profit_factor": 0.9075656504709456,
+      "algo_drawdown": -0.9967882251172754,
+      "profit_factor_quantile": 89.4,
+      "drawdown_quantile": 53.8
+    },
+    {
+      "reference_coin": "ONG",
+      "algo_profit_factor": 0.9354311255401918,
+      "algo_drawdown": -0.9736025785303414,
+      "profit_factor_quantile": 92.4,
+      "drawdown_quantile": 14.599999999999994
+    },
+    {
+      "reference_coin": "ONT",
+      "algo_profit_factor": 0.913687938268111,
+      "algo_drawdown": -0.9922536385708208,
+      "profit_factor_quantile": 90.2,
+      "drawdown_quantile": 37.0
+    },
+    {
+      "reference_coin": "OXT",
+      "algo_profit_factor": 0.9536513544438028,
+      "algo_drawdown": -0.9623949676082784,
+      "profit_factor_quantile": 95.60000000000001,
+      "drawdown_quantile": 10.599999999999994
+    },
+    {
+      "reference_coin": "PAXG",
+      "algo_profit_factor": 0.972016078937814,
+      "algo_drawdown": -0.988145502865748,
+      "profit_factor_quantile": 97.4,
+      "drawdown_quantile": 29.599999999999994
+    },
+    {
+      "reference_coin": "PSG",
+      "algo_profit_factor": 0.967358751836108,
+      "algo_drawdown": -0.9677057112708936,
+      "profit_factor_quantile": 96.80000000000001,
+      "drawdown_quantile": 11.399999999999991
+    },
+    {
+      "reference_coin": "QTUM",
+      "algo_profit_factor": 0.9410568134644658,
+      "algo_drawdown": -0.9804117406554448,
+      "profit_factor_quantile": 93.80000000000001,
+      "drawdown_quantile": 20.799999999999997
+    },
+    {
+      "reference_coin": "RIF",
+      "algo_profit_factor": 0.9202012959527148,
+      "algo_drawdown": -0.9947855595042212,
+      "profit_factor_quantile": 91.2,
+      "drawdown_quantile": 44.599999999999994
+    },
+    {
+      "reference_coin": "RLC",
+      "algo_profit_factor": 0.8820269687613762,
+      "algo_drawdown": -0.9998175748577588,
+      "profit_factor_quantile": 84.0,
+      "drawdown_quantile": 92.4
+    },
+    {
+      "reference_coin": "ROSE",
+      "algo_profit_factor": 0.9622764874164436,
+      "algo_drawdown": -0.9473950364469615,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 6.3999999999999915
+    },
+    {
+      "reference_coin": "RSR",
+      "algo_profit_factor": 0.8572959759895729,
+      "algo_drawdown": -0.9998873943103274,
+      "profit_factor_quantile": 74.60000000000001,
+      "drawdown_quantile": 96.0
+    },
+    {
+      "reference_coin": "RUNE",
+      "algo_profit_factor": 0.8850112079721978,
+      "algo_drawdown": -0.9995931102817388,
+      "profit_factor_quantile": 84.80000000000001,
+      "drawdown_quantile": 86.8
+    },
+    {
+      "reference_coin": "RVN",
+      "algo_profit_factor": 0.9543670696333956,
+      "algo_drawdown": -0.9717269547459698,
+      "profit_factor_quantile": 95.80000000000001,
+      "drawdown_quantile": 13.599999999999994
+    },
+    {
+      "reference_coin": "SAND",
+      "algo_profit_factor": 0.91497698686536,
+      "algo_drawdown": -0.9933118193401042,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 39.8
+    },
+    {
+      "reference_coin": "SC",
+      "algo_profit_factor": 0.8730741924275176,
+      "algo_drawdown": -0.9991838513137408,
+      "profit_factor_quantile": 80.60000000000001,
+      "drawdown_quantile": 76.8
+    },
+    {
+      "reference_coin": "SKL",
+      "algo_profit_factor": 0.9313458663743052,
+      "algo_drawdown": -0.989763313908612,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 31.39999999999999
+    },
+    {
+      "reference_coin": "SNX",
+      "algo_profit_factor": 0.932419796685766,
+      "algo_drawdown": -0.9905509806743258,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 32.39999999999999
+    },
+    {
+      "reference_coin": "SOL",
+      "algo_profit_factor": 0.890625232687673,
+      "algo_drawdown": -0.999151867763673,
+      "profit_factor_quantile": 85.4,
+      "drawdown_quantile": 76.0
+    },
+    {
+      "reference_coin": "STORJ",
+      "algo_profit_factor": 0.8843125438993241,
+      "algo_drawdown": -0.9987575114034316,
+      "profit_factor_quantile": 84.4,
+      "drawdown_quantile": 69.4
+    },
+    {
+      "reference_coin": "STPT",
+      "algo_profit_factor": 0.8947779315919434,
+      "algo_drawdown": -0.9970631475846072,
+      "profit_factor_quantile": 86.4,
+      "drawdown_quantile": 55.599999999999994
+    },
+    {
+      "reference_coin": "STRAX",
+      "algo_profit_factor": 0.8720672798172959,
+      "algo_drawdown": -0.9993996316115398,
+      "profit_factor_quantile": 79.60000000000001,
+      "drawdown_quantile": 80.0
+    },
+    {
+      "reference_coin": "STX",
+      "algo_profit_factor": 0.9014834616096128,
+      "algo_drawdown": -0.9976436898033642,
+      "profit_factor_quantile": 88.60000000000001,
+      "drawdown_quantile": 60.4
+    },
+    {
+      "reference_coin": "SUN",
+      "algo_profit_factor": 0.916056322443873,
+      "algo_drawdown": -0.9981981742095376,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 64.0
+    },
+    {
+      "reference_coin": "SUSHI",
+      "algo_profit_factor": 0.9091620486634264,
+      "algo_drawdown": -0.9977422205323312,
+      "profit_factor_quantile": 89.80000000000001,
+      "drawdown_quantile": 60.8
+    },
+    {
+      "reference_coin": "SXP",
+      "algo_profit_factor": 0.8875894502455073,
+      "algo_drawdown": -0.9990128883283717,
+      "profit_factor_quantile": 85.2,
+      "drawdown_quantile": 73.4
+    },
+    {
+      "reference_coin": "TFUEL",
+      "algo_profit_factor": 0.8726898465123547,
+      "algo_drawdown": -0.9995318866602824,
+      "profit_factor_quantile": 80.2,
+      "drawdown_quantile": 84.6
+    },
+    {
+      "reference_coin": "THETA",
+      "algo_profit_factor": 0.889618176656599,
+      "algo_drawdown": -0.999617418534602,
+      "profit_factor_quantile": 85.2,
+      "drawdown_quantile": 87.0
+    },
+    {
+      "reference_coin": "TRB",
+      "algo_profit_factor": 0.8929987598693545,
+      "algo_drawdown": -0.9988998031954618,
+      "profit_factor_quantile": 86.4,
+      "drawdown_quantile": 71.6
+    },
+    {
+      "reference_coin": "TROY",
+      "algo_profit_factor": 0.9172595364142506,
+      "algo_drawdown": -0.9938584709523328,
+      "profit_factor_quantile": 90.80000000000001,
+      "drawdown_quantile": 41.8
+    },
+    {
+      "reference_coin": "TRU",
+      "algo_profit_factor": 0.9652444452382392,
+      "algo_drawdown": -0.9479748799655998,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 6.3999999999999915
+    },
+    {
+      "reference_coin": "TRX",
+      "algo_profit_factor": 0.9685819315644104,
+      "algo_drawdown": -0.9575206927335852,
+      "profit_factor_quantile": 97.0,
+      "drawdown_quantile": 9.199999999999989
+    },
+    {
+      "reference_coin": "TWT",
+      "algo_profit_factor": 0.9644469428007372,
+      "algo_drawdown": -0.9806201160505672,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 21.0
+    },
+    {
+      "reference_coin": "UMA",
+      "algo_profit_factor": 0.9580414182272874,
+      "algo_drawdown": -0.9628222315646078,
+      "profit_factor_quantile": 96.0,
+      "drawdown_quantile": 10.599999999999994
+    },
+    {
+      "reference_coin": "UNI",
+      "algo_profit_factor": 0.9165819164544644,
+      "algo_drawdown": -0.9954321297602976,
+      "profit_factor_quantile": 90.60000000000001,
+      "drawdown_quantile": 46.599999999999994
+    },
+    {
+      "reference_coin": "UTK",
+      "algo_profit_factor": 0.9425851439730368,
+      "algo_drawdown": -0.9831532263149708,
+      "profit_factor_quantile": 94.2,
+      "drawdown_quantile": 24.200000000000003
+    },
+    {
+      "reference_coin": "VET",
+      "algo_profit_factor": 0.9117311816994492,
+      "algo_drawdown": -0.9959883694446744,
+      "profit_factor_quantile": 90.0,
+      "drawdown_quantile": 49.4
+    },
+    {
+      "reference_coin": "VTHO",
+      "algo_profit_factor": 0.9297600806170548,
+      "algo_drawdown": -0.9905247191097838,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 32.39999999999999
+    },
+    {
+      "reference_coin": "WAN",
+      "algo_profit_factor": 0.8957541632076501,
+      "algo_drawdown": -0.9993429391744476,
+      "profit_factor_quantile": 86.80000000000001,
+      "drawdown_quantile": 79.2
+    },
+    {
+      "reference_coin": "WING",
+      "algo_profit_factor": 0.9068693044645874,
+      "algo_drawdown": -0.9976768986904948,
+      "profit_factor_quantile": 89.4,
+      "drawdown_quantile": 60.4
+    },
+    {
+      "reference_coin": "WIN",
+      "algo_profit_factor": 0.9003330430141097,
+      "algo_drawdown": -0.998675358898545,
+      "profit_factor_quantile": 88.4,
+      "drawdown_quantile": 68.2
+    },
+    {
+      "reference_coin": "XLM",
+      "algo_profit_factor": 0.9199033003190948,
+      "algo_drawdown": -0.993915103255994,
+      "profit_factor_quantile": 91.2,
+      "drawdown_quantile": 42.0
+    },
+    {
+      "reference_coin": "XRP",
+      "algo_profit_factor": 0.941973492067602,
+      "algo_drawdown": -0.9838133074747092,
+      "profit_factor_quantile": 93.80000000000001,
+      "drawdown_quantile": 24.599999999999994
+    },
+    {
+      "reference_coin": "XTZ",
+      "algo_profit_factor": 0.9634197206772128,
+      "algo_drawdown": -0.9267719907115896,
+      "profit_factor_quantile": 96.4,
+      "drawdown_quantile": 4.799999999999997
+    },
+    {
+      "reference_coin": "XVS",
+      "algo_profit_factor": 0.8905183486366023,
+      "algo_drawdown": -0.9994001729521568,
+      "profit_factor_quantile": 85.4,
+      "drawdown_quantile": 80.0
+    },
+    {
+      "reference_coin": "YFI",
+      "algo_profit_factor": 0.9561108448543172,
+      "algo_drawdown": -0.9692511418229705,
+      "profit_factor_quantile": 96.0,
+      "drawdown_quantile": 12.199999999999989
+    },
+    {
+      "reference_coin": "ZEC",
+      "algo_profit_factor": 0.9345483099796472,
+      "algo_drawdown": -0.9898099530670864,
+      "profit_factor_quantile": 92.4,
+      "drawdown_quantile": 31.39999999999999
+    },
+    {
+      "reference_coin": "ZEN",
+      "algo_profit_factor": 0.876869515560141,
+      "algo_drawdown": -0.9994537567817766,
+      "profit_factor_quantile": 81.4,
+      "drawdown_quantile": 81.0
+    },
+    {
+      "reference_coin": "ZIL",
+      "algo_profit_factor": 0.9314225381588244,
+      "algo_drawdown": -0.9872362370586896,
+      "profit_factor_quantile": 92.2,
+      "drawdown_quantile": 28.39999999999999
+    },
+    {
+      "reference_coin": "ZRX",
+      "algo_profit_factor": 0.9349277249086704,
+      "algo_drawdown": -0.9752236899256608,
+      "profit_factor_quantile": 92.4,
+      "drawdown_quantile": 15.199999999999989
+    }
+  ]
+}
