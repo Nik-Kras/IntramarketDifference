@@ -187,9 +187,10 @@ def run_pair(reference_name: str,
     signal_changes = traded_df["sig"].diff().fillna(0)
     num_trades = int((signal_changes != 0).sum())
 
-    # profit factor
-    gains = rets[rets > 0].sum()
-    losses = rets[rets < 0].abs().sum()
+    # profit factor (convert log returns to simple returns first)
+    simple_rets = np.exp(rets) - 1  # Convert log returns to simple returns
+    gains = simple_rets[simple_rets > 0].sum()
+    losses = simple_rets[simple_rets < 0].abs().sum()
     profit_factor = np.inf if losses == 0 and gains > 0 else (gains / losses if losses > 0 else np.nan)
 
     total_return = rets.cumsum().iloc[-1] if len(rets) else np.nan
