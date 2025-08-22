@@ -1,0 +1,19 @@
+{
+  "pair": "DCR \u2192 BTC",
+  "trade_type_filter": "long",
+  "total_trades": 267,
+  "long_trades": 267,
+  "short_trades": 0,
+  "mean_return": 0.0019773674144812317,
+  "median_return": -0.00318346569135349,
+  "std_return": 0.03257113594461333,
+  "mean_long_return": 0.0019773674144812317,
+  "mean_short_return": null,
+  "mean_holding_period_hours": 18.49812734082397,
+  "median_holding_period_hours": 16.0,
+  "total_log_return": 0.5279570996664888,
+  "total_simple_return": 0.6954651020232645,
+  "win_rate": 0.45318352059925093,
+  "best_trade": 0.14824785359426643,
+  "worst_trade": -0.08678239646909644
+}

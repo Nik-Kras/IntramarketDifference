@@ -1,5 +1,6 @@
 import os
 import glob
+import json
 import numpy as np
 import pandas as pd
 import pandas_ta as ta
@@ -13,6 +14,7 @@ from tqdm import tqdm
 # -----------------------
 DATA_DIR = "data"           # where your 9+ CSVs are
 OUT_CSV  = "pair_backtest_results.csv"
+TRADES_DIR = "trades"       # where to save detailed trade JSON files
 
 LOOKBACK = 24               # MA window for cmma
 ATR_LOOKBACK = 168          # ATR window for cmma
@@ -139,6 +141,55 @@ def calculate_exit_hour_stats(traded_df: pd.DataFrame) -> tuple[float, float]:
     except Exception as e:
         return np.nan, np.nan
 
+def save_trades_to_json(reference_name: str, traded_name: str, traded_df: pd.DataFrame):
+    """Save detailed trade data to JSON file."""
+    try:
+        # Get individual trades using existing function
+        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
+        
+        if len(all_trades) == 0:
+            return  # No trades to save
+        
+        # Prepare trade data for JSON
+        trades_data = []
+        
+        for entry_time, trade in all_trades.iterrows():
+            # Calculate log return for this specific trade
+            if trade['type'] == 1:  # Long trade
+                log_return = np.log(trade['exit_price'] / trade['entry_price'])
+            else:  # Short trade  
+                log_return = np.log(trade['entry_price'] / trade['exit_price'])
+                
+            trade_record = {
+                'time_entered': entry_time.isoformat() if pd.notna(entry_time) else None,
+                'time_exited': trade['exit_time'].isoformat() if pd.notna(trade['exit_time']) else None,
+                'log_return': float(log_return) if pd.notna(log_return) else None,
+                'trade_type': 'long' if trade['type'] == 1 else 'short'
+            }
+            trades_data.append(trade_record)
+        
+        # Create directory structure - ensure both root and coin directories exist
+        if not os.path.exists(TRADES_DIR):
+            os.makedirs(TRADES_DIR, exist_ok=True)
+            print(f"Created trades directory: {TRADES_DIR}")
+        
+        coin_dir = os.path.join(TRADES_DIR, traded_name)
+        if not os.path.exists(coin_dir):
+            os.makedirs(coin_dir, exist_ok=True)
+            print(f"Created coin directory: {coin_dir}")
+        
+        # Save to JSON file with pair name format
+        filename = f"{reference_name}_{traded_name}_trades.json"
+        filepath = os.path.join(coin_dir, filename)
+        
+        with open(filepath, 'w') as f:
+            json.dump(trades_data, f, indent=2)
+            
+    except Exception as e:
+        print(f"Warning: Could not save trades for {reference_name}-{traded_name}: {e}")
+        import traceback
+        traceback.print_exc()
+
 def run_pair(reference_name: str,
              traded_name: str,
              ref_df: pd.DataFrame,
@@ -203,6 +254,9 @@ def run_pair(reference_name: str,
     
     # Exit hour statistics
     mean_exit_hour, std_exit_hour = calculate_exit_hour_stats(traded_df)
+    
+    # Save detailed trade data to JSON
+    save_trades_to_json(reference_name, traded_name, traded_df)
 
     return {
         "Reference Coin": reference_name,

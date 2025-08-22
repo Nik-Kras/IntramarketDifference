@@ -32,6 +32,9 @@ The trading strategy works as follows:
 ### Results Structure
 - `pair_backtest_results.csv` - Main results file from `run_all.py`
 - `permutation_test_results.csv` - Statistical significance results
+- `trades/` directory - Individual trade data in JSON format
+  - `trades/{COIN}/` - Trade data for each trading coin
+  - `{REF_COIN}_{TRADING_COIN}_trades.json` - Detailed trade records per pair
 - `permutations/` directory - Individual coin analysis with visualizations
   - Each coin gets its own subdirectory with distribution plots and equity curves
 
@@ -53,6 +56,15 @@ python permutation_test.py
 ```bash
 # Run original prototype analysis
 python intermarket.py
+```
+
+### Environment Setup
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies if needed
+pip install pandas numpy matplotlib pandas_ta statsmodels scipy tqdm
 ```
 
 ### Data Requirements
@@ -96,13 +108,32 @@ python intermarket.py
 - `permutation_test_results.csv` - Statistical significance of each pair
 - `trading_coin_summary_stats.csv` - Aggregated statistics per trading coin
 
+### Trade Data (per coin in trades/{COIN}/)
+- `{REF_COIN}_{TRADING_COIN}_trades.json` - Individual trade records with:
+  - `time_entered`, `time_exited` - Entry/exit timestamps
+  - `log_return` - Individual trade log return
+  - `trade_type` - "long" or "short"
+
 ### Visualizations (per coin in permutations/{COIN}/)
-- `profit_factor_distribution.png` - Algorithm vs random distribution
-- `drawdown_distribution.png` - Risk comparison vs random
-- `equity_curves_top10.png` - Best performing reference coins
+**Separate Analysis by Trade Type:**
+- `profit_factor_distribution_combined.png` - Combined longs+shorts vs random
+- `profit_factor_distribution_longs.png` - Longs-only vs random
+- `profit_factor_distribution_shorts.png` - Shorts-only vs random
+- `drawdown_distribution_combined.png` - Combined drawdown vs random
+- `drawdown_distribution_longs.png` - Longs-only drawdown vs random
+- `drawdown_distribution_shorts.png` - Shorts-only drawdown vs random
+- `equity_curves_combined.png` - Top 10 combined performers
+- `equity_curves_longs.png` - Top 10 long performers
+- `equity_curves_shorts.png` - Top 10 short performers
+
+**Results Data:**
+- `results_combined.json` - Combined analysis quantile data
+- `results_longs.json` - Longs-only analysis quantile data
+- `results_shorts.json` - Shorts-only analysis quantile data
+
+**Legacy Files:**
 - `profit_factor_dist.png` - All reference coins distribution  
 - `drawdown_dist.png` - All reference coins drawdown distribution
-- `results.json` - Detailed quantile analysis data
 
 ## Architecture Notes
 
@@ -125,6 +156,7 @@ The permutation testing framework:
 2. Generates random trades with same count and timing characteristics  
 3. Compares algorithm performance vs random distribution
 4. Reports percentile rankings (lower = better performance)
+5. Selects top performers for visualization: highest profit factors and lowest drawdowns
 
 ## Development Notes
 
@@ -142,3 +174,41 @@ The permutation testing framework:
 - Current implementation processes ~19,000 pair combinations
 - Uses tqdm for progress tracking
 - Consider parallel processing for large-scale analysis
+
+### Dependencies and Environment
+- **Python 3.9+** required (based on `__pycache__` files)
+- **Required packages**: pandas, numpy, matplotlib, pandas_ta, statsmodels, scipy, tqdm
+- **Virtual environment**: `venv/` directory present - activate with `source venv/bin/activate`
+
+### File Structure Understanding
+```
+data/{COIN}USDT_IS.csv     # Raw OHLC data (140+ coins)
+run_all.py                 # Main backtester → pair_backtest_results.csv
+create_distributions.py    # Visualizations → permutations/{COIN}/
+permutation_test.py        # Statistical validation → permutation_test_results.csv
+trades/{COIN}/             # Individual trade records (JSON)
+```
+
+### Signal Logic Details
+The `threshold_revert_signal` function implements a state machine:
+- **Long Entry**: When intermarket difference > +0.25
+- **Short Entry**: When intermarket difference < -0.25  
+- **Long Exit**: When in long position and difference <= 0
+- **Short Exit**: When in short position and difference >= 0
+- **Position Persistence**: Signal maintains last state during NaN values
+
+### Trading Execution Model
+- **Entry**: Signal changes trigger position entry at next bar's close
+- **Returns**: Log returns calculated as `signal[t] * log_return[t+1]`
+- **Commission**: 0.2% per trade side applied in permutation testing only
+- **Position Sizing**: Fixed 1x leverage (no sizing optimization)
+
+### Known Limitations and Considerations
+- **Look-ahead bias**: Signals use same-bar prices but trade at next bar
+- **Survivorship bias**: Only includes coins with complete data histories
+- **Commission impact**: Main backtests exclude commission costs
+- **Data quality**: Assumes clean OHLC data without gaps or errors
+- **Market regime**: Results may not generalize across different market conditions
+
+### Recent Bug Fixes
+- Fixed drawdown sorting in `permutation_test.py:302` - now correctly selects worst performing (highest drawdown) reference coins for visualization instead of best performing ones

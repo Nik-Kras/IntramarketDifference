@@ -10,7 +10,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Import functions from run_all.py
-from run_all import load_one_csv, extract_coin_name, calculate_max_drawdown, cmma, threshold_revert_signal, align_frames, MIN_OVERLAP
+from run_all import load_one_csv, extract_coin_name, calculate_max_drawdown
 
 # Configuration
 COMMISSION_RATE = 0.002  # 0.2% per trade
@@ -18,6 +18,7 @@ N_PERMUTATIONS = 500
 DATA_DIR = "data"
 RESULTS_CSV = "pair_backtest_results.csv"
 OUTPUT_DIR = "permutations"
+TRADES_DIR = "trades"    # where trade JSON files are stored
 
 # Trading algorithm parameters (from run_all.py)
 LOOKBACK = 24               # MA window for cmma
@@ -109,60 +110,125 @@ def calculate_profit_factor(returns: np.ndarray) -> float:
     
     return gains / losses if losses > 0 else np.nan
 
-def run_algorithm_simulation(reference_coin_data: pd.DataFrame, trading_coin_data: pd.DataFrame, 
-                           initial_capital: float = 1000.0) -> tuple[pd.Series, pd.Series, float, float]:
+def load_trades_from_json(trading_coin: str, reference_coin: str) -> list:
+    """Load trade data from JSON file for a specific pair."""
+    try:
+        filename = f"{reference_coin}_{trading_coin}_trades.json"
+        filepath = os.path.join(TRADES_DIR, trading_coin, filename)
+        
+        if not os.path.exists(filepath):
+            return []
+            
+        with open(filepath, 'r') as f:
+            trades_data = json.load(f)
+        
+        return trades_data
+    except Exception as e:
+        print(f"Warning: Could not load trades for {reference_coin}-{trading_coin}: {e}")
+        return []
+
+def analyze_trades_by_type(trades_data: list, trade_type: str = 'both') -> tuple[float, float, int]:
     """
-    Run the actual trading algorithm and return equity curve.
-    Match the exact logic from run_all.py run_pair function.
+    Analyze trades by type and calculate metrics.
     
     Args:
-        reference_coin_data: Reference coin data (e.g., ETH data when ETH is reference)
-        trading_coin_data: Trading coin data (e.g., BTC data when BTC is being traded)
+        trades_data: List of trade dictionaries from JSON
+        trade_type: 'both', 'long', or 'short'
     
     Returns:
-        equity_curve: Time series of portfolio value
-        returns_series: Time series of returns
-        final_profit_factor: Profit factor of the simulation
-        final_drawdown: Maximum drawdown of the simulation
+        profit_factor, max_drawdown, num_trades
     """
-    # Align the data frames (same as run_all.py)
-    ref_df, traded_df = align_frames(reference_coin_data, trading_coin_data)
+    if not trades_data:
+        return np.nan, np.nan, 0
     
-    if len(ref_df) < MIN_OVERLAP:  # Use same minimum as run_all.py
-        return pd.Series(), pd.Series(), np.nan, np.nan
+    # Filter trades by type
+    if trade_type == 'both':
+        filtered_trades = trades_data
+    elif trade_type == 'long':
+        filtered_trades = [t for t in trades_data if t['trade_type'] == 'long']
+    elif trade_type == 'short':
+        filtered_trades = [t for t in trades_data if t['trade_type'] == 'short']
+    else:
+        raise ValueError(f"Invalid trade_type: {trade_type}")
     
-    # Exact copy of run_all.py logic
-    traded_df = traded_df.copy()
-    traded_df["diff"] = np.log(traded_df["close"]).diff()
-    traded_df["next_return"] = traded_df["diff"].shift(-1)
+    if not filtered_trades:
+        return np.nan, np.nan, 0
     
-    # cmma indicators
-    ref_cmma = cmma(ref_df, LOOKBACK, ATR_LOOKBACK)
-    trd_cmma = cmma(traded_df, LOOKBACK, ATR_LOOKBACK)
-    intermarket_diff = trd_cmma - ref_cmma
+    # Extract log returns and convert to simple returns
+    log_returns = [t['log_return'] for t in filtered_trades if t['log_return'] is not None]
     
-    # signal & returns (exact copy from run_all.py)
-    traded_df["sig"] = threshold_revert_signal(intermarket_diff, THRESHOLD)
-    rets = traded_df["sig"] * traded_df["next_return"]
-    rets = rets.replace([np.inf, -np.inf], np.nan).dropna()
+    if not log_returns:
+        return np.nan, np.nan, 0
     
-    if len(rets) == 0:
-        return pd.Series(), pd.Series(), np.nan, np.nan
+    # Convert log returns to simple returns for profit factor calculation
+    simple_returns = np.array([np.exp(lr) - 1 for lr in log_returns])
     
-    # Calculate metrics exactly like run_all.py (convert log returns to simple returns first)
-    simple_rets = np.exp(rets) - 1  # Convert log returns to simple returns
-    gains = simple_rets[simple_rets > 0].sum()
-    losses = simple_rets[simple_rets < 0].abs().sum()
-    profit_factor = np.inf if losses == 0 and gains > 0 else (gains / losses if losses > 0 else np.nan)
+    # Calculate profit factor
+    profit_factor = calculate_profit_factor(simple_returns)
     
-    # Calculate equity curve from log returns
-    # rets contains log returns, so we use exp(cumsum) for proper compounding
-    equity_curve = initial_capital * np.exp(rets.cumsum())
+    # Calculate max drawdown using log returns (for proper compounding)
+    log_returns_series = pd.Series(log_returns)
+    max_drawdown = calculate_max_drawdown(log_returns_series)
     
-    # Max drawdown
-    drawdown = calculate_max_drawdown(rets)
+    num_trades = len(filtered_trades)
     
-    return equity_curve, rets, profit_factor, drawdown
+    return profit_factor, max_drawdown, num_trades
+
+def get_equity_curve_by_type(reference_coin_data: pd.DataFrame, trading_coin_data: pd.DataFrame, 
+                           trading_coin: str, reference_coin: str, trade_type: str = 'both',
+                           initial_capital: float = 1000.0) -> tuple[pd.Series, float, float]:
+    """
+    Generate equity curve for specific trade type.
+    
+    Returns:
+        equity_curve, profit_factor, max_drawdown
+    """
+    # Load trade data from JSON
+    trades_data = load_trades_from_json(trading_coin, reference_coin)
+    
+    if not trades_data:
+        return pd.Series(), np.nan, np.nan
+    
+    # Analyze by trade type
+    profit_factor, max_drawdown, num_trades = analyze_trades_by_type(trades_data, trade_type)
+    
+    if num_trades == 0:
+        return pd.Series(), np.nan, np.nan
+    
+    # Create equity curve from individual trades
+    # Filter trades by type
+    if trade_type == 'both':
+        filtered_trades = trades_data
+    elif trade_type == 'long':
+        filtered_trades = [t for t in trades_data if t['trade_type'] == 'long']
+    elif trade_type == 'short':
+        filtered_trades = [t for t in trades_data if t['trade_type'] == 'short']
+    else:
+        return pd.Series(), np.nan, np.nan
+    
+    if not filtered_trades:
+        return pd.Series(), np.nan, np.nan
+    
+    # Create time series of returns
+    trade_times = []
+    trade_returns = []
+    
+    for trade in filtered_trades:
+        if trade['time_exited'] and trade['log_return'] is not None:
+            trade_times.append(pd.to_datetime(trade['time_exited']))
+            trade_returns.append(trade['log_return'])
+    
+    if not trade_times:
+        return pd.Series(), np.nan, np.nan
+    
+    # Create series and sort by time
+    returns_series = pd.Series(trade_returns, index=trade_times).sort_index()
+    
+    # Calculate equity curve
+    equity_curve = initial_capital * np.exp(returns_series.cumsum())
+    
+    return equity_curve, profit_factor, max_drawdown
+
 
 def run_permutation_test(results_df: pd.DataFrame, trading_data: dict):
     """Run permutation test for all trading coins."""
@@ -215,11 +281,11 @@ def run_permutation_test(results_df: pd.DataFrame, trading_data: dict):
         exit_hour_mean = reference_row['Mean Exit Hour']
         exit_hour_std = max(reference_row['STD Exit Hour'], 0.1)  # Ensure minimum std
         
-        # Generate ONE set of 500 random sequences for this trading coin
+        # Generate 500 random sequences for statistical baseline comparison
         random_profit_factors = []
         random_drawdowns = []
         
-        print(f"  🎲 Generating {N_PERMUTATIONS} random sequences...")
+        print(f"  🎲 Generating {N_PERMUTATIONS} random trade sequences...")
         for _ in range(N_PERMUTATIONS):
             random_returns = generate_random_sequence(coin_data, n_trades, exit_hour_mean, exit_hour_std)
             
@@ -239,45 +305,67 @@ def run_permutation_test(results_df: pd.DataFrame, trading_data: dict):
         print(f"  ✅ Generated {len(random_profit_factors)} valid random profit factors")
         
         # Now compare all reference coin pairs against this single distribution
-        coin_results = []
+        coin_results_combined = []
+        coin_results_longs = []
+        coin_results_shorts = []
+        
         for row in valid_rows:
-            # Calculate quantiles for this reference coin pair
-            # For profit factor: lower quantile = better performance (algorithm beats more random trades)
-            pf_quantile = 100 - stats.percentileofscore(random_profit_factors, row['Profit Factor'])
-            # For drawdown: lower quantile = better performance (algorithm has lower drawdown than more random trades)  
-            dd_quantile = 100 - stats.percentileofscore(random_drawdowns, row['Max DrawDown'])
+            reference_coin = row['Reference Coin']
             
-            coin_results.append({
-                'reference_coin': row['Reference Coin'],
-                'algo_profit_factor': row['Profit Factor'],
-                'algo_drawdown': row['Max DrawDown'],
-                'profit_factor_quantile': pf_quantile,
-                'drawdown_quantile': dd_quantile
-            })
+            # Load trade data for this specific pair
+            trades_data = load_trades_from_json(trading_coin, reference_coin)
             
-            all_results.append({
-                'Trading Coin': trading_coin,
-                'Reference Coin': row['Reference Coin'],
-                'Algorithm Profit Factor': row['Profit Factor'],
-                'Algorithm Drawdown': row['Max DrawDown'],
-                'Profit Factor Quantile': pf_quantile,
-                'Drawdown Quantile': dd_quantile
-            })
+            if not trades_data:
+                continue  # Skip pairs with no trade data
+            
+            # Analyze for each trade type
+            for trade_type, results_list in [('both', coin_results_combined), 
+                                            ('long', coin_results_longs), 
+                                            ('short', coin_results_shorts)]:
+                
+                pf, dd, num_trades = analyze_trades_by_type(trades_data, trade_type)
+                
+                if num_trades > 0 and not pd.isna(pf) and not pd.isna(dd):
+                    # Calculate quantiles
+                    pf_quantile = 100 - stats.percentileofscore(random_profit_factors, pf)
+                    dd_quantile = 100 - stats.percentileofscore(random_drawdowns, dd)
+                    
+                    results_list.append({
+                        'reference_coin': reference_coin,
+                        'algo_profit_factor': pf,
+                        'algo_drawdown': dd,
+                        'profit_factor_quantile': pf_quantile,
+                        'drawdown_quantile': dd_quantile,
+                        'num_trades': num_trades,
+                        'trade_type': trade_type
+                    })
+            
+            # For backward compatibility, keep the combined results in all_results
+            combined_pf, combined_dd, combined_trades = analyze_trades_by_type(trades_data, 'both')
+            if combined_trades > 0 and not pd.isna(combined_pf) and not pd.isna(combined_dd):
+                pf_quantile = 100 - stats.percentileofscore(random_profit_factors, combined_pf)
+                dd_quantile = 100 - stats.percentileofscore(random_drawdowns, combined_dd)
+                
+                all_results.append({
+                    'Trading Coin': trading_coin,
+                    'Reference Coin': reference_coin,
+                    'Algorithm Profit Factor': combined_pf,
+                    'Algorithm Drawdown': combined_dd,
+                    'Profit Factor Quantile': pf_quantile,
+                    'Drawdown Quantile': dd_quantile
+                })
         
         # Create visualizations and save results
-        print(f"  📈 Creating permutation test visualizations...")
-        create_visualizations(trading_coin, coin_results, random_profit_factors, random_drawdowns, coin_dir)
+        print(f"  📈 Creating separate visualizations for each trade type...")
+        create_separate_visualizations(trading_coin, coin_results_combined, coin_results_longs, coin_results_shorts, 
+                                     random_profit_factors, random_drawdowns, trading_data, coin_dir)
         
-        # Generate equity curves for top-10 performers
-        print(f"  💰 Generating equity curves for top performers...")
-        create_equity_curves(trading_coin, coin_results, trading_data, coin_dir)
-        
-        # Generate distribution plots for this trading coin
+        # Generate distribution plots for this trading coin (original function)
         print(f"  📊 Creating performance distribution plots...")
         create_coin_distributions(trading_coin, results_df, coin_dir)
         
         print(f"  💾 Saving results...")
-        save_coin_results(trading_coin, coin_results, coin_dir)
+        save_separate_results(trading_coin, coin_results_combined, coin_results_longs, coin_results_shorts, coin_dir)
         
         print(f"  ✅ {trading_coin} completed successfully!")
     
@@ -291,6 +379,177 @@ def run_permutation_test(results_df: pd.DataFrame, trading_data: dict):
         print("❌ No valid results to save")
     
     print(f"\n🎉 Permutation test completed for {total_coins} trading coins!")
+
+def create_separate_visualizations(trading_coin: str, coin_results_combined: list, coin_results_longs: list, 
+                                 coin_results_shorts: list, random_profit_factors: list, random_drawdowns: list, 
+                                 trading_data: dict, output_dir: str):
+    """Create separate visualizations for combined, longs-only, and shorts-only trades."""
+    
+    trade_types = [
+        ('combined', coin_results_combined, 'Combined (Longs + Shorts)', 'blue'),
+        ('longs', coin_results_longs, 'Longs Only', 'green'), 
+        ('shorts', coin_results_shorts, 'Shorts Only', 'red')
+    ]
+    
+    for trade_type_name, coin_results, title_suffix, base_color in trade_types:
+        if not coin_results:
+            print(f"    ⚠️ No {trade_type_name} results for {trading_coin}")
+            continue
+            
+        print(f"    📈 Creating {trade_type_name} visualizations...")
+        
+        # Create distribution plots
+        create_distribution_plots(trading_coin, coin_results, random_profit_factors, random_drawdowns, 
+                                output_dir, trade_type_name, title_suffix, base_color)
+        
+        # Create equity curves
+        create_equity_curves_by_type(trading_coin, coin_results, trading_data, output_dir, 
+                                   trade_type_name, title_suffix, base_color)
+
+def create_distribution_plots(trading_coin: str, coin_results: list, random_profit_factors: list, random_drawdowns: list,
+                            output_dir: str, trade_type: str, title_suffix: str, base_color: str = None):
+    """Create profit factor and drawdown distribution plots for a specific trade type."""
+    
+    # Select top-10 reference coins by HIGHEST profit factors
+    sorted_by_pf = sorted(coin_results, key=lambda x: x['algo_profit_factor'], reverse=True)[:10]
+    
+    # Select top-10 reference coins by WORST drawdowns (most negative)
+    sorted_by_drawdown = sorted(coin_results, key=lambda x: x['algo_drawdown'])[:10]
+    
+    # Create profit factor distribution plot
+    plt.figure(figsize=(12, 8))
+    plt.hist(random_profit_factors, bins=50, alpha=0.7, color='lightblue', label='Random Trades')
+    
+    # Add vertical lines for top-10 by profit factor
+    colors = plt.cm.tab10(np.linspace(0, 1, len(sorted_by_pf)))
+    for i, result in enumerate(sorted_by_pf):
+        plt.axvline(result['algo_profit_factor'], color=colors[i], linewidth=2,
+                   label=f"{result['reference_coin']}: {result['profit_factor_quantile']:.1f}%")
+    
+    plt.xlabel('Profit Factor')
+    plt.ylabel('Frequency')
+    plt.title(f'{trading_coin} - Profit Factor Distribution - {title_suffix}\n(Top 10 by Performance)')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'profit_factor_distribution_{trade_type}.png'), dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # Create drawdown distribution plot
+    plt.figure(figsize=(12, 8))
+    plt.hist(random_drawdowns, bins=50, alpha=0.7, color='lightcoral', label='Random Trades')
+    
+    # Add vertical lines for worst drawdowns
+    colors = plt.cm.tab10(np.linspace(0, 1, len(sorted_by_drawdown)))
+    for i, result in enumerate(sorted_by_drawdown):
+        plt.axvline(result['algo_drawdown'], color=colors[i], linewidth=2,
+                   label=f"{result['reference_coin']}: {result['drawdown_quantile']:.1f}%")
+    
+    plt.xlabel('Max Drawdown')
+    plt.ylabel('Frequency')
+    plt.title(f'{trading_coin} - Drawdown Distribution - {title_suffix}\n(Worst 10 by Performance)')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'drawdown_distribution_{trade_type}.png'), dpi=300, bbox_inches='tight')
+    plt.close()
+
+def create_equity_curves_by_type(trading_coin: str, coin_results: list, trading_data: dict, output_dir: str,
+                               trade_type: str, title_suffix: str, base_color: str = None):
+    """Generate equity curves for specific trade type."""
+    
+    if trading_coin not in trading_data:
+        print(f"    Warning: No data for {trading_coin} to generate equity curves")
+        return
+    
+    # Select top-10 reference coins by profit factor
+    sorted_by_pf = sorted(coin_results, key=lambda x: x['algo_profit_factor'], reverse=True)[:10]
+    
+    if not sorted_by_pf:
+        print(f"    No results for {trade_type} equity curves")
+        return
+    
+    plt.figure(figsize=(15, 10))
+    colors = plt.cm.tab10(np.linspace(0, 1, len(sorted_by_pf)))
+    
+    equity_curves = {}
+    
+    for i, result in enumerate(sorted_by_pf):
+        reference_coin = result['reference_coin']
+        
+        if reference_coin not in trading_data:
+            continue
+            
+        reference_coin_data = trading_data[reference_coin]
+        trading_coin_data = trading_data[trading_coin]
+        
+        # Get equity curve for this specific trade type
+        trade_type_key = result['trade_type'] if 'trade_type' in result else 'both'
+        equity_curve, pf, dd = get_equity_curve_by_type(
+            reference_coin_data, trading_coin_data, trading_coin, reference_coin, 
+            trade_type_key, initial_capital=1000.0
+        )
+        
+        if len(equity_curve) > 0:
+            plt.plot(equity_curve.index, equity_curve.values,
+                    color=colors[i], linewidth=2, alpha=0.8,
+                    label=f'{reference_coin} (PF: {pf:.2f}, DD: {dd:.1%}, Q: {result["profit_factor_quantile"]:.1f}%)')
+            
+            equity_curves[reference_coin] = equity_curve
+    
+    # Format the plot
+    plt.axhline(y=1000, color='black', linestyle='--', alpha=0.5, label='Initial Capital ($1000)')
+    plt.xlabel('Date')
+    plt.ylabel('Portfolio Value ($)')
+    plt.title(f'{trading_coin} - Equity Curves - {title_suffix}\n(Top 10 Reference Coins, Starting Capital: $1000)')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'equity_curves_{trade_type}.png'), dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # Save equity curve data
+    if equity_curves:
+        equity_df = pd.DataFrame(equity_curves)
+        equity_df.index.name = 'Date'
+        equity_df.to_csv(os.path.join(output_dir, f'equity_curves_{trade_type}_data.csv'))
+
+def save_separate_results(trading_coin: str, coin_results_combined: list, coin_results_longs: list, 
+                        coin_results_shorts: list, output_dir: str):
+    """Save separate results for each trade type."""
+    
+    results_by_type = {
+        'combined': coin_results_combined,
+        'longs': coin_results_longs,
+        'shorts': coin_results_shorts
+    }
+    
+    for trade_type, coin_results in results_by_type.items():
+        if not coin_results:
+            continue
+            
+        # Save to JSON
+        filename = f'results_{trade_type}.json'
+        filepath = os.path.join(output_dir, filename)
+        
+        # Prepare data for JSON (remove numpy arrays)
+        json_results = []
+        for result in coin_results:
+            json_results.append({
+                'reference_coin': result['reference_coin'],
+                'algo_profit_factor': float(result['algo_profit_factor']) if not pd.isna(result['algo_profit_factor']) else None,
+                'algo_drawdown': float(result['algo_drawdown']) if not pd.isna(result['algo_drawdown']) else None,
+                'profit_factor_quantile': float(result['profit_factor_quantile']),
+                'drawdown_quantile': float(result['drawdown_quantile']),
+                'num_trades': int(result['num_trades']),
+                'trade_type': result['trade_type']
+            })
+        
+        with open(filepath, 'w') as f:
+            json.dump({
+                'trading_coin': trading_coin,
+                'trade_type': trade_type,
+                'results': json_results
+            }, f, indent=2)
 
 def create_visualizations(trading_coin: str, coin_results: list, random_profit_factors: list, random_drawdowns: list, output_dir: str):
     """Create distribution plots for profit factor and drawdown."""
@@ -366,9 +625,9 @@ def create_equity_curves(trading_coin: str, coin_results: list, trading_data: di
             
         reference_coin_data = trading_data[reference_coin]
         
-        # Run algorithm simulation (reference_coin_data, trading_coin_data)
-        equity_curve, returns_series, pf, dd = run_algorithm_simulation(
-            reference_coin_data, trading_coin_data, initial_capital=1000.0
+        # Use JSON trade data to get equity curve
+        equity_curve, pf, dd = get_equity_curve_by_type(
+            reference_coin_data, trading_coin_data, trading_coin, reference_coin, 'both', initial_capital=1000.0
         )
         
         if len(equity_curve) > 0:

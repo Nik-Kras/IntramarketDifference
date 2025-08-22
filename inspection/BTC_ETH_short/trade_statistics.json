@@ -1,0 +1,19 @@
+{
+  "pair": "BTC \u2192 ETH",
+  "trade_type_filter": "short",
+  "total_trades": 377,
+  "long_trades": 0,
+  "short_trades": 377,
+  "mean_return": 0.007597912705062286,
+  "median_return": 0.001989395770351939,
+  "std_return": 0.05081355994848136,
+  "mean_long_return": null,
+  "mean_short_return": 0.007597912705062286,
+  "mean_holding_period_hours": 21.344827586206897,
+  "median_holding_period_hours": 18.0,
+  "total_log_return": 2.864413089808482,
+  "total_simple_return": 16.538756508322884,
+  "win_rate": 0.5145888594164456,
+  "best_trade": 0.3267298659135282,
+  "worst_trade": -0.11966344237819752
+}
