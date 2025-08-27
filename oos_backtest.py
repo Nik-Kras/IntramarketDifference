@@ -422,6 +422,11 @@ def save_detailed_results_both_years(trading_coin: str, reference_coin: str, tra
         output_dir = os.path.join(OUTPUT_DIR, pair_name)
         os.makedirs(output_dir, exist_ok=True)
         
+        # Create yearly trade directories
+        for year in [2023, 2024]:
+            year_trades_dir = os.path.join(OUTPUT_DIR, "trades", f"year_{year}")
+            os.makedirs(year_trades_dir, exist_ok=True)
+        
         # Process both years
         for year in [2023, 2024]:
             try:
@@ -462,18 +467,28 @@ def save_detailed_results_both_years(trading_coin: str, reference_coin: str, tra
                             log_return = np.log(trade['exit_price'] / trade['entry_price'])
                         else:  # Short trade  
                             log_return = np.log(trade['entry_price'] / trade['exit_price'])
+                        
+                        # Calculate percentage return from log return: pcnt_return = (e^log_return - 1) * 100
+                        pcnt_return = (np.exp(log_return) - 1) * 100 if pd.notna(log_return) else None
                             
                         trade_record = {
                             'time_entered': entry_time.isoformat() if pd.notna(entry_time) else None,
                             'time_exited': trade['exit_time'].isoformat() if pd.notna(trade['exit_time']) else None,
                             'log_return': float(log_return) if pd.notna(log_return) else None,
+                            'pcnt_return': float(pcnt_return) if pd.notna(pcnt_return) else None,
                             'trade_type': 'long' if trade['type'] == 1 else 'short'
                         }
                         trades_data.append(trade_record)
                 
-                # Save trades JSON for this year
+                # Save trades JSON for this year in pair-specific directory
                 trades_file = os.path.join(output_dir, f'oos_trades_{year}.json')
                 with open(trades_file, 'w') as f:
+                    json.dump(trades_data, f, indent=2)
+                
+                # Also save trades in yearly directory for portfolio simulation
+                year_trades_dir = os.path.join(OUTPUT_DIR, "trades", f"year_{year}")
+                year_trades_file = os.path.join(year_trades_dir, f"{trading_coin}_{reference_coin}_{trade_type}.json")
+                with open(year_trades_file, 'w') as f:
                     json.dump(trades_data, f, indent=2)
                 
                 # Create equity curve using permutation_test.py methodology (SAME AS METRICS)
@@ -877,6 +892,274 @@ def analyze_oos_performance(results_df: pd.DataFrame):
     print(f"\n🎉 OOS Analysis completed!")
 
 
+def simulate_portfolio():
+    """
+    Simulate portfolio performance combining all trades from all pairs chronologically.
+    Assumes equal position sizing (full budget) for each trade starting with $1000.
+    """
+    
+    print(f"\n" + "=" * 80)
+    print("PORTFOLIO SIMULATION (OUT-OF-SAMPLE)")
+    print("=" * 80)
+    
+    # Create portfolio output directory
+    portfolio_dir = os.path.join(OUTPUT_DIR, "portfolio")
+    os.makedirs(portfolio_dir, exist_ok=True)
+    
+    # Collect all trades from both years
+    all_trades = []
+    trades_base_dir = os.path.join(OUTPUT_DIR, "trades")
+    
+    if not os.path.exists(trades_base_dir):
+        print("❌ No trades directory found! Run OOS backtesting first.")
+        return
+    
+    # Load trades from both years
+    for year in [2023, 2024]:
+        year_dir = os.path.join(trades_base_dir, f"year_{year}")
+        if not os.path.exists(year_dir):
+            print(f"⚠️  No trades found for {year}")
+            continue
+        
+        # Load all JSON files in this year directory
+        trade_files = [f for f in os.listdir(year_dir) if f.endswith('.json')]
+        print(f"📂 Loading {len(trade_files)} trade files from {year}")
+        
+        for trade_file in trade_files:
+            file_path = os.path.join(year_dir, trade_file)
+            try:
+                with open(file_path, 'r') as f:
+                    trades_data = json.load(f)
+                
+                # Add source information and year to each trade
+                pair_info = trade_file.replace('.json', '')  # e.g., "DOGE_1INCH_long"
+                for trade in trades_data:
+                    trade['source_pair'] = pair_info
+                    trade['year'] = year
+                    
+                all_trades.extend(trades_data)
+                
+            except Exception as e:
+                print(f"⚠️  Could not load {trade_file}: {e}")
+    
+    if not all_trades:
+        print("❌ No trades found for portfolio simulation!")
+        return
+    
+    print(f"✅ Loaded {len(all_trades)} total trades from all pairs")
+    
+    # Convert to DataFrame and sort chronologically
+    trades_df = pd.DataFrame(all_trades)
+    
+    # Convert time columns to datetime
+    trades_df['time_entered'] = pd.to_datetime(trades_df['time_entered'])
+    trades_df['time_exited'] = pd.to_datetime(trades_df['time_exited'])
+    
+    # Sort by entry time
+    trades_df = trades_df.sort_values('time_entered').reset_index(drop=True)
+    
+    print(f"📊 Portfolio simulation period: {trades_df['time_entered'].min()} to {trades_df['time_exited'].max()}")
+    print(f"📊 Trade types: {trades_df['trade_type'].value_counts().to_dict()}")
+    print(f"📊 Years: {trades_df['year'].value_counts().to_dict()}")
+    
+    # Portfolio simulation with $1000 starting capital
+    initial_capital = 1000.0
+    portfolio_value = initial_capital
+    equity_curve = []
+    portfolio_returns = []
+    
+    # Track portfolio metrics
+    for _, trade in trades_df.iterrows():
+        if pd.notna(trade['pcnt_return']):
+            # Calculate return on full portfolio value
+            trade_return = portfolio_value * (trade['pcnt_return'] / 100)
+            portfolio_value += trade_return
+            
+            # Track return as percentage of initial capital
+            portfolio_returns.append(trade_return / initial_capital)
+            
+            # Record equity point at trade exit
+            equity_curve.append({
+                'date': trade['time_exited'],
+                'portfolio_value': portfolio_value,
+                'trade_return': trade_return,
+                'source_pair': trade['source_pair'],
+                'trade_type': trade['trade_type']
+            })
+    
+    # Convert to DataFrame for analysis
+    equity_df = pd.DataFrame(equity_curve)
+    equity_df = equity_df.set_index('date').sort_index()
+    
+    # Calculate portfolio metrics
+    portfolio_returns = np.array(portfolio_returns)
+    
+    # Total return
+    total_return = (portfolio_value / initial_capital) - 1
+    
+    # Profit Factor
+    gains = portfolio_returns[portfolio_returns > 0].sum()
+    losses = portfolio_returns[portfolio_returns < 0].sum()
+    profit_factor = gains / abs(losses) if losses < 0 else float('inf') if gains > 0 else 0
+    
+    # Max Drawdown
+    equity_series = equity_df['portfolio_value']
+    peak = equity_series.cummax()
+    drawdown = (equity_series - peak) / peak
+    max_drawdown = drawdown.min()
+    
+    # Sharpe Ratio (assuming daily rebalancing)
+    returns_series = pd.Series(portfolio_returns, index=equity_df.index)
+    if returns_series.std() > 0:
+        sharpe_ratio = returns_series.mean() / returns_series.std() * np.sqrt(252)  # Annualized
+    else:
+        sharpe_ratio = 0
+    
+    # Number of trades
+    num_trades = len(trades_df)
+    
+    portfolio_metrics = {
+        'initial_capital': initial_capital,
+        'final_portfolio_value': float(portfolio_value),
+        'total_cumulative_return': float(total_return),
+        'profit_factor': float(profit_factor),
+        'max_drawdown': float(max_drawdown),
+        'sharpe_ratio': float(sharpe_ratio),
+        'number_of_trades': int(num_trades),
+        'simulation_period': {
+            'start_date': trades_df['time_entered'].min().isoformat(),
+            'end_date': trades_df['time_exited'].max().isoformat()
+        },
+        'trade_breakdown': {
+            'long_trades': int((trades_df['trade_type'] == 'long').sum()),
+            'short_trades': int((trades_df['trade_type'] == 'short').sum()),
+            'year_2023': int((trades_df['year'] == 2023).sum()),
+            'year_2024': int((trades_df['year'] == 2024).sum())
+        }
+    }
+    
+    # Save portfolio metrics
+    metrics_file = os.path.join(portfolio_dir, 'portfolio_metrics.json')
+    with open(metrics_file, 'w') as f:
+        json.dump(portfolio_metrics, f, indent=2)
+    
+    print(f"\n📊 PORTFOLIO PERFORMANCE SUMMARY:")
+    print(f"   Initial Capital: ${initial_capital:,.2f}")
+    print(f"   Final Value: ${portfolio_value:,.2f}")
+    print(f"   Total Return: {total_return:.2%}")
+    print(f"   Profit Factor: {profit_factor:.3f}")
+    print(f"   Max Drawdown: {max_drawdown:.2%}")
+    print(f"   Sharpe Ratio: {sharpe_ratio:.3f}")
+    print(f"   Number of Trades: {num_trades}")
+    
+    # Create visualizations
+    create_portfolio_visualizations(trades_df, equity_df, portfolio_dir)
+    
+    print(f"\n💾 Portfolio simulation results saved to: {portfolio_dir}")
+    return portfolio_metrics
+
+
+def create_portfolio_visualizations(trades_df: pd.DataFrame, equity_df: pd.DataFrame, portfolio_dir: str):
+    """Create portfolio visualization charts."""
+    
+    print(f"\n📈 Creating portfolio visualizations...")
+    
+    # 1. Equity Curve
+    plt.figure(figsize=(15, 8))
+    plt.plot(equity_df.index, equity_df['portfolio_value'], linewidth=1.5, color='blue')
+    plt.title('Portfolio Equity Curve (Out-of-Sample)', fontsize=16)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Portfolio Value ($)', fontsize=12)
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    equity_file = os.path.join(portfolio_dir, 'portfolio_equity_curve.png')
+    plt.savefig(equity_file, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # 2. Drawdown Curve
+    peak = equity_df['portfolio_value'].cummax()
+    drawdown = (equity_df['portfolio_value'] - peak) / peak
+    
+    plt.figure(figsize=(15, 8))
+    plt.fill_between(drawdown.index, drawdown, 0, alpha=0.3, color='red')
+    plt.plot(drawdown.index, drawdown, color='red', linewidth=1)
+    plt.title('Portfolio Drawdown Curve (Out-of-Sample)', fontsize=16)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Drawdown (%)', fontsize=12)
+    plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y:.1%}'))
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    drawdown_file = os.path.join(portfolio_dir, 'portfolio_drawdown_curve.png')
+    plt.savefig(drawdown_file, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # 3. Trades per Day Analysis
+    trades_df_analysis = trades_df.copy()
+    trades_df_analysis['entry_date'] = trades_df_analysis['time_entered'].dt.date
+    
+    # Count trades per day
+    trades_per_day = trades_df_analysis.groupby('entry_date').size().reset_index(name='trade_count')
+    trades_per_day['entry_date'] = pd.to_datetime(trades_per_day['entry_date'])
+    
+    plt.figure(figsize=(15, 8))
+    plt.bar(trades_per_day['entry_date'], trades_per_day['trade_count'], alpha=0.7, color='green', width=1)
+    plt.title('Number of Trades Per Day (Out-of-Sample)', fontsize=16)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Number of Trades', fontsize=12)
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    trades_per_day_file = os.path.join(portfolio_dir, 'trades_per_day.png')
+    plt.savefig(trades_per_day_file, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # 4. Active Trades Per Day Analysis
+    # Create a date range covering the entire period
+    start_date = trades_df['time_entered'].min().date()
+    end_date = trades_df['time_exited'].max().date()
+    date_range = pd.date_range(start=start_date, end=end_date, freq='D')
+    
+    active_trades_per_day = []
+    
+    for date in date_range:
+        # Count trades that are active on this date
+        active_count = 0
+        for _, trade in trades_df.iterrows():
+            if (trade['time_entered'].date() <= date <= trade['time_exited'].date()):
+                active_count += 1
+        
+        active_trades_per_day.append({
+            'date': date,
+            'active_trades': active_count
+        })
+    
+    active_df = pd.DataFrame(active_trades_per_day)
+    
+    plt.figure(figsize=(15, 8))
+    plt.plot(active_df['date'], active_df['active_trades'], linewidth=1, color='orange')
+    plt.fill_between(active_df['date'], active_df['active_trades'], alpha=0.3, color='orange')
+    plt.title('Number of Active Trades Per Day (Out-of-Sample)', fontsize=16)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Number of Active Trades', fontsize=12)
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    active_trades_file = os.path.join(portfolio_dir, 'active_trades_per_day.png')
+    plt.savefig(active_trades_file, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"   ✅ Equity curve saved: portfolio_equity_curve.png")
+    print(f"   ✅ Drawdown curve saved: portfolio_drawdown_curve.png") 
+    print(f"   ✅ Trades per day chart saved: trades_per_day.png")
+    print(f"   ✅ Active trades per day chart saved: active_trades_per_day.png")
+
+
 def main():
     """Main execution function."""
     
@@ -901,7 +1184,7 @@ def main():
     results = []
     failed_pairs = 0
     
-    for index, row in tqdm(selected_pairs.iterrows(), total=len(selected_pairs), desc="Processing pairs"):
+    for _, row in tqdm(selected_pairs.iterrows(), total=len(selected_pairs), desc="Processing pairs"):
         trading_coin = row['trading_coin']
         reference_coin = row['reference_coin'] 
         trade_type = row['trade_type']
@@ -972,6 +1255,9 @@ def main():
     
     # Comprehensive OOS Analysis
     analyze_oos_performance(results_df)
+    
+    # Portfolio Simulation
+    simulate_portfolio()
 
 if __name__ == "__main__":
     main()

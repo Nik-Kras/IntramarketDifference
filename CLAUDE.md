@@ -24,19 +24,43 @@ The trading strategy works as follows:
 - `trades_from_signal.py` - Trade execution logic and P&L calculation
 - `create_distributions.py` - Visualization and summary statistics generation
 
+### Strategy Validation & Selection Files
+- `custom_filter.py` - Applies multi-criteria filters to select best performing pairs
+- `filter_pairs.py` - Core filtering engine with flexible parameter system
+- `selecting_pairs.py` - Pair selection utilities and analysis
+- `oos_backtest.py` - Out-of-Sample validation on unseen 2023-2024 data
+
+### Analysis & Inspection Tools
+- `inspect_pair.py` - Detailed analysis of specific trading pairs
+- `rank_correlation_analysis.py` - Correlation analysis between in-sample and OOS performance
+- `eth_btc_comparison.py` - Comparative analysis tools for specific pairs
+
 ### Data Structure
 - `data/` directory contains hourly OHLC data for ~140 cryptocurrencies in CSV format
-- Files follow naming convention: `{COIN}USDT_IS.csv` (e.g., `BTCUSDT_IS.csv`)
-- Each CSV has columns: date/open time, high, low, close (volume not used)
+  - Files follow naming convention: `{COIN}USDT_IS.csv` (e.g., `BTCUSDT_IS.csv`)
+  - Each CSV has columns: date/open time, high, low, close (volume not used)
+- `OOS/` directory contains Out-of-Sample data (2023-2025) for validation
+  - Files follow naming convention: `{COIN}USDT_OOS.csv`
+  - Used exclusively for strategy validation, never for optimization
 
 ### Results Structure
 - `pair_backtest_results.csv` - Main results file from `run_all.py`
+- `all_pairs_metrics.csv` - Enhanced results with additional metrics and quantiles
 - `permutation_test_results.csv` - Statistical significance results
+- `trading_coin_summary_stats.csv` - Aggregated statistics per trading coin
 - `trades/` directory - Individual trade data in JSON format
   - `trades/{COIN}/` - Trade data for each trading coin
   - `{REF_COIN}_{TRADING_COIN}_trades.json` - Detailed trade records per pair
 - `permutations/` directory - Individual coin analysis with visualizations
   - Each coin gets its own subdirectory with distribution plots and equity curves
+- `filtered_results/` directory - Filtered pair selections for OOS testing
+  - `user_custom_filter.csv` - Top performing pairs selected by multi-criteria filters
+  - `user_custom_filter_summary.txt` - Filter application summary
+- `oos_experiments/` directory - Out-of-Sample validation results
+  - `oos_backtest_results.csv` - OOS performance metrics for selected pairs
+  - Individual pair folders with 2023/2024 results and visualizations
+- `inspection/` directory - Detailed pair analysis results
+  - Per-pair subdirectories with comprehensive analysis reports
 
 ## Common Commands
 
@@ -50,6 +74,24 @@ python create_distributions.py
 
 # Step 3: Run Monte Carlo permutation tests for statistical validation
 python permutation_test.py
+
+# Step 4: Apply filtering criteria to select best pairs
+python custom_filter.py
+
+# Step 5: Validate selected pairs on out-of-sample data
+python oos_backtest.py
+```
+
+### Advanced Analysis Workflows
+```bash
+# Inspect specific trading pair in detail
+python inspect_pair.py
+
+# Analyze correlation between in-sample and OOS performance  
+python rank_correlation_analysis.py
+
+# Run comparative analysis on selected pairs
+python selecting_pairs.py
 ```
 
 ### Quick ETH-BTC Analysis
@@ -88,10 +130,12 @@ pip install pandas numpy matplotlib pandas_ta statsmodels scipy tqdm
 
 ### Trading Performance
 - **Profit Factor**: Gross gains / Gross losses
-- **Total Cumulative Return**: Log return cumulative sum
+- **Total Cumulative Return**: Log return cumulative sum  
 - **Number of Trades**: Position changes in signal
 - **Max Drawdown**: Peak-to-trough decline
 - **Sharpe Ratio**: Risk-adjusted return metric
+- **Last Year Drawdown**: Maximum drawdown in final year of data
+- **Volatility**: Standard deviation of returns
 
 ### Exit Timing Analysis  
 - **Mean Exit Hour**: Average holding period
@@ -100,6 +144,12 @@ pip install pandas numpy matplotlib pandas_ta statsmodels scipy tqdm
 ### Statistical Validation
 - **Profit Factor Quantile**: Percentile rank vs random trading
 - **Drawdown Quantile**: Percentile rank vs random trading
+
+### Out-of-Sample Validation Metrics
+- **OOS Profit Factor (2023/2024)**: Performance on unseen data by year
+- **OOS Sharpe Ratio (2023/2024)**: Risk-adjusted returns on OOS data
+- **OOS Max Drawdown (2023/2024)**: Worst-case performance on OOS data
+- **IS-OOS Correlation**: Correlation between in-sample and out-of-sample metrics
 
 ## Output Files
 
@@ -157,6 +207,30 @@ The permutation testing framework:
 3. Compares algorithm performance vs random distribution
 4. Reports percentile rankings (lower = better performance)
 5. Selects top performers for visualization: highest profit factors and lowest drawdowns
+
+## Out-of-Sample Validation System
+
+### Purpose
+The OOS backtesting system validates that in-sample (2018-2022) performance generalizes to unseen market conditions. This prevents overfitting and provides realistic expectations for live trading.
+
+### Workflow
+1. **Filter Selection**: `custom_filter.py` applies multi-criteria filters to select top ~1000 pairs
+2. **OOS Testing**: `oos_backtest.py` tests selected pairs on 2023-2024 data separately
+3. **Correlation Analysis**: `rank_correlation_analysis.py` measures IS-OOS performance persistence
+4. **Strategy Selection**: Choose pairs with high IS-OOS correlation and consistent performance
+
+### Key Validation Principles
+- **Identical Algorithm**: Same CMMA calculation, signal generation, and metrics
+- **Strategy Type Consistency**: Respects long-only, short-only, or combined strategies from filtering
+- **Temporal Separation**: OOS data (2023-2024) completely separate from IS data (2018-2022)
+- **No Optimization**: Parameters never adjusted based on OOS results
+
+### Default Filter Criteria (custom_filter.py)
+- Sharpe Ratio > 1.0
+- Max Drawdown > -75%
+- Last Year Drawdown > -40%
+- Profit Factor Quantile <= 5% (top 5%)
+- Drawdown Quantile <= 5% (top 5%)
 
 ## Development Notes
 
