@@ -11,6 +11,8 @@ Saves filtered pairs for out-of-sample validation.
 
 import os
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -87,19 +89,28 @@ class PairFilter:
             print(f"      After:  {passed_count:,} pairs")
             print(f"      Failed: {failed_count:,} pairs ({failed_count/initial_count*100:.1f}%)")
         
-        # Save filtered results
-        results_dir = "results/filtered_pairs"
+        return filtered_df, filter_summary
+    
+    def save_results(self, filtered_df: pd.DataFrame, filter_summary: list, 
+                    filters: list, output_name: str, results_dir: str):
+        """Save all results including CSV, summary, and visualizations."""
+        
         os.makedirs(results_dir, exist_ok=True)
         
+        # Save filtered results CSV
         output_file = os.path.join(results_dir, f"{output_name}.csv")
         filtered_df.to_csv(output_file, index=False, float_format='%.6f')
         
-        # Create summary
+        # Create and save summary
         summary_text = self._create_summary(filter_summary, filtered_df, output_name)
         summary_file = os.path.join(results_dir, f"{output_name}_summary.txt")
         
         with open(summary_file, 'w') as f:
             f.write(summary_text)
+        
+        # Create visualizations
+        self.create_distribution_plots(filters, results_dir)
+        self.create_cumulative_returns_plot(filtered_df, results_dir)
         
         print(f"\n📊 FILTERING COMPLETE:")
         print(f"   Original pairs: {self.original_count:,}")
@@ -107,6 +118,7 @@ class PairFilter:
         print(f"   Survival rate: {len(filtered_df)/self.original_count*100:.1f}%")
         print(f"   Output file: {output_file}")
         print(f"   Summary file: {summary_file}")
+        print(f"   Visualizations saved to: {results_dir}")
         
         return filtered_df
     
@@ -150,6 +162,96 @@ class PairFilter:
                 summary += f"{row['max_drawdown']:<10.2%} {row['sharpe_ratio']:<8.2f}\n"
         
         return summary
+    
+    def create_distribution_plots(self, filters: list, results_dir: str):
+        """Create distribution plots with filter threshold lines."""
+        
+        print(f"\n📊 Creating distribution visualizations...")
+        
+        for filter_config in filters:
+            column = filter_config['column']
+            threshold = filter_config['value']
+            operator = filter_config['operator']
+            name = filter_config['name']
+            
+            # Calculate pass rate
+            if operator == '>':
+                passing_pairs = len(self.df[self.df[column] > threshold])
+            elif operator == '>=':
+                passing_pairs = len(self.df[self.df[column] >= threshold])
+            elif operator == '<':
+                passing_pairs = len(self.df[self.df[column] < threshold])
+            elif operator == '<=':
+                passing_pairs = len(self.df[self.df[column] <= threshold])
+            else:
+                continue
+            
+            pass_fraction = passing_pairs / len(self.df)
+            
+            # Create the plot
+            plt.figure(figsize=(12, 8))
+            
+            # Plot histogram
+            data = self.df[column].dropna()
+            plt.hist(data, bins=50, alpha=0.7, color='skyblue', edgecolor='black', density=True)
+            
+            # Add threshold line
+            plt.axvline(threshold, color='red', linestyle='--', linewidth=2, 
+                       label=f'Threshold: {threshold}')
+            
+            # Format title based on column type
+            if column == 'max_drawdown':
+                title = f'{column.replace("_", " ").title()} Distribution\n'
+                title += f'Fraction passing {name}: {pass_fraction:.2%} ({passing_pairs:,} pairs)'
+                plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{x:.1%}'))
+            else:
+                title = f'{column.replace("_", " ").title()} Distribution\n'
+                title += f'Fraction passing {name}: {pass_fraction:.2%} ({passing_pairs:,} pairs)'
+            
+            plt.title(title, fontsize=14, fontweight='bold')
+            plt.xlabel(column.replace('_', ' ').title())
+            plt.ylabel('Density')
+            plt.legend()
+            plt.grid(True, alpha=0.3)
+            
+            # Save the plot
+            safe_name = column.replace('_', '_')
+            plt.savefig(os.path.join(results_dir, f'{safe_name}_distribution.png'), 
+                       dpi=300, bbox_inches='tight')
+            plt.close()
+    
+    def create_cumulative_returns_plot(self, filtered_df: pd.DataFrame, results_dir: str):
+        """Create cumulative returns distribution plot for filtered pairs."""
+        
+        print(f"📈 Creating cumulative returns plot...")
+        
+        plt.figure(figsize=(12, 8))
+        
+        # Plot histogram of total cumulative returns
+        returns_data = filtered_df['total_cumulative_return'].dropna()
+        
+        plt.hist(returns_data, bins=50, alpha=0.7, color='green', edgecolor='black')
+        
+        # Add statistics lines
+        mean_return = returns_data.mean()
+        median_return = returns_data.median()
+        
+        plt.axvline(mean_return, color='red', linestyle='--', linewidth=2, 
+                   label=f'Mean: {mean_return:.2f}')
+        plt.axvline(median_return, color='orange', linestyle='--', linewidth=2,
+                   label=f'Median: {median_return:.2f}')
+        
+        plt.title(f'Total Cumulative Returns Distribution\nFiltered Pairs (N={len(filtered_df):,})', 
+                 fontsize=14, fontweight='bold')
+        plt.xlabel('Total Cumulative Return')
+        plt.ylabel('Frequency')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        
+        # Save the plot
+        plt.savefig(os.path.join(results_dir, 'filtered_pairs_cumulative_returns.png'), 
+                   dpi=300, bbox_inches='tight')
+        plt.close()
 
 
 def main():
@@ -191,7 +293,14 @@ def main():
         print(f"{i}. {f['name']}: {f['column']} {f['operator']} {f['value']}")
     
     # Apply the filters
-    result = filter_engine.apply_filters(custom_filters, "new_experiment_filtered_pairs")
+    filtered_df, filter_summary = filter_engine.apply_filters(custom_filters, "new_experiment_filtered_pairs")
+    
+    # Set the correct output directory
+    results_dir = "/Users/nikitakrasnytskyi/Desktop/IntramarketDifference/new_in_sample_out_of_sample_experiment/results/filtered_pairs"
+    
+    # Save all results including visualizations
+    result = filter_engine.save_results(filtered_df, filter_summary, custom_filters, 
+                                       "new_experiment_filtered_pairs", results_dir)
     
     if len(result) == 0:
         print("\n❌ No pairs passed the filters!")
