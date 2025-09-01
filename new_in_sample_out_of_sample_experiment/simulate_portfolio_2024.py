@@ -14,22 +14,19 @@ import json
 import argparse
 import numpy as np
 import pandas as pd
-import pandas_ta as ta
 import matplotlib.pyplot as plt
 from datetime import datetime
 from tqdm import tqdm
 from typing import Dict
+import glob
 import sys
-
-# Add parent directory to path
-sys.path.append('..')
-from trades_from_signal import get_trades_from_signal
 
 # -----------------------
 # Configuration
 # -----------------------
 OUT_OF_SAMPLE_DATA_DIR = "data/out_of_sample"
 VALIDATION_RESULTS_FILE = "results/out_of_sample/oos_validation_results.csv"
+TRADES_DIR = "results/out_of_sample/trades"
 PORTFOLIO_DIR = "portfolio_simulation"
 
 # Algorithm parameters
@@ -41,7 +38,7 @@ THRESHOLD = 0.25
 class PortfolioSimulator:
     """Simulates portfolio trading with proper budget allocation management."""
     
-    def __init__(self, initial_budget: float = 10000.0, allocation_fraction: float = 0.01):
+    def __init__(self, initial_budget: float = 1000.0, allocation_fraction: float = 0.01):
         self.initial_budget = initial_budget
         self.allocation_fraction = allocation_fraction
         
@@ -62,86 +59,58 @@ class PortfolioSimulator:
         print(f"   Maximum Concurrent Trades: {max_trades}")
         print(f"   Initial Trade Size: ${initial_budget / max_trades:,.2f}")
     
-    def load_oos_data(self, coin: str) -> pd.DataFrame:
-        """Load out-of-sample data for a coin."""
-        filepath = os.path.join(OUT_OF_SAMPLE_DATA_DIR, f"{coin}_oos.csv")
+    def load_all_saved_trades(self) -> list:
+        """Load all saved trade JSON files from the trades directory."""
         
-        if not os.path.exists(filepath):
-            return None
+        all_trades = []
+        trade_id_counter = 0  # Global counter to ensure unique trade IDs
         
-        try:
-            df = pd.read_csv(filepath, index_col=0, parse_dates=True)
-            df.columns = [c.lower() for c in df.columns]
-            return df.sort_index().dropna()
-        except Exception:
-            return None
+        # Find all trade JSON files
+        trade_files = glob.glob(os.path.join(TRADES_DIR, "**/*.json"), recursive=True)
+        
+        print(f"📂 Found {len(trade_files)} trade files to load...")
+        
+        for trade_file in tqdm(trade_files, desc="Loading trades"):
+            try:
+                with open(trade_file, 'r') as f:
+                    trades_data = json.load(f)
+                
+                # Extract trading info from filename
+                filename = os.path.basename(trade_file)
+                # Expected format: {TRADING_COIN}_{REF_COIN}_{trading_type}_trades.json
+                parts = filename.replace('_trades.json', '').split('_')
+                if len(parts) >= 3:
+                    trading_coin = parts[0]
+                    ref_coin = parts[1]
+                    trading_type = '_'.join(parts[2:])  # Handle multi-word trading types
+                    
+                    # Process each trade in the file
+                    for trade_idx, trade in enumerate(trades_data):
+                        if trade['time_entered'] and trade['time_exited'] and trade['log_return'] is not None:
+                            # Create globally unique trade ID
+                            unique_trade_id = f"{trading_coin}_{ref_coin}_{trade_id_counter:06d}"
+                            trade_id_counter += 1
+                            
+                            all_trades.append({
+                                'entry_time': pd.to_datetime(trade['time_entered']),
+                                'exit_time': pd.to_datetime(trade['time_exited']),
+                                'log_return': trade['log_return'],
+                                'trade_type': trade['trade_type'],
+                                'trading_coin': trading_coin,
+                                'ref_coin': ref_coin,
+                                'trading_strategy': trading_type,
+                                'pair_id': f"{trading_coin}_{ref_coin}",
+                                'trade_id': unique_trade_id
+                            })
+                            
+            except Exception as e:
+                print(f"⚠️  Could not load {trade_file}: {e}")
+                continue
+        
+        print(f"✅ Loaded {len(all_trades)} individual trades from {len(trade_files)} files")
+        return all_trades
     
-    def generate_trades_for_pair(self, ref_coin: str, trading_coin: str) -> pd.DataFrame:
-        """Generate all trades for a specific pair."""
-        
-        # Load data
-        ref_df = self.load_oos_data(ref_coin)
-        traded_df = self.load_oos_data(trading_coin)
-        
-        if ref_df is None or traded_df is None:
-            return pd.DataFrame()
-        
-        # Align data
-        ix = ref_df.index.intersection(traded_df.index)
-        ref_df = ref_df.loc[ix]
-        traded_df = traded_df.loc[ix]
-        
-        if len(ref_df) < 100:
-            return pd.DataFrame()
-        
-        try:
-            # Generate signals using same algorithm
-            traded_df = traded_df.copy()
-            traded_df["diff"] = np.log(traded_df["close"]).diff()
-            traded_df["next_return"] = traded_df["diff"].shift(-1)
-            
-            # CMMA indicators
-            ref_atr = ta.atr(ref_df["high"], ref_df["low"], ref_df["close"], ATR_LOOKBACK)
-            ref_ma = ref_df["close"].rolling(LOOKBACK).mean()
-            ref_cmma = (ref_df["close"] - ref_ma) / (ref_atr * LOOKBACK ** 0.5)
-            
-            trd_atr = ta.atr(traded_df["high"], traded_df["low"], traded_df["close"], ATR_LOOKBACK)
-            trd_ma = traded_df["close"].rolling(LOOKBACK).mean()
-            trd_cmma = (traded_df["close"] - trd_ma) / (trd_atr * LOOKBACK ** 0.5)
-            
-            intermarket_diff = trd_cmma - ref_cmma
-            
-            # Generate signals
-            signal = np.zeros(len(intermarket_diff))
-            position = 0
-            values = intermarket_diff.values
-            for i in range(len(values)):
-                v = values[i]
-                if not np.isnan(v):
-                    if v > THRESHOLD:
-                        position = 1
-                    if v < -THRESHOLD:
-                        position = -1
-                    if position == 1 and v <= 0:
-                        position = 0
-                    if position == -1 and v >= 0:
-                        position = 0
-                signal[i] = position
-            
-            traded_df["sig"] = signal
-            
-            # Get trades
-            long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, signal)
-            
-            # Add pair information
-            all_trades['ref_coin'] = ref_coin
-            all_trades['trading_coin'] = trading_coin
-            all_trades['pair_id'] = f"{ref_coin}_{trading_coin}"
-            
-            return all_trades
-            
-        except Exception:
-            return pd.DataFrame()
+    # Removed generate_trades_for_pair - now loading from saved JSON files
     
     def can_allocate_trade(self, trade_amount: float) -> bool:
         """Check if we can allocate a new trade."""
@@ -209,34 +178,16 @@ class PortfolioSimulator:
             'num_active_trades': len(self.active_trades)
         })
     
-    def simulate_portfolio(self, validated_pairs: pd.DataFrame) -> Dict:
-        """Run portfolio simulation on validated pairs."""
+    def simulate_portfolio(self) -> Dict:
+        """Run portfolio simulation using all saved trades."""
         
         print(f"\n🚀 Starting Portfolio Simulation")
-        print(f"📊 Processing {len(validated_pairs)} validated pairs...")
         
-        # Generate all trades from all pairs
-        all_trades_data = []
-        
-        for _, pair in tqdm(validated_pairs.iterrows(), total=len(validated_pairs), desc="Generating trades"):
-            ref_coin = pair['reference_coin']
-            trading_coin = pair['trading_coin']
-            
-            pair_trades = self.generate_trades_for_pair(ref_coin, trading_coin)
-            
-            if len(pair_trades) > 0:
-                for entry_time, trade in pair_trades.iterrows():
-                    all_trades_data.append({
-                        'entry_time': entry_time,
-                        'exit_time': trade['exit_time'],
-                        'trade_return': trade['return'],  # Use simple return
-                        'trade_type': 'long' if trade['type'] == 1 else 'short',
-                        'pair_id': trade['pair_id'],
-                        'trade_id': f"{trade['pair_id']}_{entry_time.strftime('%Y%m%d_%H%M%S')}"
-                    })
+        # Load all saved trades
+        all_trades_data = self.load_all_saved_trades()
         
         if not all_trades_data:
-            print("❌ No trades generated!")
+            print("❌ No trades loaded!")
             return {}
         
         # Create timeline of events
@@ -264,26 +215,41 @@ class PortfolioSimulator:
         trades_opened = 0
         trades_closed = 0
         trades_rejected = 0
+        trades_not_found = 0  # Track trades that couldn't be closed
         max_active_trades = 0
         
-        for event in events:
+        print(f"📊 Processing {len(events)} events...")
+        
+        for i, event in enumerate(events):
             current_time = event['timestamp']
             
             if event['type'] == 'exit':
-                trade_pnl = self.close_trade(event['trade_id'], current_time)
-                if trade_pnl != 0:
+                trade_id = event['trade_id']
+                if trade_id in self.active_trades:
+                    trade_pnl = self.close_trade(trade_id, current_time)
                     trades_closed += 1
+                else:
+                    trades_not_found += 1
+                    # Debug: log some failed closures
+                    if trades_not_found <= 5:
+                        print(f"⚠️  Trade not found for closure: {trade_id} at {current_time}")
             
             elif event['type'] == 'entry':
                 trade = event['trade']
                 
-                # Calculate trade amount
+                # Calculate trade amount based on current portfolio value
                 max_trades = int(1 / self.allocation_fraction)
                 current_portfolio_value = self.available_budget + self.allocated_budget
                 trade_amount = current_portfolio_value / max_trades
                 
                 if self.can_allocate_trade(trade_amount) and trade_amount > 0:
-                    self.open_trade(trade, trade_amount)
+                    # Convert log return to simple return for simulation
+                    # log_return to simple return: exp(log_return) - 1
+                    simple_return = np.exp(trade['log_return']) - 1
+                    trade_with_simple_return = trade.copy()
+                    trade_with_simple_return['trade_return'] = simple_return
+                    
+                    self.open_trade(trade_with_simple_return, trade_amount)
                     trades_opened += 1
                 else:
                     trades_rejected += 1
@@ -291,6 +257,16 @@ class PortfolioSimulator:
             # Update tracking
             max_active_trades = max(max_active_trades, len(self.active_trades))
             self.update_portfolio_tracking(current_time)
+            
+            # Progress tracking
+            if i % 10000 == 0:
+                print(f"   Processed {i:,} events. Active trades: {len(self.active_trades)}")
+        
+        # Final active trades check
+        if len(self.active_trades) > 0:
+            print(f"⚠️  {len(self.active_trades)} trades never closed:")
+            for trade_id, trade_info in list(self.active_trades.items())[:5]:  # Show first 5
+                print(f"     {trade_id}: opened {trade_info['entry_time']}")
         
         # Calculate final metrics
         final_pnl = self.total_portfolio_value - self.initial_budget
@@ -300,11 +276,15 @@ class PortfolioSimulator:
         print(f"   Trades Opened: {trades_opened}")
         print(f"   Trades Closed: {trades_closed}")
         print(f"   Trades Rejected: {trades_rejected}")
+        print(f"   Trades Not Found (couldn't close): {trades_not_found}")
+        print(f"   Still Active: {len(self.active_trades)}")
         print(f"   Maximum Active Trades: {max_active_trades}")
         print(f"   Theoretical Max: {int(1/self.allocation_fraction)}")
         print(f"   Final Portfolio Value: ${self.total_portfolio_value:,.2f}")
         print(f"   Total P&L: ${final_pnl:,.2f}")
         print(f"   Total Return: {total_return:.2%}")
+        print(f"\n🔍 DEBUG INFO:")
+        print(f"   Trade Match Rate: {trades_closed / (trades_closed + trades_not_found) * 100:.1f}%" if (trades_closed + trades_not_found) > 0 else "   No trades to match")
         
         return self.calculate_metrics()
     
@@ -434,8 +414,8 @@ def main():
     """Main execution function."""
     
     parser = argparse.ArgumentParser(description='Portfolio Simulation for 2024 OOS Data')
-    parser.add_argument('--initial_budget', type=float, default=10000.0,
-                       help='Initial portfolio budget (default: 10000)')
+    parser.add_argument('--initial_budget', type=float, default=1000.0,
+                       help='Initial portfolio budget (default: 1000)')
     parser.add_argument('--allocation_fraction', type=float, default=0.01,
                        help='Allocation fraction per trade (default: 0.01)')
     
@@ -447,14 +427,19 @@ def main():
     # Create output directory
     os.makedirs(PORTFOLIO_DIR, exist_ok=True)
     
-    # Load validated pairs
-    if not os.path.exists(VALIDATION_RESULTS_FILE):
-        print(f"❌ Validation results not found: {VALIDATION_RESULTS_FILE}")
-        print("Run run_out_of_sample_validation.py first.")
+    # Check that trades directory exists
+    if not os.path.exists(TRADES_DIR):
+        print(f"❌ Trades directory not found: {TRADES_DIR}")
+        print("Run run_out_of_sample_validation.py first to generate trades.")
         return
     
-    validated_pairs = pd.read_csv(VALIDATION_RESULTS_FILE)
-    print(f"📊 Loaded {len(validated_pairs)} validated pairs")
+    trade_files = glob.glob(os.path.join(TRADES_DIR, "**/*.json"), recursive=True)
+    if not trade_files:
+        print(f"❌ No trade files found in: {TRADES_DIR}")
+        print("Run run_out_of_sample_validation.py first to generate trades.")
+        return
+    
+    print(f"📊 Found {len(trade_files)} trade files to simulate")
     
     # Initialize simulator
     simulator = PortfolioSimulator(
@@ -464,7 +449,7 @@ def main():
     
     try:
         # Run simulation
-        metrics = simulator.simulate_portfolio(validated_pairs)
+        metrics = simulator.simulate_portfolio()
         
         # Save metrics
         with open(os.path.join(PORTFOLIO_DIR, 'portfolio_metrics.json'), 'w') as f:

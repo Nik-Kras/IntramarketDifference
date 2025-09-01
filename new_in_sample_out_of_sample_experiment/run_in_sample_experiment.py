@@ -15,12 +15,17 @@ import glob
 import json
 import numpy as np
 import pandas as pd
-import pandas_ta as ta
-import statsmodels.api as sm
 import matplotlib.pyplot as plt
-from itertools import permutations
 from tqdm import tqdm
 import sys
+
+# Import core trading functions
+from core import (
+    cmma, threshold_revert_signal, load_csv_with_cache, align_frames,
+    calculate_metrics_from_trades, calculate_max_drawdown, run_pair_backtest_core,
+    generate_equity_curve_from_trades as core_generate_equity_curve, get_available_coins, create_trade_record,
+    LOOKBACK, ATR_LOOKBACK, THRESHOLD, MIN_OVERLAP
+)
 
 # Add parent directory to path to import trading functions
 sys.path.append('..')
@@ -34,183 +39,25 @@ RESULTS_DIR = "results/in_sample"
 TRADES_DIR = os.path.join(RESULTS_DIR, "trades")
 DISTRIBUTIONS_DIR = os.path.join(RESULTS_DIR, "distributions")
 
-# Algorithm parameters (same as original)
-LOOKBACK = 24               # MA window for cmma
-ATR_LOOKBACK = 168          # ATR window for cmma
-THRESHOLD = 0.25            # signal threshold
-MIN_OVERLAP = 500           # skip pairs with tiny overlap
+# Algorithm parameters imported from core
+# LOOKBACK, ATR_LOOKBACK, THRESHOLD, MIN_OVERLAP are now imported from core.py
 
 # Output files
 OUT_CSV = os.path.join(RESULTS_DIR, "in_sample_results.csv")
 
 
 # -----------------------
-# Trading Algorithm (Identical to original)
+# Trading Algorithm (imported from core.py)
 # -----------------------
-def cmma(ohlc: pd.DataFrame, lookback: int, atr_lookback: int = 168) -> pd.Series:
-    """Close-minus-MA normalized by ATR * sqrt(L)."""
-    atr = ta.atr(ohlc["high"], ohlc["low"], ohlc["close"], atr_lookback)
-    ma = ohlc["close"].rolling(lookback).mean()
-    ind = (ohlc["close"] - ma) / (atr * lookback ** 0.5)
-    return ind
-
-
-def threshold_revert_signal(ind: pd.Series, threshold: float) -> np.ndarray:
-    """Generate mean reversion signals based on threshold crossings."""
-    signal = np.zeros(len(ind))
-    position = 0
-    values = ind.values
-    for i in range(len(values)):
-        v = values[i]
-        if not np.isnan(v):
-            if v > threshold:
-                position = 1
-            if v < -threshold:
-                position = -1
-            if position == 1 and v <= 0:
-                position = 0
-            if position == -1 and v >= 0:
-                position = 0
-        signal[i] = position
-    return signal
+# cmma() and threshold_revert_signal() functions are now imported from core.py
 
 
 def load_in_sample_csv(coin: str) -> pd.DataFrame:
     """Load in-sample CSV file for a coin with caching."""
-    # Check cache first
-    if coin in _data_cache:
-        return _data_cache[coin]
-    
-    filepath = os.path.join(DATA_DIR, f"{coin}_is.csv")
-    
-    if not os.path.exists(filepath):
-        return None
-    
-    try:
-        df = pd.read_csv(filepath, index_col=0, parse_dates=True)
-        df.columns = [c.lower() for c in df.columns]
-        
-        # Ensure required columns
-        required_cols = ["high", "low", "close"]
-        for col in required_cols:
-            if col not in df.columns:
-                return None
-        
-        df = df.sort_index().dropna()
-        
-        # Cache the loaded data
-        _data_cache[coin] = df
-        
-        return df
-        
-    except Exception:
-        return None
+    return load_csv_with_cache(coin, DATA_DIR, "is", _data_cache)
 
 
-def align_frames(a: pd.DataFrame, b: pd.DataFrame) -> tuple:
-    """Align two dataframes by common index."""
-    ix = a.index.intersection(b.index)
-    return a.loc[ix].copy(), b.loc[ix].copy()
-
-
-def calculate_metrics_from_trades(trades_df: pd.DataFrame, data_points: int) -> dict:
-    """
-    Calculate performance metrics from trade DataFrame.
-    """
-    if len(trades_df) == 0:
-        return {
-            'total_cumulative_return': 0.0,
-            'profit_factor': 0.0,
-            'max_drawdown': 0.0,
-            'last_year_drawdown': 0.0,
-            'sharpe_ratio': 0.0,
-            'volatility': 0.0,
-            'num_trades': 0,
-            'data_points': data_points
-        }
-    
-    # Convert trades to returns series
-    trade_returns = []
-    trade_times = []
-    
-    for _, trade in trades_df.iterrows():
-        if pd.notna(trade['exit_price']) and pd.notna(trade['entry_price']):
-            if trade['type'] == 1:  # Long trade
-                log_return = np.log(trade['exit_price'] / trade['entry_price'])
-            else:  # Short trade
-                log_return = np.log(trade['entry_price'] / trade['exit_price'])
-            
-            trade_returns.append(log_return)
-            trade_times.append(trade['exit_time'])
-    
-    if len(trade_returns) == 0:
-        return {
-            'total_cumulative_return': 0.0,
-            'profit_factor': 0.0,
-            'max_drawdown': 0.0,
-            'last_year_drawdown': 0.0,
-            'sharpe_ratio': 0.0,
-            'volatility': 0.0,
-            'num_trades': 0,
-            'data_points': data_points
-        }
-    
-    # Create returns series
-    returns_series = pd.Series(trade_returns, index=trade_times)
-    returns_series = returns_series.sort_index().replace([np.inf, -np.inf], np.nan).dropna()
-    
-    if len(returns_series) == 0:
-        return {
-            'total_cumulative_return': 0.0,
-            'profit_factor': 0.0,
-            'max_drawdown': 0.0,
-            'last_year_drawdown': 0.0,
-            'sharpe_ratio': 0.0,
-            'volatility': 0.0,
-            'num_trades': 0,
-            'data_points': data_points
-        }
-    
-    # Calculate metrics - total_cumulative_return based on equity curve
-    # Equity curve: starting from $1000 (same as plots), final value after all trades
-    initial_budget = 1000.0
-    portfolio_values = initial_budget * np.exp(returns_series.cumsum())
-    total_return = portfolio_values.iloc[-1] / initial_budget
-    
-    # Profit factor
-    gains = returns_series[returns_series > 0].sum()
-    losses = returns_series[returns_series < 0].sum()
-    profit_factor = gains / abs(losses) if losses < 0 else np.inf if gains > 0 else 0
-    
-    # Max drawdown
-    max_drawdown = calculate_max_drawdown(returns_series)
-    
-    # Last year drawdown (last 25% of data)
-    last_quarter_start = int(len(returns_series) * 0.75)
-    last_quarter_rets = returns_series.iloc[last_quarter_start:]
-    if len(last_quarter_rets) > 0:
-        last_year_drawdown = calculate_max_drawdown(last_quarter_rets)
-    else:
-        last_year_drawdown = 0
-    
-    # Sharpe ratio (assuming trades are roughly daily frequency)
-    # Use conservative estimate of trade frequency for annualization
-    trade_frequency = max(1, len(returns_series) * 365 / (data_points / 24))  # Convert hourly data points to days
-    sharpe_ratio = returns_series.mean() / returns_series.std() * np.sqrt(trade_frequency) if returns_series.std() > 0 else 0
-    
-    # Volatility (annualized)
-    volatility = returns_series.std() * np.sqrt(trade_frequency)
-    
-    return {
-        'total_cumulative_return': total_return,
-        'profit_factor': profit_factor,
-        'max_drawdown': max_drawdown,
-        'last_year_drawdown': last_year_drawdown,
-        'sharpe_ratio': sharpe_ratio,
-        'volatility': volatility,
-        'num_trades': len(returns_series),
-        'data_points': data_points
-    }
+# calculate_metrics_from_trades() function is now imported from core.py
 
 
 def run_pair_backtest(ref_coin: str, trading_coin: str) -> list:
@@ -223,68 +70,8 @@ def run_pair_backtest(ref_coin: str, trading_coin: str) -> list:
     ref_df = load_in_sample_csv(ref_coin)
     traded_df = load_in_sample_csv(trading_coin)
     
-    if ref_df is None or traded_df is None:
-        return []
-    
-    # Align data
-    ref_df, traded_df = align_frames(ref_df, traded_df)
-    
-    if len(ref_df) < MIN_OVERLAP:
-        return []
-    
-    try:
-        # Calculate returns
-        traded_df = traded_df.copy()
-        traded_df["diff"] = np.log(traded_df["close"]).diff()
-        traded_df["next_return"] = traded_df["diff"].shift(-1)
-        
-        # Calculate CMMA indicators
-        ref_cmma = cmma(ref_df, LOOKBACK, ATR_LOOKBACK)
-        trd_cmma = cmma(traded_df, LOOKBACK, ATR_LOOKBACK)
-        intermarket_diff = trd_cmma - ref_cmma
-        
-        # Generate signal
-        traded_df["sig"] = threshold_revert_signal(intermarket_diff, THRESHOLD)
-        
-        # Get detailed trades
-        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
-        
-        data_points = len(traded_df)
-        
-        # Calculate metrics for each trading type
-        results = []
-        
-        # 1. Both longs and shorts
-        both_metrics = calculate_metrics_from_trades(all_trades, data_points)
-        both_metrics.update({
-            'reference_coin': ref_coin,
-            'trading_coin': trading_coin,
-            'trading_type': 'both'
-        })
-        results.append(both_metrics)
-        
-        # 2. Longs only
-        longs_metrics = calculate_metrics_from_trades(long_trades, data_points)
-        longs_metrics.update({
-            'reference_coin': ref_coin,
-            'trading_coin': trading_coin,
-            'trading_type': 'longs'
-        })
-        results.append(longs_metrics)
-        
-        # 3. Shorts only
-        shorts_metrics = calculate_metrics_from_trades(short_trades, data_points)
-        shorts_metrics.update({
-            'reference_coin': ref_coin,
-            'trading_coin': trading_coin,
-            'trading_type': 'shorts'
-        })
-        results.append(shorts_metrics)
-        
-        return results
-        
-    except Exception:
-        return []
+    # Use core backtesting function
+    return run_pair_backtest_core(ref_df, traded_df, ref_coin, trading_coin, MIN_OVERLAP)
 
 
 def save_detailed_trades(ref_coin: str, trading_coin: str, trading_type: str):
@@ -335,16 +122,11 @@ def save_detailed_trades(ref_coin: str, trading_coin: str, trading_type: str):
             else:  # Short trade  
                 log_return = np.log(trade['entry_price'] / trade['exit_price'])
             
-            trade_record = {
-                'time_entered': entry_time.isoformat() if pd.notna(entry_time) else None,
-                'time_exited': trade['exit_time'].isoformat() if pd.notna(trade['exit_time']) else None,
-                'log_return': float(log_return) if pd.notna(log_return) else None,
-                'trade_type': 'long' if trade['type'] == 1 else 'short'
-            }
+            trade_record = create_trade_record(trade, entry_time)
             trades_data.append(trade_record)
         
         # Save to JSON
-        trades_file = os.path.join(trade_dir, f"{ref_coin}_{trading_coin}_{trading_type}_trades.json")
+        trades_file = os.path.join(trade_dir, f"{trading_coin}_{ref_coin}_{trading_type}_trades.json")
         with open(trades_file, 'w') as f:
             json.dump(trades_data, f, indent=2)
             
@@ -352,10 +134,10 @@ def save_detailed_trades(ref_coin: str, trading_coin: str, trading_type: str):
         pass
 
 
-def generate_equity_curve_from_trades(ref_coin: str, trading_coin: str, trading_type: str = 'both') -> pd.Series:
-    """Generate equity curve from saved trade data."""
+def load_trades_and_generate_equity_curve(ref_coin: str, trading_coin: str, trading_type: str = 'both') -> pd.Series:
+    """Load trade data from JSON and generate equity curve."""
     
-    trades_file = os.path.join(TRADES_DIR, trading_coin, f"{ref_coin}_{trading_coin}_{trading_type}_trades.json")
+    trades_file = os.path.join(TRADES_DIR, trading_coin, f"{trading_coin}_{ref_coin}_{trading_type}_trades.json")
     
     if not os.path.exists(trades_file):
         # Try to generate trades if not saved yet
@@ -371,48 +153,37 @@ def generate_equity_curve_from_trades(ref_coin: str, trading_coin: str, trading_
         if not trades_data:
             return None
         
-        # Convert to DataFrame for easier processing
+        # Convert to DataFrame for core function
         trades_list = []
         for trade in trades_data:
             if trade['time_exited'] and trade['log_return'] is not None:
+                # Create proper format for core function
                 trades_list.append({
                     'exit_time': pd.to_datetime(trade['time_exited']),
-                    'log_return': trade['log_return']
+                    'entry_price': 100.0,  # Dummy value - log_return is already calculated
+                    'exit_price': 100.0 * np.exp(trade['log_return']),  # Reconstruct from log return
+                    'type': 1 if trade['trade_type'] == 'long' else -1
                 })
         
         if not trades_list:
             return None
         
-        trades_df = pd.DataFrame(trades_list)
-        trades_df = trades_df.sort_values('exit_time')
+        # Convert to DataFrame and call core function
+        trades_df = pd.DataFrame(trades_list).set_index('exit_time')
+        equity_curve = core_generate_equity_curve(trades_df)
         
-        # Create time series of returns
-        equity_series = pd.Series(trades_df['log_return'].values, 
-                                 index=trades_df['exit_time'], 
-                                 name='log_return')
-        
-        return equity_series
+        return equity_curve
         
     except Exception:
         return None
 
 
-def calculate_max_drawdown(cumulative_returns: pd.Series) -> float:
-    """Calculate maximum drawdown from cumulative returns."""
-    if len(cumulative_returns) == 0:
-        return np.nan
-    
-    cumulative = np.exp(cumulative_returns.cumsum())
-    peak = cumulative.cummax()
-    drawdown = (cumulative - peak) / peak
-    return float(drawdown.min())
+# calculate_max_drawdown() function is now imported from core.py
 
 
-def get_available_coins() -> list:
+def get_available_in_sample_coins() -> list:
     """Get list of available coins from in-sample data."""
-    files = glob.glob(os.path.join(DATA_DIR, "*_is.csv"))
-    coins = [os.path.basename(f).replace("_is.csv", "") for f in files]
-    return sorted(coins)
+    return get_available_coins(DATA_DIR, "is")
 
 
 # Global cache for loaded data to avoid repeated file I/O
@@ -489,15 +260,25 @@ def create_distribution_plots(results_df: pd.DataFrame):
             
             # Generate real equity curves from trades
             plt.figure(figsize=(15, 10))
+            curves_plotted = 0
             for _, row in top_performers.iterrows():
                 ref_coin = row['reference_coin']
-                equity_curve = generate_equity_curve_from_trades(ref_coin, trading_coin, trading_type)
-                if equity_curve is not None and len(equity_curve) > 0:
-                    # Plot the equity curve starting from $1000
-                    portfolio_values = 1000 * np.exp(equity_curve.cumsum())
-                    plt.plot(equity_curve.index, portfolio_values, 
-                            label=f"{ref_coin} (PF: {row['profit_factor']:.2f})", 
-                            linewidth=2, alpha=0.8)
+                
+                # Use the corrected function to load trades and generate equity curve
+                try:
+                    equity_curve = load_trades_and_generate_equity_curve(ref_coin, trading_coin, trading_type)
+                    if equity_curve is not None and len(equity_curve) > 0:
+                        plt.plot(equity_curve.index, equity_curve, 
+                                label=f"{ref_coin} (PF: {row['profit_factor']:.2f})", 
+                                linewidth=2, alpha=0.8)
+                        curves_plotted += 1
+                except Exception:
+                    continue
+            
+            # Only save if we have at least one curve to plot
+            if curves_plotted == 0:
+                plt.close()
+                continue
             
             plt.title(f'Top 10 Performers Equity Curves - {trading_coin} ({trading_type})')
             plt.xlabel('Date')
@@ -551,7 +332,7 @@ def main():
     os.makedirs(TRADES_DIR, exist_ok=True)
     
     # Get available coins
-    coins = get_available_coins()
+    coins = get_available_in_sample_coins()
     
     if not coins:
         print("❌ No coin data found in data/in_sample directory!")

@@ -14,10 +14,17 @@ import os
 import json
 import numpy as np
 import pandas as pd
-import pandas_ta as ta
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
+
+# Import core trading functions
+from core import (
+    cmma, threshold_revert_signal, load_csv_with_cache, align_frames,
+    calculate_metrics_from_trades, calculate_max_drawdown, run_single_trading_type_backtest,
+    generate_equity_curve_from_trades, get_available_coins, create_trade_record,
+    LOOKBACK, ATR_LOOKBACK, THRESHOLD
+)
 
 # Add parent directory to path to import trading functions
 sys.path.append('..')
@@ -30,12 +37,11 @@ IN_SAMPLE_DATA_DIR = "data/in_sample"
 OUT_OF_SAMPLE_DATA_DIR = "data/out_of_sample"
 FILTERED_PAIRS_FILE = "results/filtered_pairs/new_experiment_filtered_pairs.csv"
 RESULTS_DIR = "results/out_of_sample"
+TRADES_DIR = os.path.join(RESULTS_DIR, "trades")
 FIGURES_DIR = "results/pair_figures"
 
-# Algorithm parameters (same as in-sample)
-LOOKBACK = 24
-ATR_LOOKBACK = 168
-THRESHOLD = 0.25
+# Algorithm parameters imported from core
+# LOOKBACK, ATR_LOOKBACK, THRESHOLD are now imported from core.py
 MIN_OVERLAP = 100  # Lower threshold for 1-year data
 
 # Output file
@@ -43,74 +49,83 @@ OUT_CSV = os.path.join(RESULTS_DIR, "oos_validation_results.csv")
 
 
 # -----------------------
-# Trading Algorithm (Identical)
+# Trading Algorithm (imported from core.py)
 # -----------------------
-def cmma(ohlc: pd.DataFrame, lookback: int, atr_lookback: int = 168) -> pd.Series:
-    """Close-minus-MA normalized by ATR * sqrt(L)."""
-    atr = ta.atr(ohlc["high"], ohlc["low"], ohlc["close"], atr_lookback)
-    ma = ohlc["close"].rolling(lookback).mean()
-    ind = (ohlc["close"] - ma) / (atr * lookback ** 0.5)
-    return ind
-
-
-def threshold_revert_signal(ind: pd.Series, threshold: float) -> np.ndarray:
-    """Generate mean reversion signals based on threshold crossings."""
-    signal = np.zeros(len(ind))
-    position = 0
-    values = ind.values
-    for i in range(len(values)):
-        v = values[i]
-        if not np.isnan(v):
-            if v > threshold:
-                position = 1
-            if v < -threshold:
-                position = -1
-            if position == 1 and v <= 0:
-                position = 0
-            if position == -1 and v >= 0:
-                position = 0
-        signal[i] = position
-    return signal
+# cmma() and threshold_revert_signal() functions are now imported from core.py
 
 
 def load_csv_data(coin: str, data_type: str) -> pd.DataFrame:
     """Load CSV file for a coin (in_sample or out_of_sample)."""
     
     if data_type == "in_sample":
-        filepath = os.path.join(IN_SAMPLE_DATA_DIR, f"{coin}_is.csv")
+        return load_csv_with_cache(coin, IN_SAMPLE_DATA_DIR, "is", {})
     elif data_type == "out_of_sample":
-        filepath = os.path.join(OUT_OF_SAMPLE_DATA_DIR, f"{coin}_oos.csv")
+        return load_csv_with_cache(coin, OUT_OF_SAMPLE_DATA_DIR, "oos", {})
     else:
         raise ValueError("data_type must be 'in_sample' or 'out_of_sample'")
+
+
+# calculate_metrics_from_trades() and calculate_max_drawdown() functions are now imported from core.py
+
+
+def save_oos_detailed_trades(ref_coin: str, trading_coin: str, trading_type: str):
+    """Save detailed OOS trade data for a pair and trading type."""
     
-    if not os.path.exists(filepath):
-        return None
+    ref_df = load_csv_data(ref_coin, "out_of_sample")
+    traded_df = load_csv_data(trading_coin, "out_of_sample")
+    
+    if ref_df is None or traded_df is None:
+        return
+    
+    ref_df, traded_df = align_frames(ref_df, traded_df)
+    
+    if len(ref_df) < MIN_OVERLAP:
+        return
     
     try:
-        df = pd.read_csv(filepath, index_col=0, parse_dates=True)
-        df.columns = [c.lower() for c in df.columns]
+        # Generate signals and trades
+        traded_df = traded_df.copy()
+        traded_df["diff"] = np.log(traded_df["close"]).diff()
+        traded_df["next_return"] = traded_df["diff"].shift(-1)
         
-        # Ensure required columns
-        required_cols = ["high", "low", "close"]
-        for col in required_cols:
-            if col not in df.columns:
-                return None
+        ref_cmma = cmma(ref_df, LOOKBACK, ATR_LOOKBACK)
+        trd_cmma = cmma(traded_df, LOOKBACK, ATR_LOOKBACK)
+        intermarket_diff = trd_cmma - ref_cmma
+        traded_df["sig"] = threshold_revert_signal(intermarket_diff, THRESHOLD)
         
-        return df.sort_index().dropna()
+        # Get trades
+        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
         
+        # Select trades based on trading type
+        if trading_type == 'longs':
+            selected_trades = long_trades
+        elif trading_type == 'shorts':
+            selected_trades = short_trades
+        else:  # 'both'
+            selected_trades = all_trades
+        
+        # Save trades JSON
+        trade_dir = os.path.join(TRADES_DIR, trading_coin)
+        os.makedirs(trade_dir, exist_ok=True)
+        
+        trades_data = []
+        for entry_time, trade in selected_trades.iterrows():
+            trade_record = create_trade_record(trade, entry_time)
+            trades_data.append(trade_record)
+        
+        # Save to JSON
+        trades_file = os.path.join(trade_dir, f"{trading_coin}_{ref_coin}_{trading_type}_trades.json")
+        with open(trades_file, 'w') as f:
+            json.dump(trades_data, f, indent=2)
+            
     except Exception:
-        return None
-
-
-def align_frames(a: pd.DataFrame, b: pd.DataFrame) -> tuple:
-    """Align two dataframes by common index."""
-    ix = a.index.intersection(b.index)
-    return a.loc[ix].copy(), b.loc[ix].copy()
+        pass
 
 
 def run_oos_validation(ref_coin: str, trading_coin: str, in_sample_metrics: dict) -> dict:
     """
     Run out-of-sample validation for a single pair.
+    Now uses core functions for consistency and saves trades.
     
     Args:
         ref_coin: Reference coin symbol
@@ -125,88 +140,45 @@ def run_oos_validation(ref_coin: str, trading_coin: str, in_sample_metrics: dict
     ref_df = load_csv_data(ref_coin, "out_of_sample")
     traded_df = load_csv_data(trading_coin, "out_of_sample")
     
-    if ref_df is None or traded_df is None:
+    # Use trading type from in-sample metrics if available
+    trading_type = in_sample_metrics['trading_type']
+    
+    # Use core function for backtesting
+    oos_metrics = run_single_trading_type_backtest(ref_df, traded_df, ref_coin, trading_coin, trading_type, MIN_OVERLAP)
+    
+    if oos_metrics is None:
         return None
     
-    # Align data
-    ref_df, traded_df = align_frames(ref_df, traded_df)
+    # Save detailed trades
+    save_oos_detailed_trades(ref_coin, trading_coin, trading_type)
     
-    if len(ref_df) < MIN_OVERLAP:
-        return None
+    # Combine with in-sample metrics
+    result = {
+        'reference_coin': ref_coin,
+        'trading_coin': trading_coin,
+        'trading_type': trading_type,
+        
+        # In-sample metrics (prefixed with is_)
+        'is_total_cumulative_return': in_sample_metrics.get('total_cumulative_return', 0.0),
+        'is_profit_factor': in_sample_metrics.get('profit_factor', 0.0),
+        'is_max_drawdown': in_sample_metrics.get('max_drawdown', 0.0),
+        'is_last_year_drawdown': in_sample_metrics.get('last_year_drawdown', 0.0),
+        'is_sharpe_ratio': in_sample_metrics.get('sharpe_ratio', 0.0),
+        'is_volatility': in_sample_metrics.get('volatility', 0.0),
+        'is_num_trades': in_sample_metrics.get('num_trades', 0),
+        
+        # Out-of-sample metrics (prefixed with oos_)
+        'oos_total_cumulative_return': oos_metrics['total_cumulative_return'],
+        'oos_profit_factor': oos_metrics['profit_factor'],
+        'oos_max_drawdown': oos_metrics['max_drawdown'],
+        'oos_last_year_drawdown': oos_metrics['last_year_drawdown'],
+        'oos_sharpe_ratio': oos_metrics['sharpe_ratio'],
+        'oos_volatility': oos_metrics['volatility'],
+        'oos_num_trades': oos_metrics['num_trades'],
+        'oos_data_points': oos_metrics['data_points']
+    }
     
-    try:
-        # Calculate returns
-        traded_df = traded_df.copy()
-        traded_df["diff"] = np.log(traded_df["close"]).diff()
-        traded_df["next_return"] = traded_df["diff"].shift(-1)
-        
-        # Calculate CMMA indicators
-        ref_cmma = cmma(ref_df, LOOKBACK, ATR_LOOKBACK)
-        trd_cmma = cmma(traded_df, LOOKBACK, ATR_LOOKBACK)
-        intermarket_diff = trd_cmma - ref_cmma
-        
-        # Generate signal
-        traded_df["sig"] = threshold_revert_signal(intermarket_diff, THRESHOLD)
-        
-        # Calculate returns
-        rets = traded_df["sig"] * traded_df["next_return"]
-        rets = rets.replace([np.inf, -np.inf], np.nan).dropna()
-        
-        if len(rets) == 0:
-            return None
-        
-        # Get detailed trades
-        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
-        
-        # Calculate OOS metrics
-        total_return = rets.sum()
-        
-        # Profit factor
-        gains = rets[rets > 0].sum()
-        losses = rets[rets < 0].sum()
-        profit_factor = gains / abs(losses) if losses < 0 else np.inf if gains > 0 else 0
-        
-        # Max drawdown
-        cumulative = rets.cumsum()
-        running_max = cumulative.cummax()
-        drawdown = cumulative - running_max
-        max_drawdown = drawdown.min()
-        
-        # Sharpe ratio
-        sharpe_ratio = rets.mean() / rets.std() * np.sqrt(8760) if rets.std() > 0 else 0  # Hourly data
-        
-        # Volatility
-        volatility = rets.std() * np.sqrt(8760)  # Annualized
-        
-        # Number of trades
-        num_trades = len(all_trades)
-        
-        # Combine with in-sample metrics
-        result = {
-            'reference_coin': ref_coin,
-            'trading_coin': trading_coin,
-            
-            # In-sample metrics (prefixed with is_)
-            'is_total_cumulative_return': in_sample_metrics['total_cumulative_return'],
-            'is_profit_factor': in_sample_metrics['profit_factor'],
-            'is_max_drawdown': in_sample_metrics['max_drawdown'],
-            'is_sharpe_ratio': in_sample_metrics['sharpe_ratio'],
-            'is_num_trades': in_sample_metrics['num_trades'],
-            
-            # Out-of-sample metrics (prefixed with oos_)
-            'oos_total_cumulative_return': total_return,
-            'oos_profit_factor': profit_factor,
-            'oos_max_drawdown': max_drawdown,
-            'oos_sharpe_ratio': sharpe_ratio,
-            'oos_volatility': volatility,
-            'oos_num_trades': num_trades,
-            'oos_data_points': len(rets)
-        }
-        
-        return result
-        
-    except Exception as e:
-        return None
+    return result
 
 
 def create_pair_visualizations(ref_coin: str, trading_coin: str, in_sample_metrics: dict):
@@ -219,14 +191,23 @@ def create_pair_visualizations(ref_coin: str, trading_coin: str, in_sample_metri
     if ref_df is None or traded_df is None:
         return
     
-    # Align data
-    ref_df, traded_df = align_frames(ref_df, traded_df)
+    # Use trading type from in-sample metrics
+    trading_type = in_sample_metrics.get('trading_type', 'both')
     
-    if len(ref_df) < MIN_OVERLAP:
+    # Use core function to get trades and metrics
+    oos_metrics = run_single_trading_type_backtest(ref_df, traded_df, ref_coin, trading_coin, trading_type, MIN_OVERLAP)
+    
+    if oos_metrics is None:
         return
     
     try:
-        # Generate signals and returns
+        # Re-run the core logic to get trade data for visualization
+        ref_df, traded_df = align_frames(ref_df, traded_df)
+        
+        if len(ref_df) < MIN_OVERLAP:
+            return
+        
+        # Calculate signals
         traded_df = traded_df.copy()
         traded_df["diff"] = np.log(traded_df["close"]).diff()
         traded_df["next_return"] = traded_df["diff"].shift(-1)
@@ -236,28 +217,38 @@ def create_pair_visualizations(ref_coin: str, trading_coin: str, in_sample_metri
         intermarket_diff = trd_cmma - ref_cmma
         traded_df["sig"] = threshold_revert_signal(intermarket_diff, THRESHOLD)
         
-        rets = traded_df["sig"] * traded_df["next_return"]
-        rets = rets.replace([np.inf, -np.inf], np.nan).dropna()
+        # Get detailed trades
+        long_trades, short_trades, all_trades = get_trades_from_signal(traded_df, traded_df["sig"].values)
         
-        if len(rets) == 0:
+        # Select trades based on trading type
+        if trading_type == 'longs':
+            selected_trades = long_trades
+        elif trading_type == 'shorts':
+            selected_trades = short_trades
+        else:  # 'both'
+            selected_trades = all_trades
+        
+        if len(selected_trades) == 0:
             return
         
-        # Calculate equity curve
-        cumulative_returns = rets.cumsum()
-        equity_curve = np.exp(cumulative_returns) * 1000  # Start with $1000
+        # Generate equity curve using core function
+        portfolio_values = generate_equity_curve_from_trades(selected_trades, 1000.0)
+        
+        if portfolio_values is None or len(portfolio_values) == 0:
+            return
         
         # Calculate drawdown
-        running_max = equity_curve.cummax()
-        drawdown = (equity_curve - running_max) / running_max
+        running_max = portfolio_values.cummax()
+        drawdown = (portfolio_values - running_max) / running_max
         
         # Create pair directory
-        pair_name = f"{ref_coin}_{trading_coin}"
+        pair_name = f"{trading_coin}_{ref_coin}"
         pair_dir = os.path.join(FIGURES_DIR, pair_name)
         os.makedirs(pair_dir, exist_ok=True)
         
         # 1. Equity Curve
         plt.figure(figsize=(15, 8))
-        plt.plot(equity_curve.index, equity_curve.values, linewidth=1.5, color='blue')
+        plt.plot(portfolio_values.index, portfolio_values.values, linewidth=1.5, color='blue')
         plt.axhline(y=1000, color='red', linestyle='--', alpha=0.7, label='Initial Capital')
         plt.title(f'Out-of-Sample Equity Curve: {trading_coin} (ref: {ref_coin})', fontsize=16)
         plt.xlabel('Date', fontsize=12)
@@ -296,12 +287,13 @@ def create_pair_visualizations(ref_coin: str, trading_coin: str, in_sample_metri
             },
             'in_sample_metrics': in_sample_metrics,
             'oos_metrics': {
-                'total_cumulative_return': float(cumulative_returns.iloc[-1]),
-                'profit_factor': float(rets[rets > 0].sum() / abs(rets[rets < 0].sum())) if rets[rets < 0].sum() < 0 else float('inf'),
+                'total_cumulative_return': float(portfolio_values.iloc[-1] / 1000),  # Portfolio return ratio
+                'profit_factor': oos_metrics['profit_factor'],
                 'max_drawdown': float(drawdown.min()),
-                'sharpe_ratio': float(rets.mean() / rets.std() * np.sqrt(8760)) if rets.std() > 0 else 0,
-                'num_trades': len(rets[rets != 0]),
-                'final_portfolio_value': float(equity_curve.iloc[-1])
+                'sharpe_ratio': oos_metrics['sharpe_ratio'],
+                'num_trades': oos_metrics['num_trades'],
+                'final_portfolio_value': float(portfolio_values.iloc[-1]),
+                'trading_type': trading_type
             }
         }
         
@@ -321,6 +313,7 @@ def main():
     
     # Create output directories
     os.makedirs(RESULTS_DIR, exist_ok=True)
+    os.makedirs(TRADES_DIR, exist_ok=True)
     os.makedirs(FIGURES_DIR, exist_ok=True)
     
     # Load filtered pairs
@@ -343,13 +336,16 @@ def main():
         ref_coin = pair['reference_coin']
         trading_coin = pair['trading_coin']
         
-        # Prepare in-sample metrics
+        # Prepare in-sample metrics (include all available fields)
         in_sample_metrics = {
-            'total_cumulative_return': pair['total_cumulative_return'],
-            'profit_factor': pair['profit_factor'],
-            'max_drawdown': pair['max_drawdown'],
-            'sharpe_ratio': pair['sharpe_ratio'],
-            'num_trades': pair['num_trades']
+            'total_cumulative_return': pair.get('total_cumulative_return', 0.0),
+            'profit_factor': pair.get('profit_factor', 0.0),
+            'max_drawdown': pair.get('max_drawdown', 0.0),
+            'last_year_drawdown': pair.get('last_year_drawdown', 0.0),
+            'sharpe_ratio': pair.get('sharpe_ratio', 0.0),
+            'volatility': pair.get('volatility', 0.0),
+            'num_trades': pair.get('num_trades', 0),
+            'trading_type': pair.get('trading_type', 'both')
         }
         
         # Run OOS validation
@@ -408,6 +404,7 @@ def main():
               f"{row['oos_max_drawdown']:<9.2%} {row['is_profit_factor']:<8.2f}")
     
     print(f"\n💾 Results saved to: {OUT_CSV}")
+    print(f"📁 Detailed trades saved to: {TRADES_DIR}")
     print(f"📊 Individual pair figures saved to: {FIGURES_DIR}")
     
     print(f"\n✅ Out-of-sample validation completed!")

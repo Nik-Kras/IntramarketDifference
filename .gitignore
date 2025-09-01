@@ -6,3 +6,11 @@ OOS
 oos_experiments
 inspection
 new_in_sample_out_of_sample_experiment/results/in_sample/distributions
+new_in_sample_out_of_sample_experiment/results
+new_in_sample_out_of_sample_experiment/results v2
+new_in_sample_out_of_sample_experiment/data
+new_in_sample_out_of_sample_experiment/results
+full_data
+data/in_sample
+data/out_of_sample
+parameter_optimization_experiment/data

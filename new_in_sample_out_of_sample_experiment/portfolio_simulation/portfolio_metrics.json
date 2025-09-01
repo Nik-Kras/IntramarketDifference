@@ -1,0 +1,10 @@
+{
+  "initial_budget": 1000.0,
+  "final_portfolio_value": 1838.5742094748095,
+  "total_return": 0.8385742094748097,
+  "profit_factor": 1.0789911850467422,
+  "max_drawdown": -0.2076748144490632,
+  "sharpe_ratio": 0.3753946058462257,
+  "num_trades": 52046,
+  "allocation_fraction": 0.01
+}
