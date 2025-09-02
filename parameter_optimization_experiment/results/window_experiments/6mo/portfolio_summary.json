@@ -1,0 +1,22 @@
+{
+  "window_name": "6mo",
+  "months_back": 6,
+  "window_start": "2023-07-01",
+  "window_end": "2024-01-01",
+  "pairs_selected": 9424,
+  "pairs_with_oos": 9424,
+  "portfolio_return": 1.340763128410122,
+  "portfolio_sharpe": 2.04286623146995,
+  "portfolio_drawdown": -0.04138042717315262,
+  "trades_executed": 4404873,
+  "max_concurrent_trades": 8567,
+  "simulation_metrics": {
+    "total_return": 0.340763128410122,
+    "sharpe_ratio": 2.04286623146995,
+    "max_drawdown": -0.04138042717315262,
+    "volatility": 0.09245482608664017,
+    "num_trades": 4404873,
+    "initial_capital": 1000.0,
+    "final_value": 1340.763128410122
+  }
+}

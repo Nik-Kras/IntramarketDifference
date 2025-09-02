@@ -1,26 +1,143 @@
 # Parameter Optimization Experiment
 
-This experiment focuses on finding optimal parameters for the intermarket difference trading strategy through systematic testing across different window sizes for In-Sample and Out-of-Sample periods.
+Tests optimal In-Sample window lengths for the intermarket difference trading strategy to determine the best backtesting period before live deployment.
 
 ## Objective
 
-Test various parameter combinations to optimize:
-- LOOKBACK (Moving Average window for CMMA)
-- ATR_LOOKBACK (ATR window for volatility normalization)
-- THRESHOLD (Signal generation threshold)
-- Time window splits between In-Sample and Out-of-Sample periods
+Test different In-Sample window lengths (3mo, 6mo, 9mo, etc.) to find the optimal amount of historical data needed for:
+- Reliable pair selection (Sharpe > 2.0, Drawdown < 50%)
+- Strong Out-of-Sample performance on 2024 data
+- Optimal portfolio returns with dynamic budget allocation
 
-## Copied Files
+## Execution Order
 
-- `core.py` - Core trading algorithms and utilities (with equity curve bug fixes)
-- `run_in_sample_experiment.py` - In-sample backtesting engine
-- `run_out_of_sample_validation.py` - Out-of-sample validation
-- `apply_custom_filters.py` - Multi-criteria filtering for pair selection
-- `simulate_portfolio_2024.py` - Portfolio simulation with budget constraints
-- `analyze_oos_results.py` - Results analysis tools
-- `prepare_data.py` - Data preparation utilities
-- `data/` - Complete dataset (in_sample and out_of_sample)
+Run these scripts in sequence:
 
-## Ready for Implementation
+### 1. Data Preparation
+```bash
+python split_data.py
+```
 
-All core logic, visualization functions, and metrics calculations are ready for parameter optimization implementation.
+- **Purpose**: Split full dataset into In-Sample (pre-2024) and Out-of-Sample (2024+) periods
+- **Output**: `data/in_sample/` and `data/out_of_sample/` directories
+
+### 2. Generate In-Sample Trade Data
+```bash
+python run_all_pairs_backtest.py
+```
+
+- **Purpose**: Generate all directional pair combinations and detailed trade records for In-Sample data
+- **Output**: `in_sample/trades/` directory with JSON trade files for each pair
+- **Duration**: ~2-3 hours (processes ~85,500 pairs)
+
+### 3. Generate Out-of-Sample Trade Data
+```bash
+python run_all_pairs_backtest_oos.py
+```
+
+- **Purpose**: Generate all directional pair combinations and detailed trade records for Out-of-Sample data (2024+)
+- **Output**: `out_of_sample/trades/` directory with JSON trade files for each pair
+- **Duration**: ~1 hour (processes ~85,500 pairs)
+
+### 4. Convert Trade Data to CSV (Performance Optimization)
+```bash
+python convert_trades_to_csv.py
+```
+
+- **Purpose**: Convert JSON trade files to CSV format for 10x faster loading
+  - Processes In-Sample and Out-of-Sample trade directories
+  - Creates `both_trades_fast.csv` files alongside existing JSON files
+  - Enables vectorized pandas operations for window filtering
+- **Output**: CSV files in trade directories (`*_fast.csv`)
+- **Duration**: ~10-15 minutes (one-time conversion)
+
+### 5. Run Window Experiments
+```bash
+python run_window_experiment_updated.py
+```
+
+- **Purpose**: Test 20 different In-Sample window lengths (3mo to 60mo in equal 3-month steps)
+  - Uses optimized CSV loading for fast trade filtering
+  - Applies selection criteria (Sharpe > 2.0, Drawdown < 50%)
+  - Loads pre-generated OOS trades for portfolio simulation
+  - Simulates portfolio with dynamic budget allocation (current_portfolio_value / max_trades)
+- **Output**: `results/window_experiments/` with results for each window
+- **Duration**: ~1-2 hours (100x performance improvement with CSV optimization)
+
+### 6. Analyze Results
+```bash
+python analyze_window_results.py
+```
+
+- **Purpose**: Create comprehensive analysis and visualizations
+  - Performance comparison across all window lengths
+  - Correlation analysis and ranking systems
+  - Master summary with recommendations
+- **Output**: `results/window_analysis/` with plots and detailed report
+
+## Key Components
+
+### Essential Scripts (Window Experiment Workflow)
+- `split_data.py` - Data preparation (In-Sample/Out-of-Sample split)
+- `run_all_pairs_backtest.py` - Generate In-Sample trade data
+- `run_all_pairs_backtest_oos.py` - Generate Out-of-Sample trade data
+- `convert_trades_to_csv.py` - Convert JSON trade files to CSV for 10x performance boost
+- `window_analyzer_fast.py` - Optimized CSV-based trade filtering and metrics calculation
+- `window_portfolio_simulator.py` - Portfolio simulation with dynamic budget allocation
+- `run_window_experiment_updated.py` - Main orchestrator for all window experiments
+- `analyze_window_results.py` - Master summary analysis and visualization
+
+## Expected Results
+
+The experiment will identify the optimal In-Sample window length by comparing:
+- **Portfolio Returns**: Actual simulated returns on Out-of-Sample 2024 data
+- **Risk-Adjusted Performance**: Sharpe ratios from portfolio simulation
+- **Risk Management**: Maximum drawdown during OOS period
+- **Trade Execution**: Number of trades executed and concurrent trade utilization
+- **Pair Selection Stability**: Consistency of selected pairs across different window lengths
+
+## Output Structure
+
+```
+results/window_experiments/
+├── 3mo/
+│   ├── selected_pairs.csv           # In-Sample filtered pairs
+│   ├── valid_oos_pairs.csv          # Pairs with OOS data
+│   ├── selection_report.txt         # Filtering details
+│   ├── portfolio_summary.json       # Portfolio metrics
+│   ├── portfolio_equity_curve.png   # Equity curve visualization
+│   ├── budget_allocation.png        # Budget allocation timeline
+│   ├── active_trades_timeline.png   # Active trades over time
+│   └── drawdown_curve.png           # Drawdown visualization
+├── 6mo/
+│   └── [same structure]
+├── ...
+├── master_window_summary.csv        # All window results
+└── master_experiment_report.txt     # Detailed analysis
+```
+
+## Cleanup Recommendations
+
+**Remove these outdated files:**
+- `run_window_experiment.py` (replaced by `run_window_experiment_updated.py`)
+- `simulate_portfolio_2024.py` (functionality moved to `window_portfolio_simulator.py`)
+
+**Archive these legacy files if not needed:**
+- `apply_custom_filters.py`
+- `analyze_oos_results.py` 
+- `analyze_in_sample_results.py`
+
+## Filter Criteria
+
+- **Sharpe Ratio**: > 2.0 (strong risk-adjusted returns)
+- **Max Drawdown**: < 50% (acceptable risk levels)
+### Portfolio Simulation
+- **Budget Formula**: `current_portfolio_value / max_trades` where `max_trades = N_pairs / 1.1`
+- **Dynamic Rebalancing**: Trade amounts recalculated on every entry based on current portfolio value
+- **Max Concurrent**: ~90% of selected pairs can trade simultaneously
+- **Initial Capital**: $1,000
+
+### Trading Parameters
+- **LOOKBACK**: 24 (moving average window)
+- **ATR_LOOKBACK**: 168 (volatility normalization window)
+- **THRESHOLD**: 0.25 (signal generation threshold)

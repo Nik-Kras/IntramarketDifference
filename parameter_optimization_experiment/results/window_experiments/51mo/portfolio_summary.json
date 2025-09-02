@@ -1,0 +1,22 @@
+{
+  "window_name": "51mo",
+  "months_back": 51,
+  "window_start": "2019-10-01",
+  "window_end": "2024-01-01",
+  "pairs_selected": 2881,
+  "pairs_with_oos": 2881,
+  "portfolio_return": 1.587351825835317,
+  "portfolio_sharpe": 2.370395627420972,
+  "portfolio_drawdown": -0.08387217066248376,
+  "trades_executed": 1367155,
+  "max_concurrent_trades": 2619,
+  "simulation_metrics": {
+    "total_return": 0.587351825835317,
+    "sharpe_ratio": 2.370395627420972,
+    "max_drawdown": -0.08387217066248376,
+    "volatility": 0.12453550029870834,
+    "num_trades": 1367155,
+    "initial_capital": 1000.0,
+    "final_value": 1587.351825835317
+  }
+}
