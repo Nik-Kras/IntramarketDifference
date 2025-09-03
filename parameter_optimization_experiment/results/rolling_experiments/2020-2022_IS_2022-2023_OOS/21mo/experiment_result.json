@@ -1,0 +1,23 @@
+{
+  "period_name": "2020-2022_IS_2022-2023_OOS",
+  "window_months": 21,
+  "window_start": "2020-04-01",
+  "window_end": "2022-01-01",
+  "oos_start": "2022-01-01",
+  "oos_end": "2023-01-01",
+  "pairs_selected": 3824,
+  "pairs_with_oos": 3824,
+  "portfolio_return": 1.0,
+  "portfolio_sharpe": 0.8574869477158193,
+  "portfolio_drawdown": -0.15763700863060984,
+  "trades_executed": 1193728,
+  "simulation_metrics": {
+    "total_return": 0.0,
+    "sharpe_ratio": 0.8574869477158193,
+    "max_drawdown": -0.15763700863060984,
+    "volatility": 0.6781632383058727,
+    "num_trades": 1193728,
+    "initial_capital": 1000.0,
+    "final_value": 1000.0
+  }
+}

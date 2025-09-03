@@ -1,0 +1,47 @@
+ROLLING WINDOW VALIDATION EXPERIMENT RESULTS
+======================================================================
+Generated: 2025-09-03 01:56:51
+Total experiments: 20
+Successful experiments: 20
+Success rate: 100.0%
+
+EXPERIMENTAL DESIGN
+-------------------------
+Time periods tested: 4
+Window lengths tested: [12, 15, 18, 21, 24]
+IS period length: 24 months
+OOS period length: 12 months
+
+WINDOW STABILITY ANALYSIS
+------------------------------
+Window   Periods  Avg Return   Avg Sharpe  Return Std   Sharpe Std  Success% 
+-------- -------- ------------ ----------- ------------ ----------- ---------
+12mo     4        1.000        1.247       0.000        2.084       100.0    
+15mo     4        1.000        1.077       0.000        1.881       100.0    
+18mo     4        1.000        1.020       0.000        1.878       100.0    
+24mo     4        1.000        0.992       0.000        1.861       100.0    
+21mo     4        1.000        0.973       0.000        1.839       100.0    
+
+ROBUSTNESS RANKING (by Sharpe CV)
+-----------------------------------
+Rank  Window   CV       Avg Sharpe  Stability 
+----- -------- -------- ----------- ----------
+1     12mo     1.671    1.247       Low       
+2     15mo     1.746    1.077       Low       
+3     18mo     1.842    1.020       Low       
+4     24mo     1.877    0.992       Low       
+5     21mo     1.889    0.973       Low       
+
+RECOMMENDATIONS
+--------------------
+Most Robust Window: 12mo (CV: 1.671)
+Best Performance Window: 12mo (Sharpe: 1.247)
+
+DECISION CRITERIA:
+• Choose 12mo for stability across market regimes
+• Choose 12mo for maximum expected performance
+
+VALIDATION NOTES:
+• Robustness measured by coefficient of variation in Sharpe ratio
+• Lower CV indicates more consistent performance across periods
+• Consider both stability and performance in final selection
