@@ -156,9 +156,16 @@ def group_and_analyze_trades_fast(windowed_trades_df: pd.DataFrame) -> pd.DataFr
     
     return pd.DataFrame(results)
 
-def apply_selection_filters(results_df: pd.DataFrame, sharpe_threshold: float = 2.0, 
+def apply_selection_filters(results_df: pd.DataFrame,
+                          sharpe_threshold: float = 2.0, 
                           drawdown_threshold: float = 0.5) -> Tuple[pd.DataFrame, Dict]:
-    """Apply selection criteria and generate detailed filtering report."""
+    """Apply selection criteria and generate detailed filtering report.
+    
+    Args:
+        results_df: DataFrame with pair metrics
+        sharpe_threshold: Minimum Sharpe ratio (default: 2.0)
+        drawdown_threshold: Maximum drawdown as positive value (default: 0.5 = 50%)
+    """
     
     initial_count = len(results_df)
     
@@ -219,12 +226,14 @@ def generate_selection_report(filter_stats: Dict, window_start: str, window_end:
         "-" * 20,
         "Sharpe Ratio > 2.0",
         "Max Drawdown < 50%",
+        f"Minimum Trades >= {filter_stats['minimum_trades']} ({filter_stats['window_months']}mo window)",
         "",
         "FILTERING RESULTS", 
         "-" * 20,
         f"Initial pairs: {filter_stats['initial_pairs']:,}",
         f"After Sharpe filter: {filter_stats['after_sharpe_filter']:,} ({filter_stats['after_sharpe_filter']/filter_stats['initial_pairs']*100:.1f}%)",
         f"After Drawdown filter: {filter_stats['after_drawdown_filter']:,} ({filter_stats['after_drawdown_filter']/filter_stats['initial_pairs']*100:.1f}%)",
+        f"After Trades filter: {filter_stats['after_trades_filter']:,} ({filter_stats['after_trades_filter']/filter_stats['initial_pairs']*100:.1f}%)",
         "",
         f"REJECTED BY SHARPE RATIO ({len(filter_stats['sharpe_rejected'])} pairs):",
         "-" * 30
@@ -246,6 +255,17 @@ def generate_selection_report(filter_stats: Dict, window_start: str, window_end:
         report_lines.append(f"  {rejected}")
     if len(filter_stats['drawdown_rejected']) > 50:
         report_lines.append(f"  ... and {len(filter_stats['drawdown_rejected']) - 50} more")
+    
+    report_lines.extend([
+        "",
+        f"REJECTED BY TRADES FILTER ({len(filter_stats['trades_rejected'])} pairs):",
+        "-" * 30
+    ])
+    
+    for rejected in filter_stats['trades_rejected'][:50]:
+        report_lines.append(f"  {rejected}")
+    if len(filter_stats['trades_rejected']) > 50:
+        report_lines.append(f"  ... and {len(filter_stats['trades_rejected']) - 50} more")
     
     report_lines.extend([
         "",

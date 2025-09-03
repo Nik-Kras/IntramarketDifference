@@ -12,17 +12,13 @@ import os
 import json
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
 from typing import Dict, List
 from tqdm import tqdm
 import sys
 
 # Import core functions
-from core import (
-    cmma, threshold_revert_signal, load_csv_with_cache, align_frames,
-    LOOKBACK, ATR_LOOKBACK, THRESHOLD
-)
+# Core imports not used in this file
 
 # Add parent directory to path
 sys.path.append('..')
@@ -101,10 +97,12 @@ class WindowPortfolioSimulator:
         
         trade_info = self.active_trades[trade_id]
         trade_amount = trade_info['trade_amount']
-        trade_return = trade_info['trade_return']
+        trade_log_return = trade_info['trade_return']  # This is actually a log return
         
-        # Calculate P&L using simple returns
-        trade_pnl = trade_amount * trade_return
+        # Convert log return to simple return for P&L calculation
+        # Simple return = exp(log_return) - 1
+        trade_simple_return = np.exp(trade_log_return) - 1
+        trade_pnl = trade_amount * trade_simple_return
         final_amount = trade_amount + trade_pnl
         
         # Return capital to available budget
@@ -118,7 +116,7 @@ class WindowPortfolioSimulator:
             'exit_time': current_time,
             'trade_amount': trade_amount,
             'trade_pnl': trade_pnl,
-            'trade_return': trade_return,
+            'trade_return': trade_simple_return,
             'trading_coin': trade_info['trading_coin'],
             'reference_coin': trade_info['reference_coin'],
             'strategy_type': trade_info['strategy_type'],
@@ -130,7 +128,7 @@ class WindowPortfolioSimulator:
         
         return trade_pnl
     
-    def update_tracking(self, current_time: pd.Timestamp):
+    def update_tracking(self, current_time: pd.Timestamp) -> None:
         """Update timeline tracking."""
         
         self.total_portfolio_value = self.available_budget + self.allocated_budget
@@ -227,32 +225,53 @@ class WindowPortfolioSimulator:
         print(f"✅ Loaded {len(all_oos_trades):,} OOS trades")
         return all_oos_trades
     
-    def simulate_portfolio(self, selected_pairs_df: pd.DataFrame) -> Dict:
-        """Run complete portfolio simulation on OOS data."""
+    def _convert_trades_to_standard_format(self, trades_data: List[Dict]) -> List[Dict]:
+        """Convert custom trades data format to standard format."""
         
-        # Load all OOS trades for selected pairs
-        all_oos_trades = self.load_oos_trades_for_pairs(selected_pairs_df)
+        all_trades = []
         
-        if not all_oos_trades:
-            print("❌ No OOS trades loaded!")
-            return {}
+        for pair_data in trades_data:
+            oos_trades = pair_data['oos_trades']
+            
+            for trade in oos_trades:
+                all_trades.append({
+                    'reference_coin': pair_data['reference_coin'],
+                    'trading_coin': pair_data['trading_coin'],
+                    'strategy_type': pair_data['trading_type'],
+                    'time_entered': trade['time_entered'],
+                    'time_exited': trade['time_exited'],
+                    'log_return': trade['log_return'],
+                    'trade_type': trade.get('trade_type', 'unknown'),
+                    'trade_id': f"{pair_data['reference_coin']}_{pair_data['trading_coin']}_{trade['time_entered']}"
+                })
         
-        print(f"📊 Loaded {len(all_oos_trades):,} OOS trades")
+        return all_trades
+    
+    def _create_chronological_events(self, all_trades: List[Dict]) -> List[Dict]:
+        """Create chronological timeline events from trades."""
         
-        # Create chronological events
         events = []
         
-        for trade in all_oos_trades:
+        for trade in all_trades:
             # Entry event
             events.append({
-                'timestamp': trade['entry_time'],
+                'timestamp': pd.to_datetime(trade['time_entered']),
                 'type': 'entry',
-                'trade': trade
+                'trade': {
+                    'trade_id': trade['trade_id'],
+                    'entry_time': pd.to_datetime(trade['time_entered']),
+                    'exit_time': pd.to_datetime(trade['time_exited']),
+                    'trade_return': trade['log_return'],
+                    'trading_coin': trade['trading_coin'],
+                    'reference_coin': trade['reference_coin'],
+                    'strategy_type': trade['strategy_type'],
+                    'trade_type': trade['trade_type']
+                }
             })
             
             # Exit event
             events.append({
-                'timestamp': trade['exit_time'],
+                'timestamp': pd.to_datetime(trade['time_exited']),
                 'type': 'exit',
                 'trade_id': trade['trade_id']
             })
@@ -260,15 +279,29 @@ class WindowPortfolioSimulator:
         # Sort events chronologically
         events.sort(key=lambda x: x['timestamp'])
         
+        return events
+    
+    def _process_timeline_events(self, events: List[Dict]) -> Dict:
+        """Process chronological events and simulate trading."""
+        
         print(f"🔄 Processing {len(events)} chronological events...")
         
-        # Process events
         trades_opened = 0
         trades_closed = 0
         trades_rejected = 0
         
         for event in tqdm(events, desc="Processing events"):
             current_time = event['timestamp']
+            
+            # Update portfolio timeline
+            current_portfolio_value = self.available_budget + self.allocated_budget
+            self.portfolio_timeline.append({
+                'timestamp': current_time,
+                'portfolio_value': current_portfolio_value,
+                'available_budget': self.available_budget,
+                'allocated_budget': self.allocated_budget,
+                'active_trades_count': len(self.active_trades)
+            })
             
             if event['type'] == 'exit':
                 trade_id = event['trade_id']
@@ -287,23 +320,82 @@ class WindowPortfolioSimulator:
                     trades_opened += 1
                 else:
                     trades_rejected += 1
-            
-            # Update tracking
-            self.update_tracking(current_time)
         
-        # Calculate final metrics
-        self.total_portfolio_value = self.available_budget + self.allocated_budget
-        final_return = (self.total_portfolio_value / self.initial_capital) - 1
+        # Close any remaining active trades
+        final_time = events[-1]['timestamp'] if events else pd.Timestamp.now()
+        remaining_trades = list(self.active_trades.keys())
+        for trade_id in remaining_trades:
+            self.close_trade(trade_id, final_time)
+            trades_closed += 1
         
-        print(f"\n📊 PORTFOLIO SIMULATION RESULTS:")
+        # Calculate and return portfolio metrics
+        portfolio_metrics = self.calculate_portfolio_metrics()
+        
+        # Print summary
+        print(f"📊 Portfolio Simulation Summary:")
         print(f"   Trades Opened: {trades_opened:,}")
         print(f"   Trades Closed: {trades_closed:,}")
         print(f"   Trades Rejected: {trades_rejected:,}")
-        print(f"   Still Active: {len(self.active_trades)}")
-        print(f"   Final Portfolio Value: ${self.total_portfolio_value:,.2f}")
-        print(f"   Total Return: {final_return:.2%}")
         
-        return self.calculate_portfolio_metrics()
+        return portfolio_metrics
+
+    def simulate_portfolio_with_trades(self, trades_data: List[Dict], 
+                                      oos_start: str, oos_end: str) -> Dict:
+        """
+        Simulate portfolio using pre-loaded trades data for custom time periods.
+        
+        Args:
+            trades_data: List of pair dictionaries with 'oos_trades' key
+            oos_start: OOS period start date
+            oos_end: OOS period end date
+        
+        Returns:
+            Portfolio performance metrics dictionary
+        """
+        
+        print(f"💰 Simulating portfolio with {len(trades_data)} pairs")
+        print(f"   OOS Period: {oos_start} to {oos_end}")
+        
+        # Convert to standard format
+        all_oos_trades = self._convert_trades_to_standard_format(trades_data)
+        
+        if not all_oos_trades:
+            print("❌ No OOS trades to simulate!")
+            return {}
+        
+        print(f"📊 Processing {len(all_oos_trades):,} OOS trades")
+        
+        # Create events and process - now properly returns metrics
+        events = self._create_chronological_events(all_oos_trades)
+        portfolio_metrics = self._process_timeline_events(events)
+        
+        return portfolio_metrics
+
+    def simulate_portfolio(self, selected_pairs_df: pd.DataFrame) -> Dict:
+        """
+        Run complete portfolio simulation on OOS data.
+        
+        Args:
+            selected_pairs_df: DataFrame of selected pairs
+            
+        Returns:
+            Portfolio performance metrics dictionary
+        """
+        
+        # Load all OOS trades for selected pairs
+        all_oos_trades = self.load_oos_trades_for_pairs(selected_pairs_df)
+        
+        if not all_oos_trades:
+            print("❌ No OOS trades loaded!")
+            return {}
+        
+        print(f"📊 Loaded {len(all_oos_trades):,} OOS trades")
+        
+        # Create events and process - now properly returns metrics
+        events = self._create_chronological_events(all_oos_trades)
+        portfolio_metrics = self._process_timeline_events(events)
+        
+        return portfolio_metrics
     
     def calculate_portfolio_metrics(self) -> Dict:
         """Calculate portfolio performance metrics."""
@@ -354,8 +446,15 @@ class WindowPortfolioSimulator:
             'final_value': self.total_portfolio_value
         }
     
-    def create_visualizations(self, output_dir: str):
-        """Create portfolio simulation visualizations."""
+    def create_visualizations(self, output_dir: str) -> None:
+        """Create portfolio simulation visualizations using shared utilities."""
+        
+        from visualization_utils import (
+            create_portfolio_equity_curve,
+            create_budget_allocation_timeline,
+            create_active_trades_timeline,
+            create_drawdown_curve
+        )
         
         os.makedirs(output_dir, exist_ok=True)
         
@@ -363,82 +462,42 @@ class WindowPortfolioSimulator:
             print("❌ No timeline data for visualizations")
             return
         
-        # Convert timeline data to DataFrames
-        portfolio_df = pd.DataFrame(self.portfolio_timeline).set_index('timestamp').sort_index()
+        # Convert timeline data to DataFrame
+        portfolio_df = pd.DataFrame(self.portfolio_timeline)
         
-        # 1. Portfolio Equity Curve
-        plt.figure(figsize=(15, 8))
-        plt.plot(portfolio_df.index, portfolio_df['portfolio_value'], 'b-', linewidth=2, label='Portfolio Value')
-        plt.axhline(y=self.initial_capital, color='gray', linestyle='--', alpha=0.7, label='Initial Capital')
-        plt.title('Portfolio Equity Curve')
-        plt.xlabel('Date')
-        plt.ylabel('Portfolio Value ($)')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'portfolio_equity_curve.png'), dpi=300, bbox_inches='tight')
-        plt.close()
+        # Ensure timestamp column exists and set as index
+        if 'timestamp' in portfolio_df.columns:
+            portfolio_df = portfolio_df.set_index('timestamp').sort_index()
+        elif 'time' in portfolio_df.columns:
+            portfolio_df = portfolio_df.set_index('time').sort_index()
+        else:
+            print("❌ No timestamp column found in portfolio timeline")
+            return
         
-        # 2. Budget Allocation Timeline
-        plt.figure(figsize=(15, 10))
+        # Create visualizations using shared functions
+        create_portfolio_equity_curve(
+            portfolio_df, self.initial_capital,
+            os.path.join(output_dir, 'portfolio_equity_curve.png')
+        )
         
-        plt.subplot(2, 1, 1)
-        plt.plot(portfolio_df.index, portfolio_df['available_budget'], 'g-', linewidth=2, label='Available Budget')
-        plt.plot(portfolio_df.index, portfolio_df['allocated_budget'], 'r-', linewidth=2, label='Allocated Budget')
-        plt.plot(portfolio_df.index, portfolio_df['portfolio_value'], 'b-', linewidth=2, label='Total Portfolio Value')
-        plt.title('Budget Allocation Over Time')
-        plt.xlabel('Date')
-        plt.ylabel('Amount ($)')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
+        create_budget_allocation_timeline(
+            portfolio_df,
+            os.path.join(output_dir, 'budget_allocation.png')
+        )
         
-        plt.subplot(2, 1, 2)
-        plt.plot(portfolio_df.index, portfolio_df['current_trade_amount'], 'purple', linewidth=2, label='Current Trade Amount')
-        plt.title('Dynamic Trade Amount (Rebalancing)')
-        plt.xlabel('Date')
-        plt.ylabel('Trade Amount ($)')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
+        create_active_trades_timeline(
+            portfolio_df, self.max_trades,
+            os.path.join(output_dir, 'active_trades_timeline.png')
+        )
         
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'budget_allocation.png'), dpi=300, bbox_inches='tight')
-        plt.close()
-        
-        # 3. Active Trades Timeline
-        plt.figure(figsize=(15, 8))
-        plt.plot(portfolio_df.index, portfolio_df['num_active_trades'], 'orange', linewidth=2, label='Active Trades')
-        plt.axhline(y=self.max_trades, color='red', linestyle='--', alpha=0.7, 
-                   label=f'Max Concurrent ({self.max_trades})')
-        plt.title('Active Trades Over Time')
-        plt.xlabel('Date')
-        plt.ylabel('Number of Active Trades')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'active_trades_timeline.png'), dpi=300, bbox_inches='tight')
-        plt.close()
-        
-        # 4. Drawdown Curve
-        plt.figure(figsize=(15, 8))
-        cumulative_values = portfolio_df['portfolio_value'] / self.initial_capital
-        peak = cumulative_values.cummax()
-        drawdown = (cumulative_values - peak) / peak
-        
-        plt.fill_between(drawdown.index, drawdown, 0, alpha=0.3, color='red', label='Drawdown')
-        plt.plot(drawdown.index, drawdown, 'r-', linewidth=2)
-        plt.title('Portfolio Drawdown Curve')
-        plt.xlabel('Date')
-        plt.ylabel('Drawdown (%)')
-        plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{x:.1%}'))
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'drawdown_curve.png'), dpi=300, bbox_inches='tight')
-        plt.close()
+        create_drawdown_curve(
+            portfolio_df, self.initial_capital,
+            os.path.join(output_dir, 'drawdown_curve.png')
+        )
         
         print(f"✅ Visualizations saved to: {output_dir}/")
     
-    def save_metrics(self, output_file: str):
+    def save_metrics(self, output_file: str) -> None:
         """Save portfolio metrics to JSON file."""
         
         metrics = self.calculate_portfolio_metrics()
@@ -456,7 +515,7 @@ class WindowPortfolioSimulator:
         
         print(f"💾 Portfolio metrics saved to: {output_file}")
 
-def main():
+def main() -> None:
     """Test the portfolio simulator."""
     
     # Test with sample configuration
