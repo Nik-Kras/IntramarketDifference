@@ -192,9 +192,14 @@ class WindowPortfolioSimulator:
                             df['reference_coin'] = ref_coin
                             df['strategy_type'] = strategy_type
                             
-                            # Convert DataFrame to list of dicts (vectorized)
-                            trade_dicts = df[['entry_time', 'exit_time', 'trade_return', 'trading_coin', 
-                                            'reference_coin', 'strategy_type', 'trade_type', 'trade_id']].to_dict('records')
+                            # Convert DataFrame to list of dicts with correct column names
+                            df_for_export = df.copy()
+                            df_for_export['time_entered'] = df['entry_time'] 
+                            df_for_export['time_exited'] = df['exit_time']
+                            df_for_export['log_return'] = df['log_return']  # Keep original log_return for event creation
+                            
+                            trade_dicts = df_for_export[['time_entered', 'time_exited', 'log_return', 'trade_return', 'trading_coin', 
+                                                       'reference_coin', 'strategy_type', 'trade_type', 'trade_id']].to_dict('records')
                             all_oos_trades.extend(trade_dicts)
                     else:
                         # Fallback JSON loading (slower)
@@ -300,7 +305,8 @@ class WindowPortfolioSimulator:
                 'portfolio_value': current_portfolio_value,
                 'available_budget': self.available_budget,
                 'allocated_budget': self.allocated_budget,
-                'active_trades_count': len(self.active_trades)
+                'active_trades_count': len(self.active_trades),
+                'current_trade_amount': self.get_current_trade_amount()
             })
             
             if event['type'] == 'exit':
