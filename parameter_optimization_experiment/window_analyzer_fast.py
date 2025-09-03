@@ -226,7 +226,6 @@ def generate_selection_report(filter_stats: Dict, window_start: str, window_end:
         "-" * 20,
         "Sharpe Ratio > 2.0",
         "Max Drawdown < 50%",
-        f"Minimum Trades >= {filter_stats['minimum_trades']} ({filter_stats['window_months']}mo window)",
         "",
         "FILTERING RESULTS", 
         "-" * 20,
