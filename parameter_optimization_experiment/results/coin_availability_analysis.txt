@@ -1,0 +1,56 @@
+
+CRYPTOCURRENCY DATA AVAILABILITY ANALYSIS SUMMARY
+================================================
+
+OVERVIEW:
+- Total unique coins in dataset: 293
+- Peak availability (Jan 2024): 293 coins
+- Final availability (Aug 2025): 281 coins
+- Coins ending early: 12
+- Net drop in 2025: 12 coins
+
+GROWTH TRAJECTORY:
+- 2018 start: 5 coins
+- 2024 peak: 293 coins  
+- 2025 end: 281 coins
+- Overall growth: 56.2x over 7 years
+
+REASON FOR 2025 DROP:
+The decrease from 293 to 281 coins in 2025 is NOT due to In-Sample vs Out-of-Sample comparison.
+Instead, it reflects the actual data availability cutoff in the Out-of-Sample files.
+
+ANALYSIS METHOD:
+1. Script combines both In-Sample (2018-2023) and Out-of-Sample (2024-2025) data
+2. For each coin, finds earliest date from either dataset
+3. For each coin, finds latest date from either dataset  
+4. Monthly coin count = coins with data spanning that month
+
+COINS ENDING BEFORE AUG 2025:
+
+Coins with data ending before August 2025:
+- BAL: ends 2024-12-31 (212 days short)
+- TROY: ends 2024-12-31 (212 days short)
+- KMD: ends 2024-12-31 (212 days short)
+- EOS: ends 2024-12-31 (212 days short)
+- HARD: ends 2024-12-31 (212 days short)
+- WING: ends 2024-12-31 (212 days short)
+- LTO: ends 2024-12-31 (212 days short)
+- FIRO: ends 2024-12-31 (212 days short)
+- CTXC: ends 2024-12-31 (212 days short)
+- STPT: ends 2024-12-31 (212 days short)
+- NULS: ends 2024-12-31 (212 days short)
+- LOKA: ends 2025-07-10 (21 days short)
+
+CUTOFF PATTERNS:
+- Earliest data cutoff: 2024-12-31
+- Latest data cutoff: 2025-07-10
+- Cutoff period span: 190 days
+
+DATA COMPLETENESS:
+- Coins with full data through Aug 2025: 281 (95.9%)
+- Coins with partial 2025 data: 12 (4.1%)
+
+INTERPRETATION:
+The 2025 coin count drop represents natural data availability limits in the source dataset,
+not a methodological artifact. Some coins simply have data that ends before August 2025,
+likely due to data collection cutoffs or exchange delisting.
