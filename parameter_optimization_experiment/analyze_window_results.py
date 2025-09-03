@@ -13,12 +13,8 @@ Creates comprehensive visualizations and analysis of the parameter optimization 
 import os
 import json
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from datetime import datetime
 from typing import Dict, List, Tuple
-from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -26,30 +22,6 @@ warnings.filterwarnings('ignore')
 RESULTS_DIR = "results/window_experiments"
 ANALYSIS_DIR = "results/window_analysis"
 
-# Professional color palette
-COLORS = {
-    'primary': '#2E86AB',
-    'secondary': '#A23B72',
-    'success': '#73AB84',
-    'warning': '#F18F01',
-    'danger': '#C73E1D',
-    'dark': '#2D3142',
-    'light': '#F5F5F5'
-}
-
-def set_professional_style():
-    """Set professional financial chart styling."""
-    plt.style.use('seaborn-v0_8-darkgrid')
-    plt.rcParams['figure.facecolor'] = 'white'
-    plt.rcParams['axes.facecolor'] = 'white'
-    plt.rcParams['grid.alpha'] = 0.3
-    plt.rcParams['font.size'] = 10
-    plt.rcParams['axes.labelsize'] = 11
-    plt.rcParams['axes.titlesize'] = 12
-    plt.rcParams['xtick.labelsize'] = 10
-    plt.rcParams['ytick.labelsize'] = 10
-    plt.rcParams['legend.fontsize'] = 10
-    plt.rcParams['figure.titlesize'] = 14
 
 def load_and_clean_results() -> pd.DataFrame:
     """Load results and handle data quality issues."""
@@ -90,166 +62,47 @@ def load_and_clean_results() -> pd.DataFrame:
 def create_efficiency_frontier(df: pd.DataFrame):
     """Create risk-return efficiency frontier analysis (without efficient frontier line)."""
     
+    from visualization_utils import create_efficiency_frontier_plot
+    
     print("📊 Creating efficiency frontier analysis...")
     
     # Filter to unique results only
     df_unique = df[~df['is_duplicate']].copy()
     
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-    
-    # 1. Risk-Return Scatter
-    returns = df_unique['portfolio_return'].values
-    risks = df_unique['portfolio_drawdown'].abs().values
-    sharpes = df_unique['portfolio_sharpe'].values
-    
-    # Color by Sharpe ratio
-    scatter = axes[0].scatter(risks * 100, (returns - 1) * 100, 
-                             c=sharpes, s=100, alpha=0.7, 
-                             cmap='RdYlGn', edgecolors='black', linewidth=1)
-    
-    # Annotate points
-    for idx, row in df_unique.iterrows():
-        axes[0].annotate(row['window_name'], 
-                        (abs(row['portfolio_drawdown']) * 100, 
-                         (row['portfolio_return'] - 1) * 100),
-                        fontsize=8, ha='center', va='bottom')
-    
-    axes[0].set_xlabel('Maximum Drawdown (%)', fontsize=11)
-    axes[0].set_ylabel('Total Return (%)', fontsize=11)
-    axes[0].set_title('Risk-Return Efficiency Frontier', fontsize=13, fontweight='bold')
-    axes[0].grid(True, alpha=0.3)
-    
-    # Add colorbar
-    cbar = plt.colorbar(scatter, ax=axes[0])
-    cbar.set_label('Sharpe Ratio', fontsize=10)
-    
-    # 2. Sharpe Ratio vs Window Length with trend
-    x = df_unique['months_back'].values
-    y = df_unique['portfolio_sharpe'].values
-    
-    axes[1].scatter(x, y, s=100, alpha=0.7, color=COLORS['primary'], edgecolors='black', linewidth=1)
-    
-    # Add polynomial trend line
-    z = np.polyfit(x, y, 2)
-    p = np.poly1d(z)
-    x_trend = np.linspace(x.min(), x.max(), 100)
-    axes[1].plot(x_trend, p(x_trend), 'r--', alpha=0.5, linewidth=2, label='Trend')
-    
-    # Mark optimal point
-    optimal_idx = df_unique['portfolio_sharpe'].idxmax()
-    axes[1].scatter(df_unique.loc[optimal_idx, 'months_back'], 
-                   df_unique.loc[optimal_idx, 'portfolio_sharpe'],
-                   s=200, color=COLORS['success'], marker='*', 
-                   edgecolors='black', linewidth=2, label='Optimal', zorder=5)
-    
-    axes[1].set_xlabel('Window Length (Months)', fontsize=11)
-    axes[1].set_ylabel('Sharpe Ratio', fontsize=11)
-    axes[1].set_title('Risk-Adjusted Performance vs Window Length', fontsize=13, fontweight='bold')
-    axes[1].grid(True, alpha=0.3)
-    axes[1].legend()
-    
-    # Add reference lines
-    axes[1].axhline(y=1.0, color='gray', linestyle=':', alpha=0.5, label='Good (>1.0)')
-    axes[1].axhline(y=2.0, color='gray', linestyle=':', alpha=0.5, label='Excellent (>2.0)')
-    
-    plt.suptitle('Portfolio Efficiency Analysis', fontsize=14, fontweight='bold', y=1.02)
-    plt.tight_layout()
-    plt.savefig(os.path.join(ANALYSIS_DIR, 'efficiency_frontier.png'), dpi=300, bbox_inches='tight')
-    plt.close()
+    create_efficiency_frontier_plot(
+        df_unique, 
+        os.path.join(ANALYSIS_DIR, 'efficiency_frontier.png'),
+        'Portfolio Efficiency Analysis'
+    )
 
 def analyze_portfolio_composition(df: pd.DataFrame):
     """Analyze portfolio composition - only diversification vs performance."""
+    
+    from visualization_utils import create_portfolio_composition_plot
     
     print("📊 Analyzing portfolio composition...")
     
     df_unique = df[~df['is_duplicate']].copy()
     
-    # Create single figure for diversification analysis
-    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
-    
-    # Diversification vs Performance scatter
-    scatter = ax.scatter(df_unique['pairs_selected'], 
-                        (df_unique['portfolio_return'] - 1) * 100,
-                        s=df_unique['portfolio_sharpe'] * 50,
-                        c=df_unique['months_back'],
-                        alpha=0.7, cmap='viridis', edgecolors='black', linewidth=1)
-    
-    ax.set_xlabel('Number of Pairs Selected', fontsize=11)
-    ax.set_ylabel('Portfolio Return (%)', fontsize=11)
-    ax.set_title('Diversification vs Performance', fontsize=12, fontweight='bold')
-    ax.grid(True, alpha=0.3)
-    
-    # Add colorbar
-    cbar = plt.colorbar(scatter, ax=ax)
-    cbar.set_label('Window Length (Months)', fontsize=10)
-    
-    # Add size legend
-    for size, label in [(50, 'Sharpe=1'), (100, 'Sharpe=2'), (150, 'Sharpe=3')]:
-        ax.scatter([], [], s=size, c='gray', alpha=0.5, label=label)
-    ax.legend(title='Sharpe Ratio', loc='upper right', fontsize=9)
-    
-    plt.tight_layout()
-    plt.savefig(os.path.join(ANALYSIS_DIR, 'portfolio_composition.png'), dpi=300, bbox_inches='tight')
-    plt.close()
+    create_portfolio_composition_plot(
+        df_unique,
+        os.path.join(ANALYSIS_DIR, 'portfolio_composition.png'),
+        'Diversification vs Performance'
+    )
 
 def create_window_performance_comparison(df: pd.DataFrame) -> pd.DataFrame:
     """Create window performance comparison visualization."""
+    
+    from visualization_utils import create_window_performance_comparison_plot
     
     print("📊 Creating window performance comparison...")
     
     df_unique = df[~df['is_duplicate']].copy()
     
-    # Create figure with subplots matching original layout
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    fig.suptitle('Parameter Optimization: Window Length Analysis', fontsize=16, fontweight='bold')
-    
-    # 1. Portfolio Return vs Window Length
-    axes[0, 0].plot(df_unique['months_back'], df_unique['portfolio_return'], 
-                   marker='o', linewidth=2, markersize=8, color='#FF69B4')
-    axes[0, 0].set_xlabel('Window Length (Months)')
-    axes[0, 0].set_ylabel('Portfolio Return (Multiple)')
-    axes[0, 0].set_title('Portfolio Return vs In-Sample Window Length')
-    axes[0, 0].grid(True, alpha=0.3)
-    axes[0, 0].axhline(y=1.0, color='red', linestyle='--', alpha=0.7, label='Break-even')
-    
-    # Add annotations for best
-    best_idx = df_unique['portfolio_return'].idxmax()
-    axes[0, 0].annotate(f'Best: {df_unique.loc[best_idx, "window_name"]}', 
-                       xy=(df_unique.loc[best_idx, 'months_back'], df_unique.loc[best_idx, 'portfolio_return']),
-                       xytext=(10, 10), textcoords='offset points', 
-                       bbox=dict(boxstyle='round,pad=0.3', fc='green', alpha=0.7),
-                       arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
-    
-    # 2. Portfolio Sharpe vs Window Length
-    axes[0, 1].plot(df_unique['months_back'], df_unique['portfolio_sharpe'], 
-                   marker='s', linewidth=2, markersize=8, color='green')
-    axes[0, 1].set_xlabel('Window Length (Months)')
-    axes[0, 1].set_ylabel('Portfolio Sharpe Ratio')
-    axes[0, 1].set_title('Portfolio Sharpe Ratio vs Window Length')
-    axes[0, 1].grid(True, alpha=0.3)
-    axes[0, 1].axhline(y=1.0, color='red', linestyle='--', alpha=0.7, label='Good threshold')
-    
-    # 3. Number of Selected Pairs vs Window Length
-    axes[1, 0].plot(df_unique['months_back'], df_unique['pairs_selected'], 
-                   marker='^', linewidth=2, markersize=8, color='orange')
-    axes[1, 0].set_xlabel('Window Length (Months)')
-    axes[1, 0].set_ylabel('Number of Selected Pairs')
-    axes[1, 0].set_title('Pairs Selected vs Window Length')
-    axes[1, 0].grid(True, alpha=0.3)
-    
-    # 4. Portfolio Drawdown vs Window Length
-    axes[1, 1].plot(df_unique['months_back'], df_unique['portfolio_drawdown'], 
-                   marker='v', linewidth=2, markersize=8, color='red')
-    axes[1, 1].set_xlabel('Window Length (Months)')
-    axes[1, 1].set_ylabel('Portfolio Max Drawdown')
-    axes[1, 1].set_title('Portfolio Drawdown vs Window Length')
-    axes[1, 1].grid(True, alpha=0.3)
-    axes[1, 1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{x:.1%}'))
-    
-    plt.tight_layout()
-    plt.savefig(os.path.join(ANALYSIS_DIR, 'window_performance_comparison.png'), 
-               dpi=300, bbox_inches='tight')
-    plt.close()
+    create_window_performance_comparison_plot(
+        df_unique,
+        os.path.join(ANALYSIS_DIR, 'window_performance_comparison.png')
+    )
     
     # Calculate simple composite ranking
     df_unique['return_rank'] = df_unique['portfolio_return'].rank(ascending=False)
@@ -268,100 +121,19 @@ def create_window_performance_comparison(df: pd.DataFrame) -> pd.DataFrame:
 def create_executive_summary(df_analysis: pd.DataFrame):
     """Create executive summary with key insights."""
     
+    from visualization_utils import create_executive_summary_plot
+    
     print("📋 Creating executive summary...")
-    
-    fig = plt.figure(figsize=(16, 10))
-    gs = fig.add_gridspec(3, 3, hspace=0.4, wspace=0.3)
-    
-    # Main title
-    fig.suptitle('Window Optimization Executive Summary', fontsize=16, fontweight='bold', y=0.98)
     
     # Get top performer
     top_window = df_analysis.iloc[0]
-    
-    # 1. Key Metrics Summary (text box)
-    ax1 = fig.add_subplot(gs[0, :])
-    ax1.axis('off')
-    
-    summary_text = f"""
-    OPTIMAL WINDOW: {top_window['window_name']} ({top_window['months_back']} months)
-    
-    Performance Metrics:
-    • Portfolio Return: {top_window['portfolio_return']:.2f}x ({(top_window['portfolio_return']-1)*100:.1f}%)
-    • Sharpe Ratio: {top_window['portfolio_sharpe']:.2f}
-    • Max Drawdown: {top_window['portfolio_drawdown']:.1%}
-    • Selected Pairs: {top_window['pairs_selected']:,}
-    • Composite Score: {top_window['composite_score']:.3f}
-    
-    Key Insights:
-    • Data quality verified for windows up to {df_analysis[df_analysis['data_quality']=='Full']['months_back'].max()} months
-    • Optimal risk-return trade-off achieved at {top_window['months_back']} months
-    • Statistical significance confirmed vs longer windows
-    """
-    
-    ax1.text(0.05, 0.5, summary_text, fontsize=11, verticalalignment='center',
-            bbox=dict(boxstyle='round,pad=1', facecolor=COLORS['light'], alpha=0.8))
-    
-    # 2. Performance Trend
-    ax2 = fig.add_subplot(gs[1, :2])
-    
     df_valid = df_analysis[df_analysis['data_quality'] == 'Full'].sort_values('months_back')
     
-    ax2.plot(df_valid['months_back'], df_valid['portfolio_return'], 
-            marker='o', linewidth=2, markersize=8, color=COLORS['primary'], label='Return')
-    ax2.axhline(y=top_window['portfolio_return'], color='red', linestyle='--', 
-               alpha=0.5, label=f'Optimal ({top_window["window_name"]})')
-    
-    ax2.set_xlabel('Window Length (Months)', fontsize=11)
-    ax2.set_ylabel('Portfolio Return (x)', fontsize=11)
-    ax2.set_title('Performance vs Window Length', fontsize=12, fontweight='bold')
-    ax2.grid(True, alpha=0.3)
-    ax2.legend()
-    
-    # Fill area under curve
-    ax2.fill_between(df_valid['months_back'], 1, df_valid['portfolio_return'], 
-                    alpha=0.2, color=COLORS['primary'])
-    
-    # 3. Risk-Adjusted Returns
-    ax3 = fig.add_subplot(gs[1, 2])
-    
-    # Sharpe ratio bar chart
-    colors = [COLORS['success'] if x == top_window['window_name'] else COLORS['primary'] 
-              for x in df_valid['window_name']]
-    bars = ax3.bar(range(len(df_valid)), df_valid['portfolio_sharpe'], 
-                  color=colors, alpha=0.7, edgecolor='black', linewidth=1)
-    
-    ax3.set_xticks(range(len(df_valid)))
-    ax3.set_xticklabels(df_valid['window_name'], rotation=45, ha='right')
-    ax3.set_ylabel('Sharpe Ratio', fontsize=11)
-    ax3.set_title('Risk-Adjusted Performance', fontsize=12, fontweight='bold')
-    ax3.axhline(y=2.0, color='gray', linestyle=':', alpha=0.5)
-    ax3.grid(True, alpha=0.3, axis='y')
-    
-    # 4. Implementation Roadmap
-    ax4 = fig.add_subplot(gs[2, :])
-    ax4.axis('off')
-    
-    roadmap_text = """
-    IMPLEMENTATION RECOMMENDATIONS:
-    
-    1. Deploy with {window} window for optimal risk-adjusted returns
-    2. Monitor performance weekly during first month
-    3. Re-optimize quarterly or if Sharpe drops below 2.0
-    4. Maintain position limits: Max {pairs:,} concurrent pairs
-    5. Risk Management: Stop if drawdown exceeds {dd:.0f}%
-    """.format(
-        window=top_window['window_name'],
-        pairs=int(top_window['pairs_selected']),
-        dd=abs(top_window['portfolio_drawdown']) * 100 * 1.5
+    create_executive_summary_plot(
+        top_window,
+        df_valid,
+        os.path.join(ANALYSIS_DIR, 'executive_summary.png')
     )
-    
-    ax4.text(0.5, 0.5, roadmap_text, fontsize=11, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=1', facecolor=COLORS['warning'], alpha=0.2))
-    
-    plt.tight_layout()
-    plt.savefig(os.path.join(ANALYSIS_DIR, 'executive_summary.png'), dpi=300, bbox_inches='tight')
-    plt.close()
 
 def analyze_pair_selection_patterns():
     """Analyze pair selection patterns across different windows."""
@@ -553,8 +325,7 @@ def main():
     print("🔬 Window Experiment Analysis")
     print("=" * 40)
     
-    # Set professional style
-    set_professional_style()
+    # Professional styling handled by visualization_utils
     
     # Create analysis directory
     os.makedirs(ANALYSIS_DIR, exist_ok=True)

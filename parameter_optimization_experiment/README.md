@@ -141,3 +141,107 @@ results/window_experiments/
 - **LOOKBACK**: 24 (moving average window)
 - **ATR_LOOKBACK**: 168 (volatility normalization window)
 - **THRESHOLD**: 0.25 (signal generation threshold)
+
+---
+
+## Rolling Window Validation Experiment
+
+Advanced temporal robustness testing that validates strategy performance across multiple time periods and market regimes. This experiment splits the 2018-2024 dataset into multiple overlapping In-Sample/Out-of-Sample combinations to test window length stability.
+
+### Objective
+
+Test different In-Sample window lengths (12mo, 15mo, 18mo, 21mo, 24mo) across multiple time periods to find optimal parameters that are:
+- **Temporally Robust**: Consistent performance across different market regimes
+- **Statistically Stable**: Low coefficient of variation in key metrics
+- **Market Regime Agnostic**: Performance not dependent on specific time periods
+- **Implementation Ready**: Reliable for live deployment with confidence intervals
+
+### Execution Order
+
+Run these scripts in sequence:
+
+### 1. Time Period Setup
+```bash
+python rolling_period_manager.py
+```
+
+- **Purpose**: Generate rolling IS/OOS period combinations (2018-2024 dataset)
+  - Creates 4 overlapping periods: each with 2-year IS + 1-year OOS
+  - Period 1: IS(2018-2020) + OOS(2020-2021)  
+  - Period 2: IS(2019-2021) + OOS(2021-2022)
+  - Period 3: IS(2020-2022) + OOS(2022-2023)
+  - Period 4: IS(2021-2023) + OOS(2023-2024)
+- **Output**: Period definitions and directory structure under `results/rolling_experiments/`
+- **Duration**: < 1 minute
+
+### 2. Run Rolling Window Experiments
+```bash
+python run_rolling_window_experiment.py
+```
+
+- **Purpose**: Execute comprehensive rolling window validation
+  - Tests 5 window lengths × 4 time periods = 20 total experiments
+  - For each experiment: filters pairs, simulates OOS portfolio performance
+  - Uses dynamic budget allocation with 90% utilization target
+  - Tracks portfolio returns, Sharpe ratios, drawdown, and pair selection stability
+- **Output**: 
+  - `results/rolling_experiments/{period}/{window}mo/` - Individual experiment results
+  - `results/rolling_experiments/master_rolling_summary.csv` - Aggregated results
+- **Duration**: ~2-3 hours (5-10 minutes per window × 20 experiments)
+
+### 3. Analyze Rolling Results
+```bash
+python analyze_rolling_results.py
+```
+
+- **Purpose**: Create comprehensive analysis and visualizations
+  - Window stability analysis across different time periods
+  - Market regime sensitivity assessment
+  - Robustness metrics (coefficient of variation) and ranking
+  - Executive summary with implementation recommendations
+- **Output**: `results/rolling_analysis/` with plots and detailed report
+  - `efficiency_frontier.png` - Risk-return analysis across periods
+  - `portfolio_composition.png` - Diversification analysis  
+  - `window_performance_comparison.png` - Average performance with error bars
+  - `executive_summary.png` - Robustness insights
+  - `comprehensive_analysis_report.txt` - Full validation report
+
+## Key Components (Rolling Window Experiment)
+
+### Core Infrastructure
+- `rolling_period_manager.py` - Time period generation and data filtering utilities
+- `run_rolling_window_experiment.py` - Main orchestrator for all rolling experiments
+- `analyze_rolling_results.py` - Comprehensive analysis and visualization suite
+
+### Analysis Modules
+- `window_analyzer_fast.py` - Optimized pair filtering and metrics calculation
+- `window_portfolio_simulator.py` - Portfolio simulation with dynamic budget allocation
+- `visualization_utils.py` - Professional plotting utilities for rolling analysis
+
+## Expected Results (Rolling Window Experiment)
+
+The rolling window experiment will identify optimal parameters by comparing:
+- **Temporal Consistency**: Coefficient of variation in Sharpe ratios across periods
+- **Market Regime Robustness**: Performance stability across different market conditions  
+- **Risk-Adjusted Returns**: Average Sharpe ratio with confidence intervals
+- **Drawdown Stability**: Maximum drawdown consistency across time periods
+- **Implementation Confidence**: Statistical confidence for live deployment
+
+## Methodology Comparison
+
+### Single Period Optimization (Original)
+- **Approach**: Fixed IS(2018-2022) + OOS(2024) split
+- **Focus**: Maximum Out-of-Sample performance
+- **Risk**: Potential overfitting to specific market regime
+- **Use Case**: Quick parameter selection for immediate deployment
+
+### Rolling Window Validation (Advanced)  
+- **Approach**: Multiple overlapping IS/OOS combinations
+- **Focus**: Temporal robustness and regime-agnostic performance
+- **Benefit**: Higher confidence in parameter stability
+- **Use Case**: Production deployment with long-term reliability requirements
+
+## Trading Parameters (Both Experiments)
+- **LOOKBACK**: 24 (moving average window)
+- **ATR_LOOKBACK**: 168 (volatility normalization window)  
+- **THRESHOLD**: 0.25 (signal generation threshold)
