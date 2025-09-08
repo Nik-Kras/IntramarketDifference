@@ -17,7 +17,7 @@ import sys
 
 # Add parent directory to path to import trading functions
 sys.path.append('..')
-from trades_from_signal import get_trades_from_signal
+from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
 
 
 # -----------------------
@@ -42,6 +42,24 @@ def cmma(ohlc: pd.DataFrame, lookback: int, atr_lookback: int = 168) -> pd.Serie
 
 def threshold_revert_signal(ind: pd.Series, threshold: float) -> np.ndarray:
     """Generate mean reversion signals based on threshold crossings."""
+    
+    # TODO: PERFORMANCE OPTIMIZATION - CRITICAL BOTTLENECK
+    # PERFORMANCE: This function takes ~6,050μs per pair (38% of total processing time)
+    # ISSUE: O(n) Python loop with state tracking through 13,000+ values per pair
+    # 
+    # OPTIMIZATION: Replace with vectorized NumPy operations
+    # 1. Use np.where() cascaded conditions instead of Python loop
+    # 2. Use np.cumsum() for state accumulation instead of manual position tracking
+    # 3. Handle NaN values with np.isnan() masking before vectorized operations
+    # 4. Vectorize state transitions: above threshold → 1, below threshold → -1, zero crossing → 0
+    # 
+    # TESTING: Create test cases with known threshold patterns before optimization
+    # - Test above/below threshold transitions
+    # - Test zero crossings and position persistence
+    # - Compare signal arrays element-by-element for identical results
+    # 
+    # EXPECTED: 3-5x faster (from 6,050μs to 1,210-2,020μs per pair)
+    
     signal = np.zeros(len(ind))
     position = 0
     values = ind.values
