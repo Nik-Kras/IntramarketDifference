@@ -17,7 +17,7 @@ import sys
 
 # Add parent directory to path to import trading functions
 sys.path.append('..')
-from trades_from_signal import get_trades_from_signal
+from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
 
 
 # -----------------------

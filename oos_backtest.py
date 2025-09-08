@@ -21,7 +21,7 @@ import pandas_ta as ta
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from datetime import datetime
-from trades_from_signal import get_trades_from_signal
+from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
 
 # Configuration - Same as original backtesting
 LOOKBACK = 24               # MA window for cmma

@@ -4,7 +4,7 @@ import scipy
 import pandas_ta as ta
 import matplotlib.pyplot as plt
 import mplfinance as mpf
-from trades_from_signal import get_trades_from_signal
+from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
 
 def cmma(ohlc: pd.DataFrame, lookback: int, atr_lookback: int = 168):
     # cmma = Close minus moving average

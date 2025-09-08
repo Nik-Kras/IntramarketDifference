@@ -14,3 +14,6 @@ full_data
 data/in_sample
 data/out_of_sample
 parameter_optimization_experiment/data
+parameter_optimization_experiment/results/optimal_window/chronological_oos_trades.csv
+parameter_optimization_experiment/prod_results/
+parameter_optimization_experiment/prod_trades/
