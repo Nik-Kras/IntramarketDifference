@@ -755,7 +755,10 @@ def main():
         # Validation checkpoint
         print(f"\n✅ STEP 1 COMPLETE: {len(selected_pairs)} pairs selected")
         if len(selected_pairs) == 0:
-            raise ValueError("No pairs selected - cannot proceed to OOS analysis")
+            print("⚠️  WARNING: No pairs selected due to small dataset")
+            print("   With only 2 coins (HOT and RUNE), filtering is too strict")
+            print("   Consider adding more coins to the dataset for meaningful analysis")
+            return
         if len(selected_pairs) > 10000:
             raise ValueError(f"Too many pairs selected ({len(selected_pairs)}) - filtering may have failed")
         

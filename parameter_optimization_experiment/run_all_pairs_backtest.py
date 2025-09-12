@@ -18,7 +18,6 @@ import json
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import sys
 
 # Import core trading functions
 from core import (
@@ -27,8 +26,6 @@ from core import (
     LOOKBACK, ATR_LOOKBACK, THRESHOLD, MIN_OVERLAP
 )
 
-# Add parent directory to path to import trading functions
-sys.path.append('..')
 from trades_from_signal import get_trades_from_signal
 
 # Configuration

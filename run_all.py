@@ -6,7 +6,7 @@ import pandas as pd
 import pandas_ta as ta
 import statsmodels.api as sm
 from itertools import permutations
-from trades_from_signal import get_trades_from_signal
+from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
 from tqdm import tqdm
 
 # -----------------------

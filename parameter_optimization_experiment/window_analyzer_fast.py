@@ -174,8 +174,10 @@ def apply_selection_filters(results_df: pd.DataFrame,
         'initial_pairs': initial_count,
         'after_sharpe_filter': 0,
         'after_drawdown_filter': 0,
+        'after_trades_filter': 0,  # Added for compatibility
         'sharpe_rejected': [],
         'drawdown_rejected': [],
+        'trades_rejected': [],  # Added for compatibility
         'final_selected': []
     }
     
@@ -197,6 +199,7 @@ def apply_selection_filters(results_df: pd.DataFrame,
     drawdown_rejected = sharpe_passed[sharpe_passed['max_drawdown'] >= drawdown_threshold]
     
     filter_stats['after_drawdown_filter'] = len(final_selected)
+    filter_stats['after_trades_filter'] = len(final_selected)  # Same as after_drawdown for now
     filter_stats['drawdown_rejected'] = [
         f"{row['reference_coin']}_{row['trading_coin']}_{row['trading_type']} (DD: {row['max_drawdown']:.2%})"
         for _, row in drawdown_rejected.iterrows()
@@ -314,6 +317,7 @@ def analyze_window_fast(window_start: str, window_end: str,
     
     # Group and calculate metrics
     print("📊 Calculating pair metrics...")
+    # BUG: results_df trading_type has only both. Should have long, short, both. Pair Selection was only applied to both.
     results_df = group_and_analyze_trades_fast(windowed_trades_df)
     print(f"   Analyzed {len(results_df)} unique pairs")
     

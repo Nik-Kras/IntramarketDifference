@@ -15,13 +15,9 @@ import pandas as pd
 from datetime import datetime
 from typing import Dict, List
 from tqdm import tqdm
-import sys
-
 # Import core functions
 # Core imports not used in this file
 
-# Add parent directory to path
-sys.path.append('..')
 from trades_from_signal import get_trades_from_signal
 
 class WindowPortfolioSimulator:
@@ -424,8 +420,9 @@ class WindowPortfolioSimulator:
         daily_portfolio = portfolio_values.resample('D').last()  # End-of-day values
         daily_returns = daily_portfolio.pct_change().dropna()   # Actual daily returns
         
-        # Calculate metrics
-        total_return = (self.total_portfolio_value / self.initial_capital) - 1
+        # Calculate metrics - use final portfolio value from timeline
+        final_portfolio_value = portfolio_values.iloc[-1] if len(portfolio_values) > 0 else self.initial_capital
+        total_return = (final_portfolio_value / self.initial_capital) - 1
         
         # Sharpe ratio (daily returns annualized)
         if len(daily_returns) > 0 and daily_returns.std() > 0:
@@ -449,7 +446,7 @@ class WindowPortfolioSimulator:
             'volatility': volatility,
             'num_trades': len(self.completed_trades),
             'initial_capital': self.initial_capital,
-            'final_value': self.total_portfolio_value
+            'final_value': final_portfolio_value
         }
     
     def create_visualizations(self, output_dir: str) -> None:

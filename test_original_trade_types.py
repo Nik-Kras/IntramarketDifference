@@ -37,7 +37,7 @@ def test_original_algorithm():
     
     # Now check what happens if we manually extract signals and check long vs short
     from run_all import cmma, threshold_revert_signal, align_frames
-    from trades_from_signal import get_trades_from_signal
+    from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
     
     ref_df, traded_df = align_frames(ref_df, traded_df)
     traded_df = traded_df.copy()

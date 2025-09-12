@@ -46,17 +46,19 @@ def get_trades_from_signal(data: pd.DataFrame, signal: np.array):
 
             open_trade = [idx[i], close_arr[i], -1, np.nan]
         
-        if signal[i] == 0.0 and last_sig == -1.0: # Short exit
-            open_trade[2] = idx[i]
-            open_trade[3] = close_arr[i]
-            short_trades.append(open_trade)
-            open_trade = None
+        if signal[i] >= 0.0 and last_sig == -1.0: # Short exit
+            if open_trade is not None:
+                open_trade[2] = idx[i]
+                open_trade[3] = close_arr[i]
+                short_trades.append(open_trade)
+                open_trade = None
 
-        if signal[i] == 0.0  and last_sig == 1.0: # Long exit
-            open_trade[2] = idx[i]
-            open_trade[3] = close_arr[i]
-            long_trades.append(open_trade)
-            open_trade = None
+        if signal[i] <= 0.0  and last_sig == 1.0: # Long exit
+            if open_trade is not None:
+                open_trade[2] = idx[i]
+                open_trade[3] = close_arr[i]
+                long_trades.append(open_trade)
+                open_trade = None
 
         last_sig = signal[i]
 
