@@ -23,7 +23,12 @@ def clean_coin_name(filename):
     """Extract coin name from filename."""
     # Remove path and extension, then extract coin symbol
     basename = os.path.basename(filename)
-    if basename.endswith("_USDT-1h.csv"):
+    
+    # New naming format: {COIN}_USDT_USDT-1h-futures.csv
+    if basename.endswith("_USDT_USDT-1h-futures.csv"):
+        return basename.replace("_USDT_USDT-1h-futures.csv", "")
+    # Keep old format support for backward compatibility
+    elif basename.endswith("_USDT-1h.csv"):
         return basename.replace("_USDT-1h.csv", "")
     elif basename.endswith("USDT-1h.csv"):
         return basename.replace("USDT-1h.csv", "").replace("_", "")
@@ -106,9 +111,11 @@ def main():
     os.makedirs(in_sample_dir, exist_ok=True)
     os.makedirs(out_sample_dir, exist_ok=True)
     
-    # Find all CSV files
-    csv_files = glob.glob(os.path.join(FULL_DATA_DIR, "*_USDT-1h.csv"))
-    print(f"\n📋 Found {len(csv_files)} CSV files")
+    # Find all CSV files - support both old and new naming formats
+    csv_files_old = glob.glob(os.path.join(FULL_DATA_DIR, "*_USDT-1h.csv"))
+    csv_files_new = glob.glob(os.path.join(FULL_DATA_DIR, "*_USDT_USDT-1h-futures.csv"))
+    csv_files = csv_files_old + csv_files_new
+    print(f"\n📋 Found {len(csv_files)} CSV files (old format: {len(csv_files_old)}, new format: {len(csv_files_new)})")
     
     # Process each coin
     successful_coins = []
