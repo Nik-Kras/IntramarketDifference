@@ -1,0 +1,30 @@
+PAIR SELECTION REPORT
+==================================================
+Window: 2022-07-01 to 2024-01-01
+Generated: 2025-09-16 17:10:50
+
+FILTERING CRITERIA
+--------------------
+Sharpe Ratio > 2.0
+Max Drawdown < 50%
+
+FILTERING RESULTS
+--------------------
+Initial pairs: 2
+After Sharpe filter: 1 (50.0%)
+After Drawdown filter: 1 (50.0%)
+After Trades filter: 1 (50.0%)
+
+REJECTED BY SHARPE RATIO (1 pairs):
+------------------------------
+  1000LUNC_IOTA_both (Sharpe: 1.39)
+
+REJECTED BY DRAWDOWN (0 pairs):
+------------------------------
+
+REJECTED BY TRADES FILTER (0 pairs):
+------------------------------
+
+FINAL SELECTED PAIRS (1 pairs):
+------------------------------
+  IOTA_1000LUNC_both

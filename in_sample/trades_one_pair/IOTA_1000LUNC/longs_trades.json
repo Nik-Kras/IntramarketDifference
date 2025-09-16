@@ -1,0 +1,1400 @@
+[
+  {
+    "time_entered": "2022-09-17T01:00:00",
+    "time_exited": "2022-09-17T07:00:00",
+    "log_return": 0.09459703464906795,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-17T14:00:00",
+    "time_exited": "2022-09-18T12:00:00",
+    "log_return": -0.031936870639168204,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-20T15:00:00",
+    "time_exited": "2022-09-20T20:00:00",
+    "log_return": 0.05717742000745061,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-21T00:00:00",
+    "time_exited": "2022-09-21T05:00:00",
+    "log_return": 0.021017722823956687,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-21T17:00:00",
+    "time_exited": "2022-09-21T19:00:00",
+    "log_return": 0.05877643647186896,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-22T10:00:00",
+    "time_exited": "2022-09-23T10:00:00",
+    "log_return": -0.04907399302254,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-23T11:00:00",
+    "time_exited": "2022-09-25T01:00:00",
+    "log_return": -0.02082540902145991,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-25T21:00:00",
+    "time_exited": "2022-09-26T09:00:00",
+    "log_return": 0.39960623648854937,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-26T09:00:00",
+    "time_exited": "2022-09-26T09:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-27T07:00:00",
+    "time_exited": "2022-09-27T22:00:00",
+    "log_return": -0.04524706564660061,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-28T08:00:00",
+    "time_exited": "2022-09-28T10:00:00",
+    "log_return": 0.07945353662014167,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-09-28T10:00:00",
+    "time_exited": "2022-09-28T10:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-01T07:00:00",
+    "time_exited": "2022-10-01T21:00:00",
+    "log_return": 0.0596257604352657,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-03T05:00:00",
+    "time_exited": "2022-10-03T08:00:00",
+    "log_return": 0.018001727589123367,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-03T14:00:00",
+    "time_exited": "2022-10-05T00:00:00",
+    "log_return": -0.014659280994064215,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-08T03:00:00",
+    "time_exited": "2022-10-08T13:00:00",
+    "log_return": 0.01800602663875387,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-09T05:00:00",
+    "time_exited": "2022-10-09T20:00:00",
+    "log_return": 0.020446497442518013,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-11T17:00:00",
+    "time_exited": "2022-10-12T01:00:00",
+    "log_return": 0.02722459106795844,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-13T18:00:00",
+    "time_exited": "2022-10-14T14:00:00",
+    "log_return": -0.017999046022180956,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-16T16:00:00",
+    "time_exited": "2022-10-17T00:00:00",
+    "log_return": 0.032088314551500664,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-17T12:00:00",
+    "time_exited": "2022-10-18T08:00:00",
+    "log_return": 0.0045523599104602555,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-19T05:00:00",
+    "time_exited": "2022-10-19T14:00:00",
+    "log_return": 0.01390046911836525,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-20T14:00:00",
+    "time_exited": "2022-10-23T00:00:00",
+    "log_return": -0.06996438340723607,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-25T00:00:00",
+    "time_exited": "2022-10-25T09:00:00",
+    "log_return": -0.0021753325959088295,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-25T17:00:00",
+    "time_exited": "2022-10-26T04:00:00",
+    "log_return": 0.011210414268022082,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-27T03:00:00",
+    "time_exited": "2022-10-27T13:00:00",
+    "log_return": -0.012739025777429826,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-28T19:00:00",
+    "time_exited": "2022-10-30T08:00:00",
+    "log_return": 0.048399767912277736,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-10-30T08:00:00",
+    "time_exited": "2022-10-30T08:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-01T10:00:00",
+    "time_exited": "2022-11-01T22:00:00",
+    "log_return": -0.026106745837720977,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-01T23:00:00",
+    "time_exited": "2022-11-02T04:00:00",
+    "log_return": 0.056727657856548847,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-03T02:00:00",
+    "time_exited": "2022-11-03T03:00:00",
+    "log_return": 0.036105004642116356,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-03T10:00:00",
+    "time_exited": "2022-11-03T12:00:00",
+    "log_return": 0.022979159341179133,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-03T12:00:00",
+    "time_exited": "2022-11-03T12:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-03T17:00:00",
+    "time_exited": "2022-11-03T22:00:00",
+    "log_return": 0.0018231545615149567,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-04T03:00:00",
+    "time_exited": "2022-11-04T19:00:00",
+    "log_return": 0.06028025551324762,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-05T17:00:00",
+    "time_exited": "2022-11-06T01:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-08T01:00:00",
+    "time_exited": "2022-11-08T03:00:00",
+    "log_return": -0.05270106866114129,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-10T13:00:00",
+    "time_exited": "2022-11-11T09:00:00",
+    "log_return": 0.0009915717222950275,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-13T22:00:00",
+    "time_exited": "2022-11-14T14:00:00",
+    "log_return": 0.009345862418237599,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-19T08:00:00",
+    "time_exited": "2022-11-20T18:00:00",
+    "log_return": -0.03338523814275473,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-23T19:00:00",
+    "time_exited": "2022-11-24T10:00:00",
+    "log_return": 0.0024752487885429737,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-27T01:00:00",
+    "time_exited": "2022-11-27T06:00:00",
+    "log_return": 0.014317082399492061,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-11-30T04:00:00",
+    "time_exited": "2022-11-30T17:00:00",
+    "log_return": -0.002473718020878141,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-03T00:00:00",
+    "time_exited": "2022-12-03T17:00:00",
+    "log_return": 0.011092737149718113,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-04T04:00:00",
+    "time_exited": "2022-12-04T06:00:00",
+    "log_return": 0.010798627242225578,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-05T05:00:00",
+    "time_exited": "2022-12-06T02:00:00",
+    "log_return": -0.010792493282022841,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-09T08:00:00",
+    "time_exited": "2022-12-09T13:00:00",
+    "log_return": 0.0005836008336050728,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-10T11:00:00",
+    "time_exited": "2022-12-12T00:00:00",
+    "log_return": -0.02910808415807077,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-13T09:00:00",
+    "time_exited": "2022-12-13T16:00:00",
+    "log_return": 0.03414527578120172,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-13T20:00:00",
+    "time_exited": "2022-12-14T02:00:00",
+    "log_return": 0.001780944370994692,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-14T02:00:00",
+    "time_exited": "2022-12-14T02:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-16T22:00:00",
+    "time_exited": "2022-12-17T04:00:00",
+    "log_return": 0.048860292855599854,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-17T13:00:00",
+    "time_exited": "2022-12-17T23:00:00",
+    "log_return": 0.023297912224821873,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-19T18:00:00",
+    "time_exited": "2022-12-20T13:00:00",
+    "log_return": 0.03733767043764431,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-21T12:00:00",
+    "time_exited": "2022-12-22T04:00:00",
+    "log_return": 0.01231732277757968,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-25T00:00:00",
+    "time_exited": "2022-12-25T23:00:00",
+    "log_return": 0.0076045993852192125,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-28T10:00:00",
+    "time_exited": "2022-12-29T18:00:00",
+    "log_return": -0.040716448053325166,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2022-12-30T12:00:00",
+    "time_exited": "2022-12-31T11:00:00",
+    "log_return": 0.00616229269453638,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-02T07:00:00",
+    "time_exited": "2023-01-03T01:00:00",
+    "log_return": 0.06679748092351576,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-05T10:00:00",
+    "time_exited": "2023-01-06T04:00:00",
+    "log_return": -0.01369437768955983,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-07T00:00:00",
+    "time_exited": "2023-01-07T11:00:00",
+    "log_return": -0.014853356704986815,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-09T00:00:00",
+    "time_exited": "2023-01-09T03:00:00",
+    "log_return": 0.0396336702966283,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-09T04:00:00",
+    "time_exited": "2023-01-09T16:00:00",
+    "log_return": 0.0722486595635385,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-09T16:00:00",
+    "time_exited": "2023-01-09T16:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-10T19:00:00",
+    "time_exited": "2023-01-11T16:00:00",
+    "log_return": -0.04472414565208103,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-11T23:00:00",
+    "time_exited": "2023-01-12T14:00:00",
+    "log_return": -0.013414835318082933,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-12T20:00:00",
+    "time_exited": "2023-01-13T05:00:00",
+    "log_return": -0.00297530716365452,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-14T00:00:00",
+    "time_exited": "2023-01-14T02:00:00",
+    "log_return": 0.07140139511537219,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-14T02:00:00",
+    "time_exited": "2023-01-14T02:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-15T16:00:00",
+    "time_exited": "2023-01-15T22:00:00",
+    "log_return": 0.005506621844194516,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-17T11:00:00",
+    "time_exited": "2023-01-18T03:00:00",
+    "log_return": 0.005605395842883918,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-19T09:00:00",
+    "time_exited": "2023-01-19T13:00:00",
+    "log_return": -0.011124960226654752,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-20T17:00:00",
+    "time_exited": "2023-01-21T09:00:00",
+    "log_return": 0.05054416593461838,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-22T08:00:00",
+    "time_exited": "2023-01-24T17:00:00",
+    "log_return": -0.022272635609123292,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-25T21:00:00",
+    "time_exited": "2023-01-28T03:00:00",
+    "log_return": -0.003438398803032709,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-01-29T09:00:00",
+    "time_exited": "2023-01-29T22:00:00",
+    "log_return": 0.009739406691023425,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-01T21:00:00",
+    "time_exited": "2023-02-02T22:00:00",
+    "log_return": -0.011682375854356681,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-04T05:00:00",
+    "time_exited": "2023-02-05T18:00:00",
+    "log_return": -0.0949056081390513,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-06T01:00:00",
+    "time_exited": "2023-02-06T04:00:00",
+    "log_return": 0.033607498891087884,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-06T18:00:00",
+    "time_exited": "2023-02-06T21:00:00",
+    "log_return": -0.001622060371868055,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-07T20:00:00",
+    "time_exited": "2023-02-08T14:00:00",
+    "log_return": -0.012530809564963287,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-09T15:00:00",
+    "time_exited": "2023-02-10T18:00:00",
+    "log_return": -0.06812669559910241,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-14T23:00:00",
+    "time_exited": "2023-02-16T22:00:00",
+    "log_return": -0.02447152854068502,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-17T18:00:00",
+    "time_exited": "2023-02-18T16:00:00",
+    "log_return": 0.02749515115380528,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-19T10:00:00",
+    "time_exited": "2023-02-21T02:00:00",
+    "log_return": -0.009384233089893704,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-24T05:00:00",
+    "time_exited": "2023-02-24T09:00:00",
+    "log_return": 0.05647145908325045,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-24T09:00:00",
+    "time_exited": "2023-02-24T09:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-02-25T06:00:00",
+    "time_exited": "2023-02-25T21:00:00",
+    "log_return": -0.03519968213163021,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-01T12:00:00",
+    "time_exited": "2023-03-02T01:00:00",
+    "log_return": -0.004259209359396233,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-08T13:00:00",
+    "time_exited": "2023-03-09T16:00:00",
+    "log_return": 0.0007421150618884935,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-11T17:00:00",
+    "time_exited": "2023-03-12T15:00:00",
+    "log_return": 0.00840341079637938,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-13T15:00:00",
+    "time_exited": "2023-03-14T14:00:00",
+    "log_return": 0.052391176343026306,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-15T00:00:00",
+    "time_exited": "2023-03-15T05:00:00",
+    "log_return": 0.004477619421294259,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-16T16:00:00",
+    "time_exited": "2023-03-18T09:00:00",
+    "log_return": 0.05920732106423313,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-20T00:00:00",
+    "time_exited": "2023-03-20T16:00:00",
+    "log_return": -0.014826646946574906,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-21T17:00:00",
+    "time_exited": "2023-03-22T00:00:00",
+    "log_return": 0.007843177461025879,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-23T13:00:00",
+    "time_exited": "2023-03-24T05:00:00",
+    "log_return": 0.028216301573213285,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-26T09:00:00",
+    "time_exited": "2023-03-27T01:00:00",
+    "log_return": -0.00886030766240044,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-03-28T15:00:00",
+    "time_exited": "2023-03-30T06:00:00",
+    "log_return": 0.021382393591355856,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-01T00:00:00",
+    "time_exited": "2023-04-01T18:00:00",
+    "log_return": 0.00556661477205349,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-04T04:00:00",
+    "time_exited": "2023-04-05T01:00:00",
+    "log_return": 0.02591238098563965,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-05T05:00:00",
+    "time_exited": "2023-04-05T17:00:00",
+    "log_return": -0.01860142595054555,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-05T22:00:00",
+    "time_exited": "2023-04-06T18:00:00",
+    "log_return": -0.0024420036555517443,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-07T23:00:00",
+    "time_exited": "2023-04-08T04:00:00",
+    "log_return": -0.00242424361150628,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-08T10:00:00",
+    "time_exited": "2023-04-08T18:00:00",
+    "log_return": 0.001622060371868051,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-10T19:00:00",
+    "time_exited": "2023-04-11T12:00:00",
+    "log_return": 0.0072260450917396276,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-14T00:00:00",
+    "time_exited": "2023-04-14T04:00:00",
+    "log_return": 0.02387483442891926,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-15T01:00:00",
+    "time_exited": "2023-04-15T07:00:00",
+    "log_return": 0.003147130843018642,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-16T17:00:00",
+    "time_exited": "2023-04-17T13:00:00",
+    "log_return": -0.020635652877369955,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-20T09:00:00",
+    "time_exited": "2023-04-21T11:00:00",
+    "log_return": -0.03037109787629876,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-22T02:00:00",
+    "time_exited": "2023-04-22T08:00:00",
+    "log_return": 0.010227890183256542,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-04-26T15:00:00",
+    "time_exited": "2023-04-27T12:00:00",
+    "log_return": -0.05333392212470811,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-02T00:00:00",
+    "time_exited": "2023-05-02T13:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-03T13:00:00",
+    "time_exited": "2023-05-04T13:00:00",
+    "log_return": 0.01740856342826391,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-05T08:00:00",
+    "time_exited": "2023-05-07T14:00:00",
+    "log_return": -0.059105834124344205,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-08T23:00:00",
+    "time_exited": "2023-05-09T15:00:00",
+    "log_return": -0.0023781224049673243,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-11T14:00:00",
+    "time_exited": "2023-05-12T11:00:00",
+    "log_return": -0.02190289288422079,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-15T08:00:00",
+    "time_exited": "2023-05-16T13:00:00",
+    "log_return": -0.017837708186021407,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-18T03:00:00",
+    "time_exited": "2023-05-18T18:00:00",
+    "log_return": -0.024203601740886364,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-22T00:00:00",
+    "time_exited": "2023-05-23T11:00:00",
+    "log_return": 0.026034294365875614,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-23T16:00:00",
+    "time_exited": "2023-05-25T02:00:00",
+    "log_return": -0.054191932874852175,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-25T09:00:00",
+    "time_exited": "2023-05-26T08:00:00",
+    "log_return": 0.018824085245635617,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-28T00:00:00",
+    "time_exited": "2023-05-29T01:00:00",
+    "log_return": 0.005685063634608259,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-29T06:00:00",
+    "time_exited": "2023-05-30T14:00:00",
+    "log_return": -0.02412523668862612,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-05-31T18:00:00",
+    "time_exited": "2023-06-01T10:00:00",
+    "log_return": -0.0011897681355885735,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-03T06:00:00",
+    "time_exited": "2023-06-03T09:00:00",
+    "log_return": 0.00588583217726135,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-03T15:00:00",
+    "time_exited": "2023-06-04T00:00:00",
+    "log_return": 0.03822121282019767,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-04T00:00:00",
+    "time_exited": "2023-06-04T00:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-05T09:00:00",
+    "time_exited": "2023-06-05T15:00:00",
+    "log_return": -0.044247138056103016,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-05T17:00:00",
+    "time_exited": "2023-06-05T21:00:00",
+    "log_return": 0.010186845306992997,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-06T14:00:00",
+    "time_exited": "2023-06-06T16:00:00",
+    "log_return": 0.06171397202323843,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-06T16:00:00",
+    "time_exited": "2023-06-06T16:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-11T01:00:00",
+    "time_exited": "2023-06-11T06:00:00",
+    "log_return": 0.023158460925368045,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-11T23:00:00",
+    "time_exited": "2023-06-12T15:00:00",
+    "log_return": -0.0021750337691474786,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-15T19:00:00",
+    "time_exited": "2023-06-16T10:00:00",
+    "log_return": -0.007168489478612516,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-16T17:00:00",
+    "time_exited": "2023-06-17T21:00:00",
+    "log_return": -0.027283732601730892,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-18T13:00:00",
+    "time_exited": "2023-06-18T23:00:00",
+    "log_return": 0.00033793297984206896,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-20T11:00:00",
+    "time_exited": "2023-06-20T14:00:00",
+    "log_return": -0.015152655370500001,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-20T17:00:00",
+    "time_exited": "2023-06-22T19:00:00",
+    "log_return": 0.02715795515849541,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-23T10:00:00",
+    "time_exited": "2023-06-24T12:00:00",
+    "log_return": 0.04485541466665576,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-25T00:00:00",
+    "time_exited": "2023-06-25T12:00:00",
+    "log_return": 0.01474067199590741,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-26T10:00:00",
+    "time_exited": "2023-06-26T16:00:00",
+    "log_return": 0.019884846167187675,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-27T02:00:00",
+    "time_exited": "2023-06-27T15:00:00",
+    "log_return": -0.009149393963517301,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-29T03:00:00",
+    "time_exited": "2023-06-29T08:00:00",
+    "log_return": 0.010009394554545322,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-30T03:00:00",
+    "time_exited": "2023-06-30T13:00:00",
+    "log_return": -0.03659015140852592,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-06-30T18:00:00",
+    "time_exited": "2023-07-01T16:00:00",
+    "log_return": 0.011739115128934817,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-04T15:00:00",
+    "time_exited": "2023-07-06T03:00:00",
+    "log_return": -0.04249931351727928,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-07T01:00:00",
+    "time_exited": "2023-07-07T16:00:00",
+    "log_return": 0.010039125028328402,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-12T03:00:00",
+    "time_exited": "2023-07-12T11:00:00",
+    "log_return": 0.0026458223492507567,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-13T15:00:00",
+    "time_exited": "2023-07-14T07:00:00",
+    "log_return": 0.03659365841073397,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-15T06:00:00",
+    "time_exited": "2023-07-15T16:00:00",
+    "log_return": 0.0022040493813083573,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-16T14:00:00",
+    "time_exited": "2023-07-16T16:00:00",
+    "log_return": 0.026834751869558617,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-16T16:00:00",
+    "time_exited": "2023-07-16T16:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-17T04:00:00",
+    "time_exited": "2023-07-17T07:00:00",
+    "log_return": 0.032016578456991004,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-18T02:00:00",
+    "time_exited": "2023-07-18T15:00:00",
+    "log_return": -0.03395873864850465,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-20T08:00:00",
+    "time_exited": "2023-07-20T18:00:00",
+    "log_return": -0.02859818627826613,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-23T11:00:00",
+    "time_exited": "2023-07-24T09:00:00",
+    "log_return": -0.07214435616037895,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-26T21:00:00",
+    "time_exited": "2023-07-27T13:00:00",
+    "log_return": 0.00220615360959299,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-28T00:00:00",
+    "time_exited": "2023-07-28T05:00:00",
+    "log_return": 0.001856551062377256,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-07-29T13:00:00",
+    "time_exited": "2023-07-30T04:00:00",
+    "log_return": 0.009486814035123673,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-01T11:00:00",
+    "time_exited": "2023-08-01T20:00:00",
+    "log_return": 0.008898974562957879,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-05T21:00:00",
+    "time_exited": "2023-08-06T04:00:00",
+    "log_return": 0.02278936163093117,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-07T10:00:00",
+    "time_exited": "2023-08-08T02:00:00",
+    "log_return": -0.018339725308756747,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-08T15:00:00",
+    "time_exited": "2023-08-09T18:00:00",
+    "log_return": -0.004233217789795393,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-15T19:00:00",
+    "time_exited": "2023-08-16T22:00:00",
+    "log_return": -0.07224629120449942,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-21T07:00:00",
+    "time_exited": "2023-08-21T08:00:00",
+    "log_return": -0.007682496172016394,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-22T18:00:00",
+    "time_exited": "2023-08-24T14:00:00",
+    "log_return": 0.008074135528263183,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-25T11:00:00",
+    "time_exited": "2023-08-25T19:00:00",
+    "log_return": 0.0028671571090924876,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-26T14:00:00",
+    "time_exited": "2023-08-27T13:00:00",
+    "log_return": -0.015592996920917895,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-29T16:00:00",
+    "time_exited": "2023-08-30T00:00:00",
+    "log_return": 0.00015476282627799277,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-08-31T05:00:00",
+    "time_exited": "2023-09-01T00:00:00",
+    "log_return": -0.03020708835788909,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-01T09:00:00",
+    "time_exited": "2023-09-02T07:00:00",
+    "log_return": -0.013634708146328368,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-02T08:00:00",
+    "time_exited": "2023-09-02T10:00:00",
+    "log_return": 0.015960438549648754,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-02T16:00:00",
+    "time_exited": "2023-09-03T08:00:00",
+    "log_return": -0.0018334866374753777,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-03T19:00:00",
+    "time_exited": "2023-09-04T14:00:00",
+    "log_return": 0.02690298418875355,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-06T05:00:00",
+    "time_exited": "2023-09-08T07:00:00",
+    "log_return": 0.012253837715351048,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-09T01:00:00",
+    "time_exited": "2023-09-09T10:00:00",
+    "log_return": -0.00082162522081631,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-10T17:00:00",
+    "time_exited": "2023-09-11T01:00:00",
+    "log_return": 0.0035602309369624475,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-11T10:00:00",
+    "time_exited": "2023-09-11T12:00:00",
+    "log_return": 0.0135291530334944,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-13T08:00:00",
+    "time_exited": "2023-09-14T05:00:00",
+    "log_return": -0.004672501362392857,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-22T20:00:00",
+    "time_exited": "2023-09-24T04:00:00",
+    "log_return": 0.0014874806477892316,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-25T15:00:00",
+    "time_exited": "2023-09-26T10:00:00",
+    "log_return": -0.015683359015551752,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-09-28T07:00:00",
+    "time_exited": "2023-09-30T05:00:00",
+    "log_return": -0.022440891141096896,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-01T05:00:00",
+    "time_exited": "2023-10-02T07:00:00",
+    "log_return": 0.013601397831865963,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-03T14:00:00",
+    "time_exited": "2023-10-05T03:00:00",
+    "log_return": -0.025883797960524636,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-06T01:00:00",
+    "time_exited": "2023-10-06T08:00:00",
+    "log_return": 0.007383909224819543,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-08T15:00:00",
+    "time_exited": "2023-10-09T10:00:00",
+    "log_return": -0.034673408623605274,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-13T07:00:00",
+    "time_exited": "2023-10-14T20:00:00",
+    "log_return": 0.015024741058285773,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-16T16:00:00",
+    "time_exited": "2023-10-17T12:00:00",
+    "log_return": -0.01875438370225432,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-17T20:00:00",
+    "time_exited": "2023-10-18T01:00:00",
+    "log_return": -0.0008967806178978812,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-21T07:00:00",
+    "time_exited": "2023-10-21T13:00:00",
+    "log_return": 0.023315104978576463,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-22T01:00:00",
+    "time_exited": "2023-10-22T23:00:00",
+    "log_return": 0.011671948505505908,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-26T07:00:00",
+    "time_exited": "2023-10-26T09:00:00",
+    "log_return": 0.02854705821266043,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-26T09:00:00",
+    "time_exited": "2023-10-26T09:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-26T15:00:00",
+    "time_exited": "2023-10-27T04:00:00",
+    "log_return": 0.009953525746450748,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-28T09:00:00",
+    "time_exited": "2023-10-28T12:00:00",
+    "log_return": 0.009579801322261203,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-29T00:00:00",
+    "time_exited": "2023-10-30T03:00:00",
+    "log_return": 0.010197863408422088,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-30T19:00:00",
+    "time_exited": "2023-10-31T07:00:00",
+    "log_return": -0.011204169082948062,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-10-31T08:00:00",
+    "time_exited": "2023-10-31T11:00:00",
+    "log_return": 0.0001540476010134715,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-02T10:00:00",
+    "time_exited": "2023-11-02T15:00:00",
+    "log_return": -0.017688591528947365,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-02T19:00:00",
+    "time_exited": "2023-11-03T09:00:00",
+    "log_return": -0.0313930661747103,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-04T11:00:00",
+    "time_exited": "2023-11-05T11:00:00",
+    "log_return": 0.023638859730554088,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-06T13:00:00",
+    "time_exited": "2023-11-06T14:00:00",
+    "log_return": 0.020456107099262218,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-07T17:00:00",
+    "time_exited": "2023-11-09T01:00:00",
+    "log_return": 0.08560204085828714,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-09T01:00:00",
+    "time_exited": "2023-11-09T01:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-12T11:00:00",
+    "time_exited": "2023-11-13T01:00:00",
+    "log_return": -0.004560611307641578,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-15T19:00:00",
+    "time_exited": "2023-11-16T04:00:00",
+    "log_return": 0.031007452112788613,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-19T06:00:00",
+    "time_exited": "2023-11-20T02:00:00",
+    "log_return": 0.01634633218113548,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-23T06:00:00",
+    "time_exited": "2023-11-24T02:00:00",
+    "log_return": 0.005924347474376986,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-27T18:00:00",
+    "time_exited": "2023-11-28T15:00:00",
+    "log_return": 0.059906558851624776,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-11-30T12:00:00",
+    "time_exited": "2023-11-30T12:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-01T06:00:00",
+    "time_exited": "2023-12-01T10:00:00",
+    "log_return": -0.016440133952272427,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-03T06:00:00",
+    "time_exited": "2023-12-03T10:00:00",
+    "log_return": 0.11280559255434007,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-03T10:00:00",
+    "time_exited": "2023-12-03T10:00:00",
+    "log_return": 0.0,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-05T04:00:00",
+    "time_exited": "2023-12-05T05:00:00",
+    "log_return": 0.06519138493163734,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-05T13:00:00",
+    "time_exited": "2023-12-06T00:00:00",
+    "log_return": 0.03107400017404705,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-06T01:00:00",
+    "time_exited": "2023-12-06T04:00:00",
+    "log_return": 0.015506926445904576,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-06T06:00:00",
+    "time_exited": "2023-12-06T10:00:00",
+    "log_return": 0.03333401477055014,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-07T06:00:00",
+    "time_exited": "2023-12-08T03:00:00",
+    "log_return": -0.033809452774553515,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-08T23:00:00",
+    "time_exited": "2023-12-09T02:00:00",
+    "log_return": 0.026316030444571595,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-09T15:00:00",
+    "time_exited": "2023-12-10T09:00:00",
+    "log_return": -0.06232979577801529,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-11T16:00:00",
+    "time_exited": "2023-12-12T05:00:00",
+    "log_return": 0.03522153763477561,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-13T07:00:00",
+    "time_exited": "2023-12-15T02:00:00",
+    "log_return": 0.12679324467474237,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-15T07:00:00",
+    "time_exited": "2023-12-15T23:00:00",
+    "log_return": -0.06340972544259242,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-18T23:00:00",
+    "time_exited": "2023-12-19T03:00:00",
+    "log_return": 0.012543260825256333,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-20T07:00:00",
+    "time_exited": "2023-12-21T04:00:00",
+    "log_return": 0.015503201415713996,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-21T23:00:00",
+    "time_exited": "2023-12-22T16:00:00",
+    "log_return": 0.04758835498591075,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-23T22:00:00",
+    "time_exited": "2023-12-24T05:00:00",
+    "log_return": 0.009935593473277507,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-25T16:00:00",
+    "time_exited": "2023-12-26T02:00:00",
+    "log_return": 0.010023890471713606,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-26T04:00:00",
+    "time_exited": "2023-12-26T06:00:00",
+    "log_return": -0.03575631113676159,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-27T09:00:00",
+    "time_exited": "2023-12-28T03:00:00",
+    "log_return": 0.029295468467799637,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-29T00:00:00",
+    "time_exited": "2023-12-30T00:00:00",
+    "log_return": 0.007359218042010368,
+    "trade_type": "long"
+  },
+  {
+    "time_entered": "2023-12-30T02:00:00",
+    "time_exited": "2023-12-30T22:00:00",
+    "log_return": 0.02021124395320307,
+    "trade_type": "long"
+  }
+]

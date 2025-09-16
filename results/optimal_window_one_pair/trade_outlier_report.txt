@@ -1,0 +1,68 @@
+================================================================================
+TRADE OUTLIER DETECTION REPORT
+================================================================================
+
+Analysis Date: 2025-09-16 17:10:55
+Trade Date Range: 2024-01-08 01:00:00 to 2025-09-08 13:00:00
+Total Trades Analyzed: 372
+Outlier Trades Detected: 4
+
+--------------------------------------------------------------------------------
+OUTLIER TRADE DETAILS
+--------------------------------------------------------------------------------
+
+Outlier Trade #1
+Date: 2024-03-05 07:00
+Trade Return: 25.08%
+Trading Coin: 1000LUNC
+Reference Coin: IOTA
+Trade Type: long
+Z-Score: 6.28
+
+Outlier Trade #2
+Date: 2024-12-09 03:00
+Trade Return: -14.69%
+Trading Coin: 1000LUNC
+Reference Coin: IOTA
+Trade Type: long
+Z-Score: 3.92
+
+Outlier Trade #3
+Date: 2024-03-01 22:00
+Trade Return: -13.95%
+Trading Coin: 1000LUNC
+Reference Coin: IOTA
+Trade Type: short
+Z-Score: 3.73
+
+Outlier Trade #4
+Date: 2024-06-22 03:00
+Trade Return: -13.51%
+Trading Coin: 1000LUNC
+Reference Coin: IOTA
+Trade Type: long
+Z-Score: 3.62
+
+--------------------------------------------------------------------------------
+STATISTICAL SUMMARY
+--------------------------------------------------------------------------------
+
+Mean Trade Return: 0.5974%
+Std Dev Trade Return: 3.9042%
+Min Trade Return: -14.69%
+Max Trade Return: 25.08%
+Skewness: 0.0461
+Kurtosis: 5.4260
+
+Positive Outlier Trades: 1
+Negative Outlier Trades: 3
+Outlier Percentage: 1.0753%
+Largest Positive Return: 25.08%
+Largest Negative Return: -14.69%
+
+Top 10 Coins with Most Outlier Trades:
+  1000LUNC: 4 outlier trades
+
+================================================================================
+END OF REPORT
+================================================================================
