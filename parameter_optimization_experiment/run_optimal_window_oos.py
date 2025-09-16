@@ -56,6 +56,13 @@ def run_in_sample_analysis() -> pd.DataFrame:
         print(f"📂 Loading existing selected pairs from: {selected_pairs_file}")
         selected_pairs = pd.read_csv(selected_pairs_file)
         print(f"✅ Loaded {len(selected_pairs)} pre-selected optimal pairs")
+        
+        # Generate coin pair distribution visualization
+        from visualization_utils import create_coin_pair_distribution
+        print("🎨 Generating coin pair distribution visualization...")
+        create_coin_pair_distribution(selected_pairs, 
+                                     os.path.join(RESULTS_DIR, 'coin_pair_distribution.png'))
+        
         return selected_pairs
     
     # Use the fast analyzer to get selected pairs
@@ -84,6 +91,12 @@ def run_in_sample_analysis() -> pd.DataFrame:
     # Generate selection report
     generate_selection_report(filter_stats, window_start, window_end, 
                             os.path.join(RESULTS_DIR, 'selection_report.txt'))
+    
+    # Generate coin pair distribution visualization
+    from visualization_utils import create_coin_pair_distribution
+    print("🎨 Generating coin pair distribution visualization...")
+    create_coin_pair_distribution(selected_pairs, 
+                                 os.path.join(RESULTS_DIR, 'coin_pair_distribution.png'))
     
     return selected_pairs
 
@@ -883,6 +896,7 @@ def main():
         print(f"📁 All results saved to: {RESULTS_DIR}/")
         print("\n📊 Generated Files:")
         print("   • selected_pairs.csv - IS-selected optimal pairs")
+        print("   • coin_pair_distribution.png - Trading coins and their reference pairs")
         print("   • chronological_oos_trades.csv - All OOS trades in time order")
         print("   • weekly_trade_counts_by_coin.csv - Weekly trade matrix")
         print("   • weekly_top10_coins_traded.csv - Top-10 ranking per week")
@@ -890,8 +904,9 @@ def main():
         print("   • all_coins_trade_distribution.png - All trading coins histogram")
         print("   • top20_coins_trade_distribution.png - Top-20 coins focused view")
         print("   • portfolio_combined_analysis.png - Combined portfolio visualization")
-        print("   • pnl_by_coin.html - P&L breakdown by coin")
-        print("   • trade_outlier_analysis.html - Trade outlier detection visualization")
+        print("   • budget_allocation.png - Budget and active trades timeline")
+        print("   • pnl_by_coin.html/.png - Cumulative return by coin (% basis)")
+        print("   • trade_outlier_analysis.html - Optimized trade outlier visualization")
         print("   • trade_outlier_report.txt - Detailed trade outlier analysis report")
         print("   • portfolio_summary.json - Complete metrics summary")
         

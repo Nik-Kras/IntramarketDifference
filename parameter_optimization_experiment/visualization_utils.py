@@ -68,8 +68,8 @@ def create_portfolio_equity_curve(portfolio_df: pd.DataFrame, initial_capital: f
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, output_path: str):
-    """Create budget allocation timeline visualization."""
+def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, output_path: str, max_trades: int = None):
+    """Create budget allocation timeline visualization with active trades."""
     
     set_professional_style()
     
@@ -90,20 +90,28 @@ def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, output_path: s
     plt.legend()
     plt.grid(True, alpha=0.3)
     
-    # Bottom subplot: Dynamic trade amount (if available)
+    # Bottom subplot: Active trades timeline
     plt.subplot(2, 1, 2)
-    if 'current_trade_amount' in portfolio_df.columns:
-        plt.plot(portfolio_df.index, portfolio_df['current_trade_amount'], 
-                color=COLORS['secondary'], linewidth=2, label='Current Trade Amount')
-        plt.title('Dynamic Trade Amount (Rebalancing)', fontsize=12, fontweight='bold')
+    
+    # Use correct column name based on what's available
+    trades_col = 'active_trades_count' if 'active_trades_count' in portfolio_df.columns else 'num_active_trades'
+    
+    if trades_col in portfolio_df.columns:
+        plt.plot(portfolio_df.index, portfolio_df[trades_col], 
+                color=COLORS['warning'], linewidth=2, label='Active Trades')
+        if max_trades:
+            plt.axhline(y=max_trades, color=COLORS['danger'], linestyle='--', alpha=0.7, 
+                       label=f'Max Concurrent ({max_trades})')
+        
+        plt.title('Active Trades Over Time', fontsize=12, fontweight='bold')
         plt.xlabel('Date', fontsize=11)
-        plt.ylabel('Trade Amount ($)', fontsize=11)
+        plt.ylabel('Number of Active Trades', fontsize=11)
         plt.legend()
         plt.grid(True, alpha=0.3)
     else:
-        plt.text(0.5, 0.5, 'Trade amount data not available', 
+        plt.text(0.5, 0.5, 'Active trades data not available', 
                 ha='center', va='center', transform=plt.gca().transAxes)
-        plt.title('Dynamic Trade Amount', fontsize=12, fontweight='bold')
+        plt.title('Active Trades Over Time', fontsize=12, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
@@ -412,195 +420,222 @@ def create_interactive_combined_portfolio(portfolio_df: pd.DataFrame, initial_ca
     
     return fig
 
-def calculate_rolling_sharpe(portfolio_df: pd.DataFrame, windows: List[int] = [30, 60, 90],
-                            risk_free_rate: float = 0.02) -> pd.DataFrame:
-    """Calculate rolling Sharpe ratios for different window sizes.
+# Rolling Sharpe functions removed - not needed for this analysis
+
+def create_coin_pair_distribution(selected_pairs_df: pd.DataFrame, output_path: str):
+    """Create vertical bar chart showing ALL trading coins and their reference coin counts.
     
     Args:
-        portfolio_df: DataFrame with portfolio_value column
-        windows: List of rolling window sizes in days
-        risk_free_rate: Annual risk-free rate (e.g., 0.02 for 2%)
+        selected_pairs_df: DataFrame with columns 'trading_coin' and 'reference_coin'
+        output_path: Path to save the visualization
     """
     
-    # Calculate daily returns
-    portfolio_df = portfolio_df.copy()  # Avoid modifying original
-    portfolio_df['daily_return'] = portfolio_df['portfolio_value'].pct_change()
+    # Count unique reference coins for each trading coin
+    pair_counts = selected_pairs_df.groupby('trading_coin')['reference_coin'].nunique()
+    # Sort ascending so that coins with most pairs are at the top (like P&L chart)
+    pair_counts = pair_counts.sort_values(ascending=True)
     
-    # Convert annual risk-free rate to daily
-    daily_rf_rate = risk_free_rate / 365
+    # Create the plot with dynamic height based on number of coins
+    set_professional_style()
     
-    # Annual trading days
-    trading_days = 365  # Crypto trades 365 days
+    # Calculate figure height based on number of coins (20 pixels per coin, min 10 inches)
+    fig_height = max(10, len(pair_counts) * 0.3)
+    plt.figure(figsize=(14, fig_height))
     
-    rolling_sharpes = pd.DataFrame(index=portfolio_df.index)
+    # Create horizontal bar plot (vertical chart with horizontal bars)
+    y_positions = range(len(pair_counts))
+    bars = plt.barh(y_positions, pair_counts.values, 
+                    color=COLORS['primary'], edgecolor='black', linewidth=0.5, alpha=0.8)
     
-    for window in windows:
-        # Calculate rolling mean and std of daily returns
-        rolling_mean = portfolio_df['daily_return'].rolling(window=window).mean()
-        rolling_std = portfolio_df['daily_return'].rolling(window=window).std()
-        
-        # Calculate excess returns (portfolio return - risk-free return)
-        excess_returns = rolling_mean - daily_rf_rate
-        
-        # Sharpe ratio using daily data, then annualize
-        daily_sharpe = excess_returns / rolling_std
-        annualized_sharpe = daily_sharpe * np.sqrt(trading_days)
-        
-        rolling_sharpes[f'sharpe_{window}d'] = annualized_sharpe
+    # Add value labels at the end of bars
+    for i, (bar, value) in enumerate(zip(bars, pair_counts.values)):
+        plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height()/2, 
+                str(int(value)), ha='left', va='center', fontsize=8, fontweight='bold')
     
-    return rolling_sharpes
-
-def create_rolling_sharpe_visualization(portfolio_df: pd.DataFrame, output_path: str):
-    """Create interactive rolling Sharpe ratio visualization."""
+    # Customize the plot
+    plt.title(f'Trading Coins by Number of Reference Coin Pairs ({len(pair_counts)} coins)', 
+              fontsize=16, fontweight='bold', pad=20)
+    plt.xlabel('Number of Reference Coins', fontsize=12, fontweight='bold')
+    plt.ylabel('Trading Coins', fontsize=12, fontweight='bold')
     
-    # Calculate rolling Sharpe ratios
-    sharpe_df = calculate_rolling_sharpe(portfolio_df)
+    # Set y-axis labels with coin names
+    plt.yticks(y_positions, pair_counts.index, fontsize=9)
     
-    # Create figure
-    fig = go.Figure()
+    # Add grid
+    plt.grid(True, alpha=0.3, axis='x')
     
-    # Add traces for each window
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
-    windows = [30, 60, 90]
+    # Add statistics box
+    total_pairs = len(selected_pairs_df)
+    unique_trading = selected_pairs_df['trading_coin'].nunique()
+    unique_reference = selected_pairs_df['reference_coin'].nunique()
+    avg_pairs = pair_counts.mean()
+    median_pairs = pair_counts.median()
+    max_pairs = pair_counts.max()
+    min_pairs = pair_counts.min()
+    max_coin = pair_counts.idxmax()
+    min_coin = pair_counts.idxmin()
     
-    for i, window in enumerate(windows):
-        col_name = f'sharpe_{window}d'
-        if col_name in sharpe_df.columns:
-            fig.add_trace(go.Scatter(
-                x=sharpe_df.index,
-                y=sharpe_df[col_name],
-                mode='lines',
-                name=f'{window}-day Sharpe',
-                line=dict(color=colors[i], width=2),
-                hovertemplate=f'{window}d Sharpe: %{{y:.2f}}<extra></extra>'
-            ))
-    
-    # Add horizontal line at 0
-    fig.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
-    
-    # Add horizontal lines for Sharpe benchmarks
-    fig.add_hline(y=1, line_dash="dot", line_color="green", opacity=0.3,
-                  annotation_text="Good (Sharpe=1)", annotation_position="right")
-    fig.add_hline(y=2, line_dash="dot", line_color="darkgreen", opacity=0.3,
-                  annotation_text="Excellent (Sharpe=2)", annotation_position="right")
-    
-    # Update layout
-    fig.update_layout(
-        title='Rolling Sharpe Ratio Analysis',
-        xaxis_title='Date',
-        yaxis_title='Sharpe Ratio',
-        height=500,
-        hovermode='x unified',
-        template='plotly_white',
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        )
+    stats_text = (
+        f'Statistics:\n'
+        f'• Total pairs: {total_pairs:,}\n'
+        f'• Trading coins: {unique_trading}\n'
+        f'• Reference coins: {unique_reference}\n'
+        f'• Avg pairs/coin: {avg_pairs:.1f}\n'
+        f'• Median pairs/coin: {median_pairs:.0f}\n'
+        f'• Max: {max_pairs} ({max_coin})\n'
+        f'• Min: {min_pairs} ({min_coin})'
     )
     
-    # Determine file paths
+    plt.text(0.98, 0.03, stats_text, transform=plt.gca().transAxes,
+            fontsize=9, verticalalignment='bottom', horizontalalignment='right',
+            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    
+    # Add vertical line for average
+    plt.axvline(x=avg_pairs, color='red', linestyle='--', alpha=0.5, linewidth=1,
+                label=f'Average: {avg_pairs:.1f}')
+    
+    # Add vertical line for median
+    plt.axvline(x=median_pairs, color='orange', linestyle=':', alpha=0.5, linewidth=1,
+                label=f'Median: {median_pairs:.0f}')
+    
+    plt.legend(loc='upper right')
+    
+    # Adjust layout to prevent label cutoff
+    plt.tight_layout()
+    
+    # Save as PNG
     if output_path.endswith('.html'):
-        html_path = output_path
         png_path = output_path.replace('.html', '.png')
     else:
         png_path = output_path
-        html_path = output_path.replace('.png', '.html')
     
-    # Save both formats
-    fig.write_html(html_path)
+    plt.savefig(png_path, dpi=300, bbox_inches='tight')
+    plt.close()
     
-    try:
-        # For PNG generation, sample data if too large to avoid memory issues
-        if len(sharpe_df) > 100:
-            # Sample every nth point to reduce data size for PNG rendering
-            sample_step = max(1, len(sharpe_df) // 100)
-            sampled_sharpe = sharpe_df.iloc[::sample_step].copy()
-            
-            # Create a simplified figure for PNG with sampled data
-            fig_png = go.Figure()
-            
-            for i, window in enumerate(windows):
-                col_name = f'sharpe_{window}d'
-                if col_name in sampled_sharpe.columns:
-                    fig_png.add_trace(go.Scatter(
-                        x=sampled_sharpe.index,
-                        y=sampled_sharpe[col_name],
-                        mode='lines',
-                        name=f'{window}-day Sharpe',
-                        line=dict(color=colors[i], width=2)
-                    ))
-            
-            fig_png.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
-            fig_png.add_hline(y=1, line_dash="dot", line_color="green", opacity=0.3)
-            fig_png.add_hline(y=2, line_dash="dot", line_color="darkgreen", opacity=0.3)
-            
-            fig_png.update_layout(
-                title='Rolling Sharpe Ratio Analysis',
-                xaxis_title='Date', yaxis_title='Sharpe Ratio',
-                height=500, template='plotly_white', showlegend=True
-            )
-            
-            fig_png.write_image(png_path, width=1400, height=600, scale=1)
-        else:
-            fig.write_image(png_path, width=1400, height=600, scale=1)
-            
-        print(f"   ✅ Saved both: {html_path} and {png_path}")
-    except Exception as e:
-        print(f"   ⚠️  HTML saved: {html_path}, PNG failed: {e}")
+    print(f"   ✅ Saved coin pair distribution: {png_path}")
     
-    return fig
+    # Also save the full distribution as CSV for reference
+    csv_path = png_path.replace('.png', '_data.csv')
+    pair_counts.to_csv(csv_path, header=['reference_coin_count'])
+    print(f"   ✅ Saved distribution data: {csv_path}")
 
 def create_pnl_by_coin_histogram(trades_df: pd.DataFrame, output_path: str):
-    """Create P&L histogram by coin."""
+    """Create P&L histogram by coin with proper cumulative return calculation."""
     
-    # Calculate P&L by coin
-    if 'trade_pnl' in trades_df.columns:
-        pnl_by_coin = trades_df.groupby('trading_coin')['trade_pnl'].sum().sort_values()
+    # Calculate cumulative returns by coin
+    if 'trade_return' in trades_df.columns:
+        # Use simple returns already calculated
+        return_col = 'trade_return'
+    elif 'log_return' in trades_df.columns:
+        # Convert log returns to simple returns
+        trades_df['trade_return'] = np.exp(trades_df['log_return']) - 1
+        return_col = 'trade_return'
     else:
-        # Calculate from log returns if trade_pnl not available
-        trades_df['trade_pnl'] = trades_df.get('trade_amount', 100) * (np.exp(trades_df['log_return']) - 1)
-        pnl_by_coin = trades_df.groupby('trading_coin')['trade_pnl'].sum().sort_values()
+        # Fallback to trade_pnl if available
+        return_col = 'trade_pnl'
     
-    # Separate profits and losses
-    profits = pnl_by_coin[pnl_by_coin > 0]
-    losses = pnl_by_coin[pnl_by_coin < 0]
+    # Calculate cumulative return and dollar P&L for each coin
+    cumulative_returns_by_coin = {}
+    dollar_pnl_by_coin = {}
+    
+    for coin in trades_df['trading_coin'].unique():
+        coin_trades = trades_df[trades_df['trading_coin'] == coin]
+        
+        # Use actual P&L and trade amounts for correct calculation
+        if 'trade_pnl' in coin_trades.columns and 'trade_amount' in coin_trades.columns:
+            # Calculate total P&L and total amount invested for this coin
+            total_pnl = coin_trades['trade_pnl'].sum()
+            total_invested = coin_trades['trade_amount'].sum()
+            
+            # Calculate cumulative return as percentage: total P&L / total invested
+            if total_invested > 0:
+                cumulative_return_pct = (total_pnl / total_invested) * 100
+            else:
+                cumulative_return_pct = 0.0
+            
+            # Store both percentage and dollar amounts
+            cumulative_returns_by_coin[coin] = cumulative_return_pct
+            dollar_pnl_by_coin[coin] = total_pnl
+                
+        elif 'log_return' in coin_trades.columns:
+            # Fallback: sum log returns (assumes equal weighting)
+            cumulative_return = np.exp(coin_trades['log_return'].sum()) - 1
+            cumulative_return_pct = cumulative_return * 100
+            cumulative_returns_by_coin[coin] = cumulative_return_pct
+            dollar_pnl_by_coin[coin] = 0.0  # Unknown dollar amount
+            
+        else:
+            # Last resort: sum simple returns (not ideal but better than nothing)
+            cumulative_return = coin_trades.get(return_col, 0).sum()
+            cumulative_return_pct = cumulative_return * 100 if return_col != 'trade_pnl' else cumulative_return
+            cumulative_returns_by_coin[coin] = cumulative_return_pct
+            dollar_pnl_by_coin[coin] = cumulative_return if return_col == 'trade_pnl' else 0.0
+    
+    # Convert to Series and sort by dollar P&L (not percentage)
+    dollar_pnl_series = pd.Series(dollar_pnl_by_coin).sort_values()
+    
+    # Calculate each coin's contribution to total portfolio P&L
+    total_portfolio_pnl = dollar_pnl_series.sum()
+    portfolio_contribution_pct = {}
+    
+    for coin in dollar_pnl_series.index:
+        if total_portfolio_pnl != 0:
+            contribution_pct = (dollar_pnl_series[coin] / total_portfolio_pnl) * 100
+        else:
+            contribution_pct = 0.0
+        portfolio_contribution_pct[coin] = contribution_pct
+    
+    contribution_pct_series = pd.Series(portfolio_contribution_pct)
+    
+    # Separate profits and losses based on dollar amounts
+    profits = dollar_pnl_series[dollar_pnl_series > 0]
+    losses = dollar_pnl_series[dollar_pnl_series < 0]
     
     # Create figure
     fig = go.Figure()
     
     # Add bars for losses (red)
     if len(losses) > 0:
+        loss_contribution_pct = [contribution_pct_series[coin] for coin in losses.index]
         fig.add_trace(go.Bar(
             y=losses.index,
             x=losses.values,
             orientation='h',
             name='Loss',
             marker_color='rgba(220, 38, 127, 0.8)',
-            hovertemplate='%{y}<br>Loss: $%{x:,.2f}<extra></extra>'
+            customdata=loss_contribution_pct,
+            hovertemplate='%{y}<br>P&L: $%{x:.2f} (%{customdata:.1f}% of portfolio)<extra></extra>',
+            text=[f'${val:.0f}<br>({pct:.1f}%)' for val, pct in zip(losses.values, loss_contribution_pct)],
+            textposition='inside',
+            textfont=dict(color='white', size=9)
         ))
     
     # Add bars for profits (green)
     if len(profits) > 0:
+        profit_contribution_pct = [contribution_pct_series[coin] for coin in profits.index]
         fig.add_trace(go.Bar(
             y=profits.index,
             x=profits.values,
             orientation='h',
             name='Profit',
             marker_color='rgba(46, 134, 171, 0.8)',
-            hovertemplate='%{y}<br>Profit: $%{x:,.2f}<extra></extra>'
+            customdata=profit_contribution_pct,
+            hovertemplate='%{y}<br>P&L: $%{x:.2f} (%{customdata:.1f}% of portfolio)<extra></extra>',
+            text=[f'${val:.0f}<br>({pct:.1f}%)' for val, pct in zip(profits.values, profit_contribution_pct)],
+            textposition='inside',
+            textfont=dict(color='white', size=9)
         ))
     
-    # Update layout
-    total_pnl = pnl_by_coin.sum()
+    # Update layout with additional statistics
+    total_dollar_pnl = dollar_pnl_series.sum()
+    num_profitable = len(profits)
+    num_losing = len(losses)
+    
     fig.update_layout(
-        title=f'Cumulative P&L by Coin (Total: ${total_pnl:,.2f})',
-        xaxis_title='Profit/Loss ($)',
+        title=f'P&L by Coin: ${total_dollar_pnl:.0f} Total Portfolio P&L (Profitable: {num_profitable}, Losing: {num_losing})',
+        xaxis_title='P&L ($)',
         yaxis_title='Trading Coin',
-        height=max(400, len(pnl_by_coin) * 20),  # Dynamic height based on number of coins
+        height=max(400, len(dollar_pnl_series) * 20),  # Dynamic height based on number of coins
         template='plotly_white',
         showlegend=True,
         hovermode='y unified'
@@ -621,7 +656,7 @@ def create_pnl_by_coin_histogram(trades_df: pd.DataFrame, output_path: str):
     fig.write_html(html_path)
     
     try:
-        fig.write_image(png_path, width=1400, height=max(800, len(pnl_by_coin) * 30), scale=1)
+        fig.write_image(png_path, width=1400, height=max(800, len(dollar_pnl_series) * 30), scale=1)
         print(f"   ✅ Saved both: {html_path} and {png_path}")
     except Exception as e:
         print(f"   ⚠️  HTML saved: {html_path}, PNG failed: {e}")
@@ -758,13 +793,24 @@ def detect_outliers(portfolio_df: pd.DataFrame, method: str = 'zscore',
 
 def create_trade_outlier_visualization(trades_df: pd.DataFrame, outliers: List[dict], 
                                       output_path: str):
-    """Create visualization highlighting trade outliers."""
+    """Create optimized visualization highlighting trade outliers with reduced file size."""
+    
+    # Sample data for large datasets to reduce file size - use fixed seed for consistency
+    MAX_POINTS = 5000  # Maximum non-outlier points to show
+    if len(trades_df) > MAX_POINTS:
+        # Use fixed random seed to ensure consistent sampling between HTML and PNG
+        sample_size = min(MAX_POINTS, len(trades_df))
+        sampled_trades = trades_df.sample(n=sample_size, random_state=42)  # Consistent seed
+    else:
+        sampled_trades = trades_df.copy()
     
     fig = make_subplots(
         rows=3, cols=1,
         shared_xaxes=True,
         vertical_spacing=0.08,
-        subplot_titles=('Trade Returns Timeline', 'Trade Returns Distribution', 'Outliers by Coin'),
+        subplot_titles=('Trade Returns Timeline (Outliers Highlighted)', 
+                        'Trade Returns Distribution', 
+                        'Top 10 Coins by Outlier Count'),
         row_heights=[0.4, 0.3, 0.3]
     )
     
@@ -777,65 +823,104 @@ def create_trade_outlier_visualization(trades_df: pd.DataFrame, outliers: List[d
         return_col = 'log_return'
     
     # Convert dates if needed
-    if 'time_entered' in trades_df.columns:
-        trade_dates = pd.to_datetime(trades_df['time_entered'])
+    if 'time_entered' in sampled_trades.columns:
+        trade_dates = pd.to_datetime(sampled_trades['time_entered'])
     else:
-        trade_dates = trades_df.index
+        trade_dates = sampled_trades.index
     
-    # 1. Trade returns timeline
-    returns_pct = trades_df[return_col] * 100 if return_col != 'trade_pnl' else trades_df[return_col]
+    if 'time_exited' in trades_df.columns:
+        trades_df['time_exited'] = pd.to_datetime(trades_df['time_exited'])
     
+    # 1. Trade returns timeline (sampled data)
+    returns_pct = sampled_trades[return_col] * 100 if return_col != 'trade_pnl' else sampled_trades[return_col]
+    
+    # Only show a subset of regular trades to reduce file size
     fig.add_trace(
         go.Scatter(
             x=trade_dates,
             y=returns_pct,
             mode='markers',
-            name='All Trades',
-            marker=dict(size=4, color='lightblue', opacity=0.6),
-            hovertemplate='Date: %{x}<br>Return: %{y:.2f}%<extra></extra>'
+            name=f'Sample Trades (n={len(sampled_trades):,})',
+            marker=dict(size=3, color='lightblue', opacity=0.4),
+            hoverinfo='skip'  # Skip hover for regular trades to save space
         ),
         row=1, col=1
     )
     
-    # Mark outlier trades
+    # Mark outlier trades with full hover information
     if outliers:
-        outlier_dates = [o['date'] for o in outliers if o['date'] is not None]
-        outlier_returns = [o['return'] * 100 if return_col != 'trade_pnl' else o['return'] for o in outliers]
-        outlier_coins = [f"{o['trading_coin']}" for o in outliers]
+        # Prepare outlier data with all required fields
+        outlier_data = []
+        for o in outliers:  # Show ALL outliers - they are the main point of interest
+            if o['date'] is not None:
+                # Find the original trade to get entry and exit times
+                outlier_trade = None
+                if 'trade_index' in o:
+                    try:
+                        outlier_trade = trades_df.iloc[o['trade_index']]
+                    except:
+                        pass
+                
+                outlier_data.append({
+                    'date': o['date'],
+                    'return': o['return'] * 100 if return_col != 'trade_pnl' else o['return'],
+                    'trading_coin': o.get('trading_coin', 'Unknown'),
+                    'reference_coin': o.get('reference_coin', 'Unknown'),
+                    'entry_time': outlier_trade['time_entered'] if outlier_trade is not None and 'time_entered' in trades_df.columns else o['date'],
+                    'exit_time': outlier_trade['time_exited'] if outlier_trade is not None and 'time_exited' in trades_df.columns else 'N/A'
+                })
         
-        fig.add_trace(
-            go.Scatter(
-                x=outlier_dates,
-                y=outlier_returns,
-                mode='markers',
-                name='Outlier Trades',
-                marker=dict(
-                    color='red',
-                    size=10,
-                    symbol='star',
-                    line=dict(color='darkred', width=2)
+        if outlier_data:
+            outlier_df = pd.DataFrame(outlier_data)
+            
+            # Create custom hover text
+            hover_texts = []
+            for _, row in outlier_df.iterrows():
+                hover_text = (
+                    f"<b>OUTLIER TRADE</b><br>"
+                    f"Entry Time: {row['entry_time']}<br>"
+                    f"Exit Time: {row['exit_time']}<br>"
+                    f"Trading Coin: {row['trading_coin']}<br>"
+                    f"Reference Coin: {row['reference_coin']}<br>"
+                    f"Return: {row['return']:.2f}%"
+                )
+                hover_texts.append(hover_text)
+            
+            fig.add_trace(
+                go.Scatter(
+                    x=outlier_df['date'],
+                    y=outlier_df['return'],
+                    mode='markers',
+                    name=f'Outliers (n={len(outlier_df)})',
+                    marker=dict(
+                        color='red',
+                        size=8,
+                        symbol='star',
+                        line=dict(color='darkred', width=1)
+                    ),
+                    hovertemplate='%{text}<extra></extra>',
+                    text=hover_texts
                 ),
-                hovertemplate='OUTLIER<br>Date: %{x}<br>Return: %{y:.2f}%<br>Coin: %{customdata}<extra></extra>',
-                customdata=outlier_coins
-            ),
-            row=1, col=1
-        )
+                row=1, col=1
+            )
     
-    # 2. Returns distribution histogram
+    # 2. Returns distribution histogram (use full data for accuracy)
+    all_returns_pct = trades_df[return_col] * 100 if return_col != 'trade_pnl' else trades_df[return_col]
+    
     fig.add_trace(
         go.Histogram(
-            x=returns_pct,
+            x=all_returns_pct,
             nbinsx=50,
             name='Return Distribution',
             marker_color='rgba(46, 134, 171, 0.7)',
-            hovertemplate='Return Range: %{x}<br>Count: %{y}<extra></extra>'
+            hoverinfo='skip'  # Reduce hover data
         ),
         row=2, col=1
     )
     
-    # 3. Outliers by coin
+    # 3. Top 10 coins by outlier count
     if outliers:
-        outlier_coins = [o['trading_coin'] for o in outliers]
+        outlier_coins = [o.get('trading_coin', 'Unknown') for o in outliers]
         coin_counts = pd.Series(outlier_coins).value_counts().head(10)
         
         fig.add_trace(
@@ -843,9 +928,11 @@ def create_trade_outlier_visualization(trades_df: pd.DataFrame, outliers: List[d
                 x=coin_counts.values,
                 y=coin_counts.index,
                 orientation='h',
-                name='Outliers by Coin',
+                name='Top Coins',
                 marker_color='rgba(220, 38, 127, 0.8)',
-                hovertemplate='%{y}<br>Outlier Count: %{x}<extra></extra>'
+                text=coin_counts.values,
+                textposition='outside',
+                hoverinfo='skip'  # Reduce hover data
             ),
             row=3, col=1
         )
@@ -859,110 +946,24 @@ def create_trade_outlier_visualization(trades_df: pd.DataFrame, outliers: List[d
     fig.update_yaxes(title_text="Frequency", row=2, col=1)
     fig.update_yaxes(title_text="Trading Coin", row=3, col=1)
     
+    # Add summary statistics
+    total_trades = len(trades_df)
+    total_outliers = len(outliers) if outliers else 0
+    outlier_pct = (total_outliers / total_trades * 100) if total_trades > 0 else 0
+    
     fig.update_layout(
-        title='Trade Outlier Analysis',
+        title=f'Trade Outlier Analysis ({total_outliers:,} outliers / {total_trades:,} trades = {outlier_pct:.2f}%)',
         height=1000,
         hovermode='closest',
         template='plotly_white',
         showlegend=True
     )
     
-    # Determine file paths
-    if output_path.endswith('.html'):
-        html_path = output_path
-        png_path = output_path.replace('.html', '.png')
-    else:
-        png_path = output_path
-        html_path = output_path.replace('.png', '.html')
+    # Save only HTML format
+    html_path = output_path if output_path.endswith('.html') else output_path.replace('.png', '.html')
     
-    # Save both formats
     fig.write_html(html_path)
-    
-    try:
-        # For PNG generation, sample data if too large to avoid memory issues
-        if len(trades_df) > 1000:
-            # Sample data for PNG rendering
-            sample_size = min(1000, len(trades_df))
-            sampled_trades = trades_df.sample(n=sample_size, random_state=42).copy()
-            
-            # Create simplified figure for PNG with sampled data
-            fig_png = make_subplots(
-                rows=3, cols=1,
-                vertical_spacing=0.08,
-                subplot_titles=('Trade Returns Timeline (Sampled)', 'Trade Returns Distribution', 'Outliers by Coin'),
-                row_heights=[0.4, 0.3, 0.3]
-            )
-            
-            # Prepare sampled data
-            if 'time_entered' in sampled_trades.columns:
-                sampled_dates = pd.to_datetime(sampled_trades['time_entered'])
-            else:
-                sampled_dates = sampled_trades.index
-                
-            sampled_returns = sampled_trades[return_col] * 100 if return_col != 'trade_pnl' else sampled_trades[return_col]
-            
-            # Add sampled timeline
-            fig_png.add_trace(
-                go.Scatter(
-                    x=sampled_dates, y=sampled_returns,
-                    mode='markers', name='All Trades',
-                    marker=dict(size=4, color='lightblue', opacity=0.6)
-                ), row=1, col=1
-            )
-            
-            # Add outliers (keep all outliers as they're already filtered)
-            if outliers:
-                outlier_dates = [o['date'] for o in outliers if o['date'] is not None]
-                outlier_returns = [o['return'] * 100 if return_col != 'trade_pnl' else o['return'] for o in outliers]
-                
-                fig_png.add_trace(
-                    go.Scatter(
-                        x=outlier_dates, y=outlier_returns,
-                        mode='markers', name='Outlier Trades',
-                        marker=dict(color='red', size=8, symbol='star')
-                    ), row=1, col=1
-                )
-            
-            # Add distribution (use original data for accuracy)
-            fig_png.add_trace(
-                go.Histogram(
-                    x=returns_pct, nbinsx=50, name='Return Distribution',
-                    marker_color='rgba(46, 134, 171, 0.7)'
-                ), row=2, col=1
-            )
-            
-            # Add outliers by coin
-            if outliers:
-                outlier_coins = [o['trading_coin'] for o in outliers]
-                coin_counts = pd.Series(outlier_coins).value_counts().head(10)
-                
-                fig_png.add_trace(
-                    go.Bar(
-                        x=coin_counts.values, y=coin_counts.index,
-                        orientation='h', name='Outliers by Coin',
-                        marker_color='rgba(220, 38, 127, 0.8)'
-                    ), row=3, col=1
-                )
-            
-            # Update PNG layout
-            fig_png.update_layout(
-                title='Trade Outlier Analysis',
-                height=1000, template='plotly_white', showlegend=True
-            )
-            fig_png.update_xaxes(title_text="Date", row=1, col=1)
-            fig_png.update_xaxes(title_text="Return (%)", row=2, col=1)
-            fig_png.update_xaxes(title_text="Number of Outlier Trades", row=3, col=1)
-            fig_png.update_yaxes(title_text="Return (%)", row=1, col=1)
-            fig_png.update_yaxes(title_text="Frequency", row=2, col=1)
-            fig_png.update_yaxes(title_text="Trading Coin", row=3, col=1)
-            
-            fig_png.write_image(png_path, width=1400, height=1000, scale=1)
-        else:
-            fig.write_image(png_path, width=1400, height=1000, scale=1)
-            
-        print(f"   ✅ Saved both: {html_path} and {png_path}")
-    except Exception as e:
-        print(f"   ⚠️  HTML saved: {html_path}, PNG failed: {e}")
+    print(f"   ✅ Saved trade outlier analysis: {html_path}")
     
     return fig
 

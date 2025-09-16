@@ -492,13 +492,11 @@ class WindowPortfolioSimulator:
         
         create_budget_allocation_timeline(
             portfolio_df,
-            os.path.join(output_dir, 'budget_allocation.png')
+            os.path.join(output_dir, 'budget_allocation.png'),
+            self.max_trades
         )
         
-        create_active_trades_timeline(
-            portfolio_df, self.max_trades,
-            os.path.join(output_dir, 'active_trades_timeline.png')
-        )
+        # active_trades_timeline is now included in budget_allocation.png, no separate file needed
         
         create_drawdown_curve(
             portfolio_df, self.initial_capital,

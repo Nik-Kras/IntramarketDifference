@@ -10,7 +10,6 @@ import sys
 sys.path.append('parameter_optimization_experiment')
 
 from visualization_utils import (
-    create_interactive_combined_portfolio,
     create_rolling_sharpe_visualization,
     create_pnl_by_coin_histogram,
     detect_trade_outliers,
@@ -26,7 +25,6 @@ results_dir = 'results/optimal_window'
 
 # Check existing HTML files
 html_files = [
-    'portfolio_interactive.html',
     'rolling_sharpe.html', 
     'pnl_by_coin.html',
     'trade_outlier_analysis.html'
@@ -130,24 +128,15 @@ if os.path.exists(trades_file):
         portfolio_df = None
     
     if portfolio_df is not None:
-        # 1. Portfolio Interactive
-        print(f"\n📊 1. Recreating portfolio_interactive...")
-        create_interactive_combined_portfolio(
-            portfolio_df,
-            initial_capital,
-            50,  # max_trades
-            f'{results_dir}/portfolio_interactive.html'
-        )
-    
-        # 2. Rolling Sharpe (with corrected calculation)
-        print(f"\n📈 2. Recreating rolling_sharpe (with corrected calculation)...")
+        # 1. Rolling Sharpe (with corrected calculation)
+        print(f"\n📈 1. Recreating rolling_sharpe (with corrected calculation)...")
         create_rolling_sharpe_visualization(
             portfolio_df,
             f'{results_dir}/rolling_sharpe.html'
         )
     
-    # 3. P&L by Coin
-    print(f"\n💰 3. Recreating pnl_by_coin...")
+    # 2. P&L by Coin
+    print(f"\n💰 2. Recreating pnl_by_coin...")
     if 'log_return' in trades_df.columns:
         trades_df['trade_pnl'] = 100 * (np.exp(trades_df['log_return']) - 1)
     
@@ -156,8 +145,8 @@ if os.path.exists(trades_file):
         f'{results_dir}/pnl_by_coin.html'
     )
     
-    # 4. Trade Outlier Analysis
-    print(f"\n🔍 4. Recreating trade_outlier_analysis...")
+    # 3. Trade Outlier Analysis
+    print(f"\n🔍 3. Recreating trade_outlier_analysis...")
     try:
         trades_with_outliers, outliers = detect_trade_outliers(
             trades_df,
