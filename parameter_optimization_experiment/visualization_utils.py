@@ -1461,103 +1461,6 @@ def create_window_performance_comparison_plot(df: pd.DataFrame, output_path: str
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-def create_executive_summary_plot(top_window: Dict, df_valid: pd.DataFrame, output_path: str,
-                                 title: str = "Window Optimization Executive Summary"):
-    """Create executive summary visualization."""
-    
-    set_professional_style()
-    
-    plt.figure(figsize=(16, 10))
-    gs = fig.add_gridspec(3, 3, hspace=0.4, wspace=0.3)
-    
-    fig.suptitle(title, fontsize=16, fontweight='bold', y=0.98)
-    
-    # 1. Key Metrics Summary (text box)
-    ax1 = fig.add_subplot(gs[0, :])
-    ax1.axis('off')
-    
-    window_name = top_window.get('window_name', f"{top_window.get('window_months', 'N/A')}mo")
-    window_months = top_window.get('months_back', top_window.get('window_months', 'N/A'))
-    
-    summary_text = f"""
-    OPTIMAL WINDOW: {window_name} ({window_months} months)
-    
-    Performance Metrics:
-    • Portfolio Return: {top_window['portfolio_return']:.2f}x ({(top_window['portfolio_return']-1)*100:.1f}%)
-    • Sharpe Ratio: {top_window['portfolio_sharpe']:.2f}
-    • Max Drawdown: {top_window['portfolio_drawdown']:.1%}
-    • Selected Pairs: {top_window['pairs_selected']:,}
-    
-    Key Insights:
-    • Optimal risk-return trade-off achieved at {window_months} months
-    • Statistically validated across multiple time periods
-    • Robust performance across different market regimes
-    """
-    
-    ax1.text(0.05, 0.5, summary_text, fontsize=11, verticalalignment='center',
-            bbox=dict(boxstyle='round,pad=1', facecolor=COLORS['light'], alpha=0.8))
-    
-    # 2. Performance Trend
-    ax2 = fig.add_subplot(gs[1, :2])
-    
-    window_col = 'months_back' if 'months_back' in df_valid.columns else 'window_months'
-    df_sorted = df_valid.sort_values(window_col)
-    
-    ax2.plot(df_sorted[window_col], df_sorted['portfolio_return'], 
-            marker='o', linewidth=2, markersize=8, color=COLORS['primary'], label='Return')
-    ax2.axhline(y=top_window['portfolio_return'], color='red', linestyle='--', 
-               alpha=0.5, label=f'Optimal ({window_name})')
-    
-    ax2.set_xlabel('Window Length (Months)', fontsize=11)
-    ax2.set_ylabel('Portfolio Return (x)', fontsize=11)
-    ax2.set_title('Performance vs Window Length', fontsize=12, fontweight='bold')
-    ax2.grid(True, alpha=0.3)
-    ax2.legend()
-    
-    # Fill area under curve
-    ax2.fill_between(df_sorted[window_col], 1, df_sorted['portfolio_return'], 
-                    alpha=0.2, color=COLORS['primary'])
-    
-    # 3. Risk-Adjusted Returns
-    ax3 = fig.add_subplot(gs[1, 2])
-    
-    # Sharpe ratio bar chart
-    window_names = [row.get('window_name', f"{row.get('window_months', i)}mo") 
-                   for i, (_, row) in enumerate(df_sorted.iterrows())]
-    colors = [COLORS['success'] if name == window_name else COLORS['primary'] 
-              for name in window_names]
-    
-    bars = ax3.bar(range(len(df_sorted)), df_sorted['portfolio_sharpe'], 
-                  color=colors, alpha=0.7, edgecolor='black', linewidth=1)
-    
-    ax3.set_xticks(range(len(df_sorted)))
-    ax3.set_xticklabels(window_names, rotation=45, ha='right')
-    ax3.set_ylabel('Sharpe Ratio', fontsize=11)
-    ax3.set_title('Risk-Adjusted Performance', fontsize=12, fontweight='bold')
-    ax3.axhline(y=2.0, color='gray', linestyle=':', alpha=0.5)
-    ax3.grid(True, alpha=0.3, axis='y')
-    
-    # 4. Implementation Roadmap
-    ax4 = fig.add_subplot(gs[2, :])
-    ax4.axis('off')
-    
-    roadmap_text = f"""
-    IMPLEMENTATION RECOMMENDATIONS:
-    
-    1. Deploy with {window_name} window for optimal risk-adjusted returns
-    2. Monitor performance weekly during first month
-    3. Re-optimize quarterly or if Sharpe drops below 2.0
-    4. Maintain position limits: Max {int(top_window['pairs_selected']):,} concurrent pairs
-    5. Risk Management: Stop if drawdown exceeds {abs(top_window['portfolio_drawdown']) * 100 * 1.5:.0f}%
-    """
-    
-    ax4.text(0.5, 0.5, roadmap_text, fontsize=11, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=1', facecolor=COLORS['warning'], alpha=0.2))
-    
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    plt.close()
-
 def create_rolling_stability_heatmap(df: pd.DataFrame, output_path: str,
                                    title: str = "Performance Stability Across Periods"):
     """Create heatmap showing performance stability across periods and windows."""
@@ -1758,7 +1661,7 @@ def create_rolling_executive_summary_plot(most_robust: pd.Series, best_performan
     
     set_professional_style()
     
-    plt.figure(figsize=(16, 10))
+    fig = plt.figure(figsize=(16, 10))
     gs = fig.add_gridspec(3, 3, hspace=0.4, wspace=0.3)
     
     fig.suptitle('Rolling Window Validation Executive Summary', fontsize=16, fontweight='bold', y=0.98)
