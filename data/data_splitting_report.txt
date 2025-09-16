@@ -1,0 +1,683 @@
+DATA SPLITTING REPORT
+============================================================
+Generated: 2025-09-15 20:47:47
+Split Date: 2024-01-01
+Minimum In-Sample Points: 8736
+Minimum Out-of-Sample Points: 8736
+
+SUMMARY
+------------------------------
+Total files processed: 489
+Successfully split: 118
+Rejected: 371
+Success rate: 24.1%
+
+SUCCESSFUL COINS
+------------------------------
+Coin         IS Points  OOS Points  IS Start     IS End       OOS Start    OOS End
+-------------------------------------------------------------------------------------
+AVAX         28673      14823       2020-09-23   2023-12-31   2024-01-01   2025-09-09
+PEOPLE       17708      14823       2021-12-24   2023-12-31   2024-01-01   2025-09-09
+RVN          25001      14823       2021-02-23   2023-12-31   2024-01-01   2025-09-09
+ONT          34072      14823       2020-02-11   2023-12-31   2024-01-01   2025-09-09
+XLM          34600      14823       2020-01-20   2023-12-31   2024-01-01   2025-09-09
+QTUM         33856      14823       2020-02-20   2023-12-31   2024-01-01   2025-09-09
+CHZ          25793      14823       2021-01-21   2023-12-31   2024-01-01   2025-09-09
+SPELL        11556      14823       2022-09-06   2023-12-31   2024-01-01   2025-09-09
+KNC          30904      14823       2020-06-22   2023-12-31   2024-01-01   2025-09-09
+1INCH        26438      14823       2020-12-25   2023-12-31   2024-01-01   2025-09-09
+BTC          37807      14823       2019-09-08   2023-12-31   2024-01-01   2025-09-09
+AXS          27281      14823       2020-11-20   2023-12-31   2024-01-01   2025-09-09
+CHR          24593      14823       2021-03-12   2023-12-31   2024-01-01   2025-09-09
+MTL          24137      14823       2021-03-31   2023-12-31   2024-01-01   2025-09-09
+LRC          28049      14823       2020-10-19   2023-12-31   2024-01-01   2025-09-09
+SAND         25697      14823       2021-01-25   2023-12-31   2024-01-01   2025-09-09
+OGN          24113      14823       2021-04-01   2023-12-31   2024-01-01   2025-09-09
+KSM          28169      14823       2020-10-14   2023-12-31   2024-01-01   2025-09-09
+YFI          29225      14823       2020-08-31   2023-12-31   2024-01-01   2025-09-09
+SFP          24977      14823       2021-02-24   2023-12-31   2024-01-01   2025-09-09
+ICP          11062      14823       2022-09-27   2023-12-31   2024-01-01   2025-09-09
+ALGO         31047      14823       2020-06-16   2023-12-31   2024-01-01   2025-09-09
+ALICE        24501      14823       2021-03-16   2023-12-31   2024-01-01   2025-09-09
+BCH          35368      14823       2019-12-19   2023-12-31   2024-01-01   2025-09-09
+UNI          28793      14823       2020-09-18   2023-12-31   2024-01-01   2025-09-09
+ETC          34696      14823       2020-01-16   2023-12-31   2024-01-01   2025-09-09
+GMT          15764      14823       2022-03-15   2023-12-31   2024-01-01   2025-09-09
+TRX          34720      14823       2020-01-15   2023-12-31   2024-01-01   2025-09-09
+ICX          28866      14823       2020-09-15   2023-12-31   2024-01-01   2025-09-09
+ANKR         25673      14823       2021-01-26   2023-12-31   2024-01-01   2025-09-09
+XTZ          34192      14823       2020-02-06   2023-12-31   2024-01-01   2025-09-09
+SNX          29633      14823       2020-08-14   2023-12-31   2024-01-01   2025-09-09
+ROSE         17541      14823       2021-12-31   2023-12-31   2024-01-01   2025-09-09
+XRP          34936      14823       2020-01-06   2023-12-31   2024-01-01   2025-09-09
+1000LUNC     11483      14823       2022-09-09   2023-12-31   2024-01-01   2025-09-09
+RSR          28049      14823       2020-10-19   2023-12-31   2024-01-01   2025-09-09
+ATOM         34164      14823       2020-02-07   2023-12-31   2024-01-01   2025-09-09
+SXP          30207      14823       2020-07-21   2023-12-31   2024-01-01   2025-09-09
+EGLD         28889      14823       2020-09-14   2023-12-31   2024-01-01   2025-09-09
+ONE          24449      14823       2021-03-18   2023-12-31   2024-01-01   2025-09-09
+ALPHA        27209      14823       2020-11-23   2023-12-31   2024-01-01   2025-09-09
+DOGE         30471      14823       2020-07-10   2023-12-31   2024-01-01   2025-09-09
+BAT          34024      14823       2020-02-13   2023-12-31   2024-01-01   2025-09-09
+NEO          33928      14823       2020-02-17   2023-12-31   2024-01-01   2025-09-09
+STG          11844      14823       2022-08-25   2023-12-31   2024-01-01   2025-09-09
+ATA          20469      14823       2021-08-31   2023-12-31   2024-01-01   2025-09-09
+MKR          29657      14726       2020-08-13   2023-12-31   2024-01-01   2025-09-05
+VET          34000      14823       2020-02-14   2023-12-31   2024-01-01   2025-09-09
+LDO          11172      14823       2022-09-22   2023-12-31   2024-01-01   2025-09-09
+JASMY        14901      14823       2022-04-20   2023-12-31   2024-01-01   2025-09-09
+SKL          26849      14823       2020-12-08   2023-12-31   2024-01-01   2025-09-09
+THETA        31528      14823       2020-05-27   2023-12-31   2024-01-01   2025-09-09
+XMR          34264      14823       2020-02-03   2023-12-31   2024-01-01   2025-09-09
+NEAR         28144      14823       2020-10-15   2023-12-31   2024-01-01   2025-09-09
+SUSHI        29129      14823       2020-09-04   2023-12-31   2024-01-01   2025-09-09
+IOTX         20925      14823       2021-08-12   2023-12-31   2024-01-01   2025-09-09
+C98          20637      14823       2021-08-24   2023-12-31   2024-01-01   2025-09-09
+BTCDOM       22173      14823       2021-06-21   2023-12-31   2024-01-01   2025-09-09
+ZEN          27185      14823       2020-11-24   2023-12-31   2024-01-01   2025-09-09
+ETH          35897      14823       2019-11-27   2023-12-31   2024-01-01   2025-09-09
+BNB          34096      14823       2020-02-10   2023-12-31   2024-01-01   2025-09-09
+CELR         24185      14823       2021-03-29   2023-12-31   2024-01-01   2025-09-09
+ARPA         19293      14823       2021-10-19   2023-12-31   2024-01-01   2025-09-09
+RUNE         29129      14823       2020-09-04   2023-12-31   2024-01-01   2025-09-09
+RLC          29969      14823       2020-07-31   2023-12-31   2024-01-01   2025-09-09
+MASK         20565      14823       2021-08-27   2023-12-31   2024-01-01   2025-09-09
+IOST         33832      14823       2020-02-21   2023-12-31   2024-01-01   2025-09-09
+HBAR         24473      14823       2021-03-17   2023-12-31   2024-01-01   2025-09-09
+APT          10534      14823       2022-10-19   2023-12-31   2024-01-01   2025-09-09
+STORJ        28841      14823       2020-09-16   2023-12-31   2024-01-01   2025-09-09
+OP           13882      14823       2022-06-01   2023-12-31   2024-01-01   2025-09-09
+LUNA2        11469      14823       2022-09-10   2023-12-31   2024-01-01   2025-09-09
+FLOW         16557      14823       2022-02-10   2023-12-31   2024-01-01   2025-09-09
+DENT         24308      14823       2021-03-24   2023-12-31   2024-01-01   2025-09-09
+LINK         34672      14823       2020-01-17   2023-12-31   2024-01-01   2025-09-09
+AR           19797      14823       2021-09-28   2023-12-31   2024-01-01   2025-09-09
+1000SHIB     23167      14823       2021-05-10   2023-12-31   2024-01-01   2025-09-09
+INJ          12046      14823       2022-08-17   2023-12-31   2024-01-01   2025-09-09
+MANA         24521      14823       2021-03-15   2023-12-31   2024-01-01   2025-09-09
+ENJ          28529      14823       2020-09-29   2023-12-31   2024-01-01   2025-09-09
+GRT          26585      14823       2020-12-19   2023-12-31   2024-01-01   2025-09-09
+HOT          24161      14823       2021-03-30   2023-12-31   2024-01-01   2025-09-09
+CELO         19821      14823       2021-09-27   2023-12-31   2024-01-01   2025-09-09
+DOT          29441      14823       2020-08-22   2023-12-31   2024-01-01   2025-09-09
+LPT          18741      14823       2021-11-11   2023-12-31   2024-01-01   2025-09-09
+DYDX         20229      14823       2021-09-10   2023-12-31   2024-01-01   2025-09-09
+TRB          29153      14823       2020-09-03   2023-12-31   2024-01-01   2025-09-09
+CTSI         19125      14823       2021-10-26   2023-12-31   2024-01-01   2025-09-09
+ADA          34336      14823       2020-01-31   2023-12-31   2024-01-01   2025-09-09
+DUSK         17373      14823       2022-01-07   2023-12-31   2024-01-01   2025-09-09
+DASH         34240      14823       2020-02-04   2023-12-31   2024-01-01   2025-09-09
+WOO          15189      14823       2022-04-08   2023-12-31   2024-01-01   2025-09-09
+GALA         20037      14823       2021-09-18   2023-12-31   2024-01-01   2025-09-09
+AAVE         28121      14823       2020-10-16   2023-12-31   2024-01-01   2025-09-09
+1000XEC      20061      14823       2021-09-17   2023-12-31   2024-01-01   2025-09-09
+LTC          34864      14823       2020-01-09   2023-12-31   2024-01-01   2025-09-09
+IOTA         34048      14823       2020-02-12   2023-12-31   2024-01-01   2025-09-09
+API3         16269      14823       2022-02-22   2023-12-31   2024-01-01   2025-09-09
+ZIL          30999      14823       2020-06-18   2023-12-31   2024-01-01   2025-09-09
+BAND         30017      14823       2020-07-29   2023-12-31   2024-01-01   2025-09-09
+COTI         24641      14823       2021-03-10   2023-12-31   2024-01-01   2025-09-09
+GTC          22413      14823       2021-06-11   2023-12-31   2024-01-01   2025-09-09
+ENS          18285      14823       2021-11-30   2023-12-31   2024-01-01   2025-09-09
+ZRX          30855      14823       2020-06-24   2023-12-31   2024-01-01   2025-09-09
+BEL          27329      14823       2020-11-18   2023-12-31   2024-01-01   2025-09-09
+DEFI         29297      13959       2020-08-28   2023-12-31   2024-01-01   2025-08-04
+FLM          28529      14823       2020-09-29   2023-12-31   2024-01-01   2025-09-09
+QNT          10510      14823       2022-10-20   2023-12-31   2024-01-01   2025-09-09
+COMP         30711      14823       2020-06-30   2023-12-31   2024-01-01   2025-09-09
+APE          15705      14823       2022-03-17   2023-12-31   2024-01-01   2025-09-09
+SOL          28889      14823       2020-09-14   2023-12-31   2024-01-01   2025-09-09
+BAKE         22961      14823       2021-05-19   2023-12-31   2024-01-01   2025-09-09
+CRV          29201      14823       2020-09-01   2023-12-31   2024-01-01   2025-09-09
+NKN          23921      14823       2021-04-09   2023-12-31   2024-01-01   2025-09-09
+KAVA         30041      14823       2020-07-28   2023-12-31   2024-01-01   2025-09-09
+FIL          28122      14823       2020-10-16   2023-12-31   2024-01-01   2025-09-09
+ZEC          34216      14823       2020-02-05   2023-12-31   2024-01-01   2025-09-09
+IMX          16533      14823       2022-02-11   2023-12-31   2024-01-01   2025-09-09
+
+IN-SAMPLE STATISTICS
+------------------------------
+Average points: 25677
+Median points: 27245
+Min points: 10510
+Max points: 37807
+
+OUT-OF-SAMPLE STATISTICS
+------------------------------
+Average points: 14815
+Median points: 14823
+Min points: 13959
+Max points: 14823
+
+REJECTED COINS
+------------------------------
+
+Insufficient in-sample data: 0 < 8736 (291 coins):
+  - BR
+  - SYS
+  - BSW
+  - TANSSI
+  - M
+  - MOCA
+  - MUBARAK
+  - MITO
+  - BRETT
+  - RARE
+  - PHA
+  - ALPINE
+  - AERO
+  - TUT
+  - DEEP
+  - AI16Z
+  - A2Z
+  - DEGEN
+  - FUN
+  - OMNI
+  - TON
+  - PARTI
+  - PUNDIX
+  - 1000000BOB
+  - CHILLGUY
+  - PUFFER
+  - YALA
+  - A
+  - RPL
+  - FIDA
+  - AIN
+  - SOMI
+  - ALCH
+  - PORTAL
+  - ATH
+  - DMC
+  - ENA
+  - JST
+  - VELODROME
+  - AVA
+  - TNSR
+  - BB
+  - EIGEN
+  - NEIROETH
+  - INIT
+  - CATI
+  - NXPC
+  - ZEREBRO
+  - KOMA
+  - SHELL
+  - SKY
+  - GOAT
+  - DOLO
+  - B2
+  - RAYSOL
+  - RENDER
+  - MELANIA
+  - REZ
+  - DOOD
+  - CROSS
+  - EPT
+  - USELESS
+  - ERA
+  - OG
+  - CVC
+  - FORM
+  - FLOCK
+  - OBOL
+  - BERA
+  - AI
+  - ONDO
+  - AGT
+  - TOWNS
+  - PAXG
+  - Q
+  - BABY
+  - B3
+  - WLFI
+  - POL
+  - XPL
+  - SXT
+  - DIA
+  - ZORA
+  - OPEN
+  - COS
+  - GPS
+  - SAPIEN
+  - GRASS
+  - ZKJ
+  - QUICK
+  - BANK
+  - ANIME
+  - FIO
+  - STO
+  - SIREN
+  - COW
+  - SWARMS
+  - MOODENG
+  - STRK
+  - MYX
+  - PENGU
+  - CUDIS
+  - SPX
+  - SYN
+  - KERNEL
+  - PROVE
+  - DAM
+  - BTR
+  - LOKA
+  - LA
+  - AIOT
+  - KAITO
+  - 1000CHEEMS
+  - MEMEFI
+  - ZRC
+  - CARV
+  - KAIA
+  - H
+  - MLN
+  - CTK
+  - SLP
+  - GUN
+  - XNY
+  - NIL
+  - NAORIS
+  - VELVET
+  - SOLV
+  - IP
+  - FARTCOIN
+  - AVAAI
+  - VANA
+  - 1000X
+  - ICNT
+  - MERL
+  - PNUT
+  - VIC
+  - SONIC
+  - VOXEL
+  - ESPORTS
+  - FIS
+  - AIO
+  - WIF
+  - PROMPT
+  - ZRO
+  - BID
+  - ARC
+  - SAFE
+  - XAI
+  - FHE
+  - HYPE
+  - D
+  - IDOL
+  - SCR
+  - XCN
+  - BANANA
+  - NEIRO
+  - VIRTUAL
+  - SAGA
+  - DRIFT
+  - AEVO
+  - IN
+  - ALT
+  - HMSTR
+  - GLM
+  - THE
+  - HEMI
+  - EPIC
+  - PTB
+  - PIPPIN
+  - POPCAT
+  - SQD
+  - OL
+  - HYPER
+  - SKATE
+  - NOT
+  - DEXE
+  - AXL
+  - KDA
+  - HIVE
+  - KMNO
+  - FORTH
+  - GRIFFAIN
+  - MILK
+  - ACX
+  - DOGS
+  - F
+  - SOPH
+  - REI
+  - HUMA
+  - CGPT
+  - VVV
+  - SYRUP
+  - BULLA
+  - ME
+  - B
+  - AERGO
+  - MAVIA
+  - TAO
+  - MBOX
+  - SIGN
+  - CVX
+  - LUMIA
+  - ETHFI
+  - HIPPO
+  - AKT
+  - WAL
+  - PUMPBTC
+  - MORPHO
+  - TAC
+  - ACT
+  - BDXN
+  - TAKE
+  - ALL
+  - VANRY
+  - PORT3
+  - SWELL
+  - TAG
+  - BAN
+  - VTHO
+  - RESOLV
+  - ARIA
+  - AIXBT
+  - C
+  - DEGO
+  - USUAL
+  - WCT
+  - HAEDAL
+  - SAHARA
+  - SPK
+  - NEWT
+  - SLERF
+  - TRUMP
+  - MANTA
+  - ASR
+  - PUMP
+  - G
+  - TST
+  - MEW
+  - RED
+  - MOVE
+  - HOME
+  - AWE
+  - BANANAS31
+  - PONKE
+  - UXLINK
+  - 1000CAT
+  - JELLYJELLY
+  - 1MBABYDOGE
+  - METIS
+  - BMT
+  - SCRT
+  - SANTOS
+  - ZETA
+  - HEI
+  - BIO
+  - SUN
+  - 1000000MOG
+  - PROM
+  - ORCA
+  - SOON
+  - S
+  - IO
+  - 1000WHY
+  - MYRO
+  - COOKIE
+  - FLUX
+  - DF
+  - LISTA
+  - W
+  - RONIN
+  - PLAY
+  - BAS
+  - SKYAI
+  - JUP
+  - CHESS
+  - CETUS
+  - VINE
+  - LAYER
+  - TA
+  - GHST
+  - ZK
+  - LSK
+  - LINEA
+  - TURBO
+  - OM
+  - DYM
+  - TAIKO
+  - PLUME
+  - PIXEL
+  - BOME
+  - TREE
+
+Insufficient in-sample data: 6636 < 8736 (2 coins):
+  - TLM
+  - LEVER
+
+Insufficient in-sample data: 6310 < 8736 (1 coins):
+  - XVS
+
+Insufficient in-sample data: 3742 < 8736 (1 coins):
+  - AGLD
+
+Insufficient in-sample data: 4620 < 8736 (1 coins):
+  - NMR
+
+Insufficient in-sample data: 7116 < 8736 (1 coins):
+  - LQTY
+
+Insufficient in-sample data: 6801 < 8736 (1 coins):
+  - ARB
+
+Insufficient in-sample data: 7546 < 8736 (1 coins):
+  - CFX
+
+Insufficient in-sample data: 1786 < 8736 (1 coins):
+  - WAXP
+
+Insufficient in-sample data: 1630 < 8736 (2 coins):
+  - GAS
+  - POLYX
+
+Insufficient in-sample data: 1078 < 8736 (1 coins):
+  - KAS
+
+Insufficient in-sample data: 1140 < 8736 (1 coins):
+  - NTRN
+
+Insufficient in-sample data: 3573 < 8736 (1 coins):
+  - YGG
+
+Insufficient in-sample data: 3180 < 8736 (1 coins):
+  - CYBER
+
+Insufficient in-sample data: 2554 < 8736 (1 coins):
+  - HIFI
+
+Insufficient in-sample data: 4308 < 8736 (1 coins):
+  - XVG
+
+Insufficient in-sample data: 4452 < 8736 (1 coins):
+  - MAV
+
+Insufficient in-sample data: 8301 < 8736 (1 coins):
+  - FXS
+
+Insufficient in-sample data: 7861 < 8736 (1 coins):
+  - MINA
+
+Insufficient in-sample data: 7452 < 8736 (1 coins):
+  - SSV
+
+Insufficient in-sample data: 8181 < 8736 (1 coins):
+  - MAGIC
+
+Insufficient in-sample data: 6468 < 8736 (1 coins):
+  - HFT
+
+Insufficient in-sample data: 3492 < 8736 (1 coins):
+  - DODOX
+
+Insufficient in-sample data: 7618 < 8736 (1 coins):
+  - GMX
+
+Insufficient in-sample data: 946 < 8736 (2 coins):
+  - 1000BONK
+  - PYTH
+
+Insufficient in-sample data: 6660 < 8736 (1 coins):
+  - JOE
+
+Insufficient in-sample data: 6802 < 8736 (1 coins):
+  - ID
+
+Insufficient in-sample data: 8374 < 8736 (1 coins):
+  - FET
+
+Insufficient in-sample data: 828 < 8736 (1 coins):
+  - USTC
+
+Insufficient in-sample data: 1402 < 8736 (1 coins):
+  - TWT
+
+Insufficient in-sample data: 132 < 8736 (1 coins):
+  - MOVR
+
+Insufficient in-sample data: 8229 < 8736 (1 coins):
+  - HOOK
+
+Insufficient in-sample data: 8003 < 8736 (1 coins):
+  - T
+
+Insufficient in-sample data: 7188 < 8736 (1 coins):
+  - TRU
+
+Insufficient in-sample data: 1930 < 8736 (1 coins):
+  - BIGTIME
+
+Insufficient in-sample data: 5940 < 8736 (1 coins):
+  - BLUR
+
+Insufficient in-sample data: 1470 < 8736 (1 coins):
+  - TIA
+
+Insufficient in-sample data: 107 < 8736 (1 coins):
+  - NFP
+
+Insufficient in-sample data: 3444 < 8736 (1 coins):
+  - BNT
+
+Insufficient in-sample data: 3420 < 8736 (1 coins):
+  - OXT
+
+Insufficient in-sample data: 5816 < 8736 (1 coins):
+  - SUI
+
+Insufficient in-sample data: 2482 < 8736 (1 coins):
+  - ARK
+
+Insufficient in-sample data: 1740 < 8736 (1 coins):
+  - BSV
+
+Insufficient in-sample data: 5892 < 8736 (1 coins):
+  - EDU
+
+Insufficient in-sample data: 7212 < 8736 (1 coins):
+  - PERP
+
+Insufficient in-sample data: 1582 < 8736 (1 coins):
+  - POWR
+
+Insufficient in-sample data: 5652 < 8736 (1 coins):
+  - UMA
+
+Insufficient in-sample data: 1716 < 8736 (1 coins):
+  - RIF
+
+Insufficient in-sample data: 394 < 8736 (1 coins):
+  - 1000RATS
+
+Insufficient in-sample data: 7498 < 8736 (1 coins):
+  - ACH
+
+Insufficient in-sample data: 7356 < 8736 (1 coins):
+  - CKB
+
+Insufficient in-sample data: 827 < 8736 (1 coins):
+  - ONG
+
+Insufficient in-sample data: 3766 < 8736 (2 coins):
+  - ARKM
+  - PENDLE
+
+Insufficient in-sample data: 566 < 8736 (1 coins):
+  - JTO
+
+Insufficient in-sample data: 1404 < 8736 (1 coins):
+  - MEME
+
+Insufficient in-sample data: 6492 < 8736 (1 coins):
+  - RDNT
+
+Insufficient in-sample data: 1428 < 8736 (1 coins):
+  - CAKE
+
+Insufficient in-sample data: 2268 < 8736 (1 coins):
+  - BICO
+
+Insufficient in-sample data: 7870 < 8736 (1 coins):
+  - HIGH
+
+Insufficient in-sample data: 7642 < 8736 (1 coins):
+  - PHB
+
+Insufficient in-sample data: 5768 < 8736 (1 coins):
+  - 1000PEPE
+
+Insufficient in-sample data: 3286 < 8736 (1 coins):
+  - SEI
+
+Insufficient in-sample data: 1067 < 8736 (1 coins):
+  - BEAMX
+
+Insufficient in-sample data: 1232 < 8736 (1 coins):
+  - ILV
+
+Insufficient in-sample data: 1308 < 8736 (1 coins):
+  - ORDI
+
+Insufficient in-sample data: 1282 < 8736 (1 coins):
+  - STEEM
+
+Insufficient in-sample data: 804 < 8736 (1 coins):
+  - ETHW
+
+Insufficient in-sample data: 466 < 8736 (1 coins):
+  - 1000SATS
+
+Insufficient in-sample data: 7522 < 8736 (1 coins):
+  - STX
+
+Insufficient in-sample data: 3852 < 8736 (1 coins):
+  - WLD
+
+Insufficient in-sample data: 851 < 8736 (1 coins):
+  - SUPER
+
+Insufficient in-sample data: 7702 < 8736 (1 coins):
+  - ASTR
+
+Insufficient in-sample data: 5744 < 8736 (1 coins):
+  - 1000FLOKI
+
+Insufficient in-sample data: 7063 < 8736 (1 coins):
+  - USDC
+
+Insufficient in-sample data: 326 < 8736 (1 coins):
+  - ACE
+
+Insufficient in-sample data: 395 < 8736 (1 coins):
+  - AUCTION
+
+Insufficient in-sample data: 1401 < 8736 (1 coins):
+  - TOKEN
+
+FILES CREATED
+------------------------------
+In-sample files: 118 (saved to data/in_sample/)
+Out-of-sample files: 118 (saved to data/out_of_sample/)

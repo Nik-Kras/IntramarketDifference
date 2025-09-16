@@ -13,14 +13,18 @@ Performs comprehensive analysis using the optimal 18-month window:
 import os
 import json
 import pandas as pd
-import numpy as np
 from datetime import datetime
-from typing import Dict, List, Tuple
-from pathlib import Path
+from typing import Dict, Tuple
 
 # Import functions from existing modules
 from window_analyzer_fast import analyze_window_fast as analyze_window, generate_selection_report
 from window_portfolio_simulator import WindowPortfolioSimulator
+from visualization_utils import (
+    create_pnl_by_coin_histogram,
+    detect_trade_outliers,
+    create_trade_outlier_visualization,
+    generate_trade_outlier_report
+)
 
 # Configuration
 OPTIMAL_WINDOW_MONTHS = 18
@@ -46,7 +50,7 @@ def run_in_sample_analysis() -> pd.DataFrame:
     window_start, window_end = calculate_optimal_window_dates()
     print(f"Window period: {window_start} to {window_end}")
     
-    # Check if results already exist
+    # Check if results already exist - PRIORITIZE EXISTING FILE
     selected_pairs_file = os.path.join(RESULTS_DIR, 'selected_pairs.csv')
     if os.path.exists(selected_pairs_file):
         print(f"📂 Loading existing selected pairs from: {selected_pairs_file}")
@@ -59,7 +63,15 @@ def run_in_sample_analysis() -> pd.DataFrame:
     _, selected_pairs, filter_stats = analyze_window(window_start, window_end, TRADES_DIR)
     
     if len(selected_pairs) == 0:
-        raise ValueError("No pairs selected from 18-month window analysis!")
+        print("⚠️  WARNING: No pairs selected from 18-month window analysis!")
+        print("   Checking for existing selected_pairs.csv file...")
+        if os.path.exists(selected_pairs_file):
+            print(f"   Found existing file, loading it instead...")
+            selected_pairs = pd.read_csv(selected_pairs_file)
+            print(f"✅ Loaded {len(selected_pairs)} pre-selected optimal pairs from backup")
+            return selected_pairs
+        else:
+            raise ValueError("No pairs selected from 18-month window analysis!")
     
     print(f"✅ In-Sample analysis complete!")
     print(f"   Selected {len(selected_pairs)} optimal pairs from filtering")
@@ -162,7 +174,7 @@ def load_chronological_oos_trades(selected_pairs: pd.DataFrame) -> pd.DataFrame:
     
     return combined_trades_df
 
-def run_portfolio_simulation(selected_pairs: pd.DataFrame) -> Dict:
+def run_portfolio_simulation(selected_pairs: pd.DataFrame) -> Tuple[Dict, object]:
     """Run portfolio simulation and generate visualizations."""
     
     print("\n💰 Step 3: Portfolio Simulation")
@@ -214,7 +226,7 @@ def run_portfolio_simulation(selected_pairs: pd.DataFrame) -> Dict:
     print(f"💾 Portfolio summary saved to: {summary_file}")
     print("✅ All portfolio visualizations generated")
     
-    return portfolio_metrics
+    return portfolio_metrics, simulator
 
 def create_weekly_trade_matrix(trades_df: pd.DataFrame) -> pd.DataFrame:
     """Create weekly trade count matrix: [Date_Week x Trading_Coin]."""
@@ -626,6 +638,81 @@ def create_all_coins_histogram(weekly_matrix: pd.DataFrame):
     print(f"✅ All coins distribution histogram created")
     print(f"💾 Saved: {plot_filename}")
 
+def create_advanced_visualizations(simulator, oos_trades_df: pd.DataFrame):
+    """Create advanced interactive visualizations and analysis."""
+    
+    print("\n🎨 Step 10: Creating Advanced Interactive Visualizations")
+    print("=" * 60)
+    
+    # Get portfolio timeline data
+    if not simulator.portfolio_timeline:
+        print("❌ No portfolio timeline data available for advanced visualizations")
+        return
+    
+    portfolio_df = pd.DataFrame(simulator.portfolio_timeline)
+    
+    # Set timestamp as index
+    if 'timestamp' in portfolio_df.columns:
+        portfolio_df = portfolio_df.set_index('timestamp').sort_index()
+    elif 'time' in portfolio_df.columns:
+        portfolio_df = portfolio_df.set_index('time').sort_index()
+    else:
+        print("❌ No timestamp column found")
+        return
+    
+    # Interactive visualizations removed - they were causing performance issues
+    
+    print("💰 3. Creating P&L by Coin Histogram...")
+    # Get completed trades with P&L info
+    if simulator.completed_trades:
+        trades_df = pd.DataFrame(simulator.completed_trades)
+        create_pnl_by_coin_histogram(
+            trades_df,
+            os.path.join(RESULTS_DIR, 'pnl_by_coin.html')
+        )
+        print("   ✅ Saved: pnl_by_coin.html")
+    else:
+        print("   ⚠️  No completed trades data available")
+    
+    print("🔍 4. Performing Trade Outlier Detection Analysis...")
+    # Use trade-level outlier detection instead of portfolio-level
+    try:
+        trades_with_outliers, trade_outliers = detect_trade_outliers(
+            oos_trades_df, 
+            method='zscore', 
+            threshold=3.5  # More conservative threshold for trades
+        )
+        
+        if trade_outliers:
+            print(f"   Found {len(trade_outliers)} outlier trades")
+            
+            # Create trade outlier visualization
+            create_trade_outlier_visualization(
+                trades_with_outliers,
+                trade_outliers,
+                os.path.join(RESULTS_DIR, 'trade_outlier_analysis.html')
+            )
+            print("   ✅ Saved: trade_outlier_analysis.html")
+            
+            # Generate trade outlier report
+            generate_trade_outlier_report(
+                trade_outliers,
+                trades_with_outliers,
+                os.path.join(RESULTS_DIR, 'trade_outlier_report.txt')
+            )
+            print("   ✅ Saved: trade_outlier_report.txt")
+        else:
+            print("   No significant trade outliers detected")
+            
+    except Exception as e:
+        print(f"   ⚠️  Error in trade outlier detection: {e}")
+        print("   Skipping outlier analysis...")
+    
+    print("\n✅ All advanced visualizations created successfully!")
+    print("📂 Interactive visualizations saved to: " + RESULTS_DIR)
+    
+    return portfolio_df
+
 def create_top20_coins_histogram(weekly_matrix: pd.DataFrame):
     """Create focused histogram showing only top-20 trading coins during OOS period."""
     
@@ -769,7 +856,7 @@ def main():
         print(f"\n✅ STEP 2 COMPLETE: {len(oos_trades_df):,} chronological trades loaded")
         
         # Step 3: Run portfolio simulation with visualizations
-        portfolio_metrics = run_portfolio_simulation(selected_pairs)
+        portfolio_metrics, simulator = run_portfolio_simulation(selected_pairs)
         
         # Step 4: Create weekly trade frequency matrix
         weekly_matrix = create_weekly_trade_matrix(oos_trades_df)
@@ -777,8 +864,8 @@ def main():
         # Step 5: Create top-10 weekly coin ranking
         top10_ranking = create_weekly_top10_ranking(weekly_matrix)
         
-        # Step 6: Create individual time series plots for top-10 coins
-        create_top10_coin_timeseries_plots(weekly_matrix, top10_ranking)
+        # Step 6: REMOVED - Individual time series plots for top-10 coins
+        # create_top10_coin_timeseries_plots(weekly_matrix, top10_ranking)
         
         # Step 7: Create monthly top-5 histogram
         create_monthly_top5_histogram(weekly_matrix)
@@ -789,6 +876,9 @@ def main():
         # Step 9: Create top-20 coins histogram
         create_top20_coins_histogram(weekly_matrix)
         
+        # Step 10: Create advanced interactive visualizations
+        create_advanced_visualizations(simulator, oos_trades_df)
+        
         print("\n🎉 OPTIMAL WINDOW ANALYSIS COMPLETE!")
         print(f"📁 All results saved to: {RESULTS_DIR}/")
         print("\n📊 Generated Files:")
@@ -796,14 +886,13 @@ def main():
         print("   • chronological_oos_trades.csv - All OOS trades in time order")
         print("   • weekly_trade_counts_by_coin.csv - Weekly trade matrix")
         print("   • weekly_top10_coins_traded.csv - Top-10 ranking per week")
-        print("   • {COIN}_weekly_trades.png - Individual time series for top-10 coins")
         print("   • monthly_top5_coins_histogram.png - Monthly top-5 coins distribution")
         print("   • all_coins_trade_distribution.png - All trading coins histogram")
         print("   • top20_coins_trade_distribution.png - Top-20 coins focused view")
-        print("   • portfolio_equity_curve.png - Portfolio performance")
-        print("   • drawdown_curve.png - Risk analysis")
-        print("   • budget_allocation.png - Capital allocation timeline")
-        print("   • active_trades_timeline.png - Trade execution timeline")
+        print("   • portfolio_combined_analysis.png - Combined portfolio visualization")
+        print("   • pnl_by_coin.html - P&L breakdown by coin")
+        print("   • trade_outlier_analysis.html - Trade outlier detection visualization")
+        print("   • trade_outlier_report.txt - Detailed trade outlier analysis report")
         print("   • portfolio_summary.json - Complete metrics summary")
         
         # Display key insights

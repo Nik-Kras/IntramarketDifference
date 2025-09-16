@@ -1,18 +1,4 @@
 #!/usr/bin/env python3
-"""
-PERFORMANCE OPTIMIZATION ROADMAP FOR FUTURE DEVELOPER:
-=======================================================
-Search for "TODO: PERFORMANCE OPTIMIZATION" to find all bottlenecks:
-
-1. CRITICAL: get_trades_from_signal() in trades_from_signal.py (42% of time)
-2. CRITICAL: threshold_revert_signal() in core.py (38% of time)  
-3. MODERATE: CSV writing in this file (17% of time)
-
-Current performance: ~62 pairs/second (24 minutes total for 89,102 pairs)
-Expected after optimization: ~500+ pairs/second (3 minutes total)
-Combined improvement: 8-10x faster processing
-"""
-
 import os
 import shutil
 import pandas as pd

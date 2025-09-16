@@ -442,7 +442,6 @@ def main():
     print(f"⏱️  Duration: {duration}")
     print(f"📊 In-Sample pairs converted: {in_sample_converted}")
     print(f"📊 Out-of-Sample pairs converted: {oos_converted}")
-    print(f"\\n🔄 Next step: Run run_window_experiment_updated.py (should be ~10x faster)")
     
     # Test fast analyzer with sample window
     if in_sample_converted > 0:
@@ -496,16 +495,6 @@ def main():
     print(f"⏱️  Total Duration: {duration}")
     print(f"📊 In-Sample pairs converted: {in_sample_converted}")
     print(f"📊 Out-of-Sample pairs converted: {oos_converted}")
-    
-    print(f"\n🔄 Performance Improvement:")
-    print(f"   Before: ~4.8 pairs/sec (JSON loading)")
-    print(f"   After: ~50+ pairs/sec (CSV loading)")
-    print(f"   Expected speedup: 10x faster window experiments")
-    
-    print(f"\n📋 Usage Instructions:")
-    print(f"   1. Run this script once: python convert_trades_to_csv.py")
-    print(f"   2. Update run_window_experiment_updated.py to use window_analyzer_fast")
-    print(f"   3. Window experiments should now complete in ~1-2 hours instead of 100+ hours")
 
 if __name__ == "__main__":
     main()

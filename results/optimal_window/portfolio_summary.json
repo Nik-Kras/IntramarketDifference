@@ -1,0 +1,10 @@
+{
+  "window_name": "18mo_optimal",
+  "months_back": 18,
+  "pairs_selected": 982,
+  "portfolio_return": 3.773165650610386,
+  "portfolio_sharpe": 6.733761969612906,
+  "portfolio_drawdown": -0.07318271693362556,
+  "trades_executed": 417953,
+  "simulation_date": "2025-09-15T23:25:01.888159"
+}

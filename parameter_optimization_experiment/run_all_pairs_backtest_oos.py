@@ -22,9 +22,7 @@ from core import (
     LOOKBACK, ATR_LOOKBACK, THRESHOLD, MIN_OVERLAP
 )
 
-# Add parent directory to path to import trading functions
-sys.path.append('..')
-from parameter_optimization_experiment.trades_from_signal import get_trades_from_signal
+from trades_from_signal import get_trades_from_signal
 
 # Configuration
 DATA_DIR = "data/out_of_sample"

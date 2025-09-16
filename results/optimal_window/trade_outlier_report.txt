@@ -1,0 +1,447 @@
+================================================================================
+TRADE OUTLIER DETECTION REPORT
+================================================================================
+
+Analysis Date: 2025-09-15 23:28:01
+Trade Date Range: 2024-01-08 00:00:00 to 2025-09-09 14:00:00
+Total Trades Analyzed: 417,953
+Outlier Trades Detected: 4732
+
+--------------------------------------------------------------------------------
+OUTLIER TRADE DETAILS
+--------------------------------------------------------------------------------
+
+Outlier Trade #1
+Date: 2024-04-12 11:00
+Trade Return: 75.20%
+Trading Coin: ATA
+Reference Coin: AVAX
+Trade Type: short
+Z-Score: 16.55
+
+Outlier Trade #2
+Date: 2024-04-12 12:00
+Trade Return: 73.94%
+Trading Coin: ATA
+Reference Coin: ALGO
+Trade Type: short
+Z-Score: 16.27
+
+Outlier Trade #3
+Date: 2024-04-12 08:00
+Trade Return: 70.23%
+Trading Coin: ATA
+Reference Coin: ENS
+Trade Type: short
+Z-Score: 15.45
+
+Outlier Trade #4
+Date: 2025-08-19 06:00
+Trade Return: 68.59%
+Trading Coin: API3
+Reference Coin: ADA
+Trade Type: long
+Z-Score: 15.09
+
+Outlier Trade #5
+Date: 2025-06-04 10:00
+Trade Return: 67.65%
+Trading Coin: RVN
+Reference Coin: BCH
+Trade Type: long
+Z-Score: 14.89
+
+Outlier Trade #6
+Date: 2025-06-04 15:00
+Trade Return: 67.35%
+Trading Coin: RVN
+Reference Coin: LDO
+Trade Type: long
+Z-Score: 14.82
+
+Outlier Trade #7
+Date: 2025-04-17 13:00
+Trade Return: -60.34%
+Trading Coin: NKN
+Reference Coin: BEL
+Trade Type: short
+Z-Score: 13.39
+
+Outlier Trade #8
+Date: 2025-04-18 00:00
+Trade Return: -59.38%
+Trading Coin: NKN
+Reference Coin: UNI
+Trade Type: short
+Z-Score: 13.18
+
+Outlier Trade #9
+Date: 2025-04-18 00:00
+Trade Return: -59.38%
+Trading Coin: NKN
+Reference Coin: MKR
+Trade Type: short
+Z-Score: 13.18
+
+Outlier Trade #10
+Date: 2024-02-18 02:00
+Trade Return: -59.31%
+Trading Coin: JASMY
+Reference Coin: BTCDOM
+Trade Type: short
+Z-Score: 13.17
+
+Outlier Trade #11
+Date: 2025-04-17 23:00
+Trade Return: -59.28%
+Trading Coin: NKN
+Reference Coin: LDO
+Trade Type: short
+Z-Score: 13.16
+
+Outlier Trade #12
+Date: 2024-04-12 01:00
+Trade Return: 58.50%
+Trading Coin: HOT
+Reference Coin: ENS
+Trade Type: short
+Z-Score: 12.86
+
+Outlier Trade #13
+Date: 2025-04-18 02:00
+Trade Return: -58.10%
+Trading Coin: NKN
+Reference Coin: API3
+Trade Type: short
+Z-Score: 12.90
+
+Outlier Trade #14
+Date: 2024-02-18 09:00
+Trade Return: -58.08%
+Trading Coin: JASMY
+Reference Coin: LINK
+Trade Type: short
+Z-Score: 12.90
+
+Outlier Trade #15
+Date: 2024-04-12 17:00
+Trade Return: 57.84%
+Trading Coin: ATA
+Reference Coin: OP
+Trade Type: short
+Z-Score: 12.72
+
+Outlier Trade #16
+Date: 2024-02-18 16:00
+Trade Return: -57.30%
+Trading Coin: JASMY
+Reference Coin: ROSE
+Trade Type: short
+Z-Score: 12.72
+
+Outlier Trade #17
+Date: 2024-02-19 00:00
+Trade Return: -57.06%
+Trading Coin: JASMY
+Reference Coin: FLOW
+Trade Type: short
+Z-Score: 12.67
+
+Outlier Trade #18
+Date: 2024-02-19 01:00
+Trade Return: -57.05%
+Trading Coin: JASMY
+Reference Coin: INJ
+Trade Type: short
+Z-Score: 12.67
+
+Outlier Trade #19
+Date: 2024-02-19 02:00
+Trade Return: -56.52%
+Trading Coin: JASMY
+Reference Coin: IMX
+Trade Type: short
+Z-Score: 12.55
+
+Outlier Trade #20
+Date: 2025-04-18 14:00
+Trade Return: -56.09%
+Trading Coin: NKN
+Reference Coin: ALGO
+Trade Type: short
+Z-Score: 12.46
+
+Outlier Trade #21
+Date: 2024-02-19 06:00
+Trade Return: -56.00%
+Trading Coin: JASMY
+Reference Coin: STG
+Trade Type: short
+Z-Score: 12.44
+
+Outlier Trade #22
+Date: 2024-02-23 03:00
+Trade Return: 55.60%
+Trading Coin: UNI
+Reference Coin: XMR
+Trade Type: long
+Z-Score: 12.22
+
+Outlier Trade #23
+Date: 2024-02-19 09:00
+Trade Return: -54.44%
+Trading Coin: JASMY
+Reference Coin: GRT
+Trade Type: short
+Z-Score: 12.09
+
+Outlier Trade #24
+Date: 2025-04-18 15:00
+Trade Return: -53.59%
+Trading Coin: NKN
+Reference Coin: FLOW
+Trade Type: short
+Z-Score: 11.90
+
+Outlier Trade #25
+Date: 2024-02-19 08:00
+Trade Return: -53.29%
+Trading Coin: JASMY
+Reference Coin: LDO
+Trade Type: short
+Z-Score: 11.84
+
+Outlier Trade #26
+Date: 2024-02-19 08:00
+Trade Return: -53.29%
+Trading Coin: JASMY
+Reference Coin: OP
+Trade Type: short
+Z-Score: 11.84
+
+Outlier Trade #27
+Date: 2024-02-19 08:00
+Trade Return: -53.29%
+Trading Coin: JASMY
+Reference Coin: ALGO
+Trade Type: short
+Z-Score: 11.84
+
+Outlier Trade #28
+Date: 2024-02-20 02:00
+Trade Return: -53.07%
+Trading Coin: JASMY
+Reference Coin: HBAR
+Trade Type: short
+Z-Score: 11.79
+
+Outlier Trade #29
+Date: 2024-04-12 13:00
+Trade Return: 52.89%
+Trading Coin: BEL
+Reference Coin: TRB
+Trade Type: short
+Z-Score: 11.62
+
+Outlier Trade #30
+Date: 2024-10-19 19:00
+Trade Return: -52.76%
+Trading Coin: APE
+Reference Coin: ROSE
+Trade Type: short
+Z-Score: 11.72
+
+Outlier Trade #31
+Date: 2024-11-22 11:00
+Trade Return: -51.95%
+Trading Coin: SAND
+Reference Coin: LDO
+Trade Type: short
+Z-Score: 11.54
+
+Outlier Trade #32
+Date: 2024-04-12 15:00
+Trade Return: 51.89%
+Trading Coin: NKN
+Reference Coin: RUNE
+Trade Type: short
+Z-Score: 11.40
+
+Outlier Trade #33
+Date: 2024-11-22 14:00
+Trade Return: 51.87%
+Trading Coin: ENJ
+Reference Coin: KSM
+Trade Type: long
+Z-Score: 11.40
+
+Outlier Trade #34
+Date: 2025-08-12 16:00
+Trade Return: -51.87%
+Trading Coin: SKL
+Reference Coin: LDO
+Trade Type: short
+Z-Score: 11.52
+
+Outlier Trade #35
+Date: 2024-10-19 16:00
+Trade Return: -50.86%
+Trading Coin: APE
+Reference Coin: SAND
+Trade Type: short
+Z-Score: 11.30
+
+Outlier Trade #36
+Date: 2024-10-19 17:00
+Trade Return: -50.86%
+Trading Coin: APE
+Reference Coin: IMX
+Trade Type: short
+Z-Score: 11.30
+
+Outlier Trade #37
+Date: 2024-02-19 18:00
+Trade Return: -50.81%
+Trading Coin: JASMY
+Reference Coin: KSM
+Trade Type: short
+Z-Score: 11.29
+
+Outlier Trade #38
+Date: 2024-10-19 19:00
+Trade Return: -50.33%
+Trading Coin: APE
+Reference Coin: CRV
+Trade Type: short
+Z-Score: 11.18
+
+Outlier Trade #39
+Date: 2024-04-13 13:00
+Trade Return: 50.33%
+Trading Coin: ATA
+Reference Coin: BAND
+Trade Type: short
+Z-Score: 11.06
+
+Outlier Trade #40
+Date: 2024-10-19 17:00
+Trade Return: -50.33%
+Trading Coin: APE
+Reference Coin: ALGO
+Trade Type: short
+Z-Score: 11.18
+
+Outlier Trade #41
+Date: 2024-10-19 20:00
+Trade Return: -50.23%
+Trading Coin: APE
+Reference Coin: IOTX
+Trade Type: short
+Z-Score: 11.16
+
+Outlier Trade #42
+Date: 2024-10-19 00:00
+Trade Return: -50.08%
+Trading Coin: APE
+Reference Coin: AR
+Trade Type: short
+Z-Score: 11.13
+
+Outlier Trade #43
+Date: 2024-10-19 20:00
+Trade Return: -49.72%
+Trading Coin: APE
+Reference Coin: FLOW
+Trade Type: short
+Z-Score: 11.05
+
+Outlier Trade #44
+Date: 2024-10-19 20:00
+Trade Return: -49.65%
+Trading Coin: APE
+Reference Coin: BAND
+Trade Type: short
+Z-Score: 11.03
+
+Outlier Trade #45
+Date: 2024-10-19 17:00
+Trade Return: -49.47%
+Trading Coin: APE
+Reference Coin: NEO
+Trade Type: short
+Z-Score: 10.99
+
+Outlier Trade #46
+Date: 2024-04-12 02:00
+Trade Return: 49.40%
+Trading Coin: CTSI
+Reference Coin: ENS
+Trade Type: short
+Z-Score: 10.85
+
+Outlier Trade #47
+Date: 2024-10-19 20:00
+Trade Return: -49.22%
+Trading Coin: APE
+Reference Coin: GALA
+Trade Type: short
+Z-Score: 10.94
+
+Outlier Trade #48
+Date: 2024-10-19 00:00
+Trade Return: -49.09%
+Trading Coin: APE
+Reference Coin: APT
+Trade Type: short
+Z-Score: 10.91
+
+Outlier Trade #49
+Date: 2024-10-19 20:00
+Trade Return: -48.64%
+Trading Coin: APE
+Reference Coin: KSM
+Trade Type: short
+Z-Score: 10.81
+
+Outlier Trade #50
+Date: 2024-10-19 20:00
+Trade Return: -48.64%
+Trading Coin: APE
+Reference Coin: ZIL
+Trade Type: short
+Z-Score: 10.81
+
+... and 4682 more outlier trades
+
+--------------------------------------------------------------------------------
+STATISTICAL SUMMARY
+--------------------------------------------------------------------------------
+
+Mean Trade Return: 0.2853%
+Std Dev Trade Return: 4.5258%
+Min Trade Return: -60.34%
+Max Trade Return: 75.20%
+Skewness: -0.8215
+Kurtosis: 13.2678
+
+Positive Outlier Trades: 1655
+Negative Outlier Trades: 3077
+Outlier Percentage: 1.1322%
+Largest Positive Return: 75.20%
+Largest Negative Return: -60.34%
+
+Top 10 Coins with Most Outlier Trades:
+  SPELL: 611 outlier trades
+  BEL: 493 outlier trades
+  ALICE: 268 outlier trades
+  PEOPLE: 262 outlier trades
+  JASMY: 207 outlier trades
+  LUNA2: 199 outlier trades
+  ATA: 185 outlier trades
+  KAVA: 182 outlier trades
+  CTSI: 152 outlier trades
+  APE: 148 outlier trades
+
+================================================================================
+END OF REPORT
+================================================================================

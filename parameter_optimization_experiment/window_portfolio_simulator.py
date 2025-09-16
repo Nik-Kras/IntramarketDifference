@@ -456,7 +456,8 @@ class WindowPortfolioSimulator:
             create_portfolio_equity_curve,
             create_budget_allocation_timeline,
             create_active_trades_timeline,
-            create_drawdown_curve
+            create_drawdown_curve,
+            create_combined_portfolio_visualization
         )
         
         os.makedirs(output_dir, exist_ok=True)
@@ -477,7 +478,13 @@ class WindowPortfolioSimulator:
             print("❌ No timestamp column found in portfolio timeline")
             return
         
-        # Create visualizations using shared functions
+        # Create combined visualization (3 plots in one figure)
+        create_combined_portfolio_visualization(
+            portfolio_df, self.initial_capital, self.max_trades,
+            os.path.join(output_dir, 'portfolio_combined_analysis.png')
+        )
+        
+        # Still create individual visualizations for backward compatibility
         create_portfolio_equity_curve(
             portfolio_df, self.initial_capital,
             os.path.join(output_dir, 'portfolio_equity_curve.png')

@@ -1,0 +1,1112 @@
+PAIR SELECTION REPORT
+==================================================
+Window: 2022-07-01 to 2024-01-01
+Generated: 2025-09-15 23:24:43
+
+FILTERING CRITERIA
+--------------------
+Sharpe Ratio > 2.0
+Max Drawdown < 50%
+
+FILTERING RESULTS
+--------------------
+Initial pairs: 13,806
+After Sharpe filter: 1,072 (7.8%)
+After Drawdown filter: 982 (7.1%)
+After Trades filter: 982 (7.1%)
+
+REJECTED BY SHARPE RATIO (12734 pairs):
+------------------------------
+  1000SHIB_1000LUNC_both (Sharpe: 1.42)
+  1000XEC_1000LUNC_both (Sharpe: 0.91)
+  1INCH_1000LUNC_both (Sharpe: 1.88)
+  AAVE_1000LUNC_both (Sharpe: 1.15)
+  ADA_1000LUNC_both (Sharpe: 1.64)
+  ALGO_1000LUNC_both (Sharpe: 1.62)
+  ALICE_1000LUNC_both (Sharpe: 0.77)
+  ALPHA_1000LUNC_both (Sharpe: 0.39)
+  ANKR_1000LUNC_both (Sharpe: 1.12)
+  APE_1000LUNC_both (Sharpe: 1.32)
+  API3_1000LUNC_both (Sharpe: 0.60)
+  APT_1000LUNC_both (Sharpe: 0.71)
+  AR_1000LUNC_both (Sharpe: 1.20)
+  ARPA_1000LUNC_both (Sharpe: -0.02)
+  ATA_1000LUNC_both (Sharpe: 1.06)
+  ATOM_1000LUNC_both (Sharpe: 1.53)
+  AVAX_1000LUNC_both (Sharpe: 1.04)
+  AXS_1000LUNC_both (Sharpe: 1.82)
+  BAKE_1000LUNC_both (Sharpe: 0.69)
+  BAND_1000LUNC_both (Sharpe: 1.19)
+  BAT_1000LUNC_both (Sharpe: 0.27)
+  BCH_1000LUNC_both (Sharpe: 1.25)
+  BEL_1000LUNC_both (Sharpe: 0.92)
+  BNB_1000LUNC_both (Sharpe: 0.16)
+  BTC_1000LUNC_both (Sharpe: 0.92)
+  C98_1000LUNC_both (Sharpe: 0.85)
+  CELO_1000LUNC_both (Sharpe: 1.23)
+  CELR_1000LUNC_both (Sharpe: 0.58)
+  CHR_1000LUNC_both (Sharpe: 0.61)
+  CHZ_1000LUNC_both (Sharpe: 0.53)
+  COMP_1000LUNC_both (Sharpe: 1.85)
+  CRV_1000LUNC_both (Sharpe: 0.83)
+  CTSI_1000LUNC_both (Sharpe: 1.03)
+  DASH_1000LUNC_both (Sharpe: 1.80)
+  DEFI_1000LUNC_both (Sharpe: 1.40)
+  DENT_1000LUNC_both (Sharpe: 1.07)
+  DOGE_1000LUNC_both (Sharpe: -0.30)
+  DOT_1000LUNC_both (Sharpe: 1.66)
+  DUSK_1000LUNC_both (Sharpe: 0.76)
+  DYDX_1000LUNC_both (Sharpe: 1.46)
+  EGLD_1000LUNC_both (Sharpe: 0.07)
+  ENJ_1000LUNC_both (Sharpe: 1.33)
+  ENS_1000LUNC_both (Sharpe: 1.03)
+  ETC_1000LUNC_both (Sharpe: 1.39)
+  ETH_1000LUNC_both (Sharpe: 0.80)
+  FIL_1000LUNC_both (Sharpe: 1.92)
+  FLM_1000LUNC_both (Sharpe: 0.86)
+  FLOW_1000LUNC_both (Sharpe: 1.64)
+  GMT_1000LUNC_both (Sharpe: 1.84)
+  GRT_1000LUNC_both (Sharpe: 1.72)
+  ... and 12684 more
+
+REJECTED BY DRAWDOWN (90 pairs):
+------------------------------
+  BTCDOM_1000LUNC_both (DD: 50.14%)
+  COTI_1000LUNC_both (DD: 53.07%)
+  GALA_1000LUNC_both (DD: 63.20%)
+  ROSE_1000LUNC_both (DD: 54.12%)
+  OP_1INCH_both (DD: 53.62%)
+  ATA_ALICE_both (DD: 52.35%)
+  NEO_ALICE_both (DD: 50.05%)
+  JASMY_ALPHA_both (DD: 50.33%)
+  AVAX_APE_both (DD: 50.24%)
+  AR_API3_both (DD: 52.07%)
+  OP_API3_both (DD: 59.77%)
+  SOL_APT_both (DD: 57.53%)
+  BEL_ARPA_both (DD: 62.81%)
+  CELO_ARPA_both (DD: 51.72%)
+  TRB_ARPA_both (DD: 66.30%)
+  DEFI_ATA_both (DD: 53.40%)
+  KSM_ATA_both (DD: 54.50%)
+  SOL_ATA_both (DD: 50.91%)
+  TRB_ATA_both (DD: 59.95%)
+  XTZ_ATA_both (DD: 50.64%)
+  ADA_BAND_both (DD: 61.52%)
+  TRB_BAND_both (DD: 67.45%)
+  HOT_BEL_both (DD: 50.99%)
+  IMX_BEL_both (DD: 52.72%)
+  ADA_C98_both (DD: 64.24%)
+  AVAX_C98_both (DD: 54.54%)
+  DASH_C98_both (DD: 54.48%)
+  FIL_C98_both (DD: 59.39%)
+  GTC_C98_both (DD: 63.71%)
+  INJ_C98_both (DD: 50.75%)
+  LINK_C98_both (DD: 72.21%)
+  ROSE_C98_both (DD: 58.66%)
+  RVN_C98_both (DD: 53.34%)
+  TRB_C98_both (DD: 56.98%)
+  THETA_CHZ_both (DD: 57.27%)
+  COTI_COMP_both (DD: 54.50%)
+  FIL_COMP_both (DD: 50.89%)
+  UNI_COMP_both (DD: 54.56%)
+  ALGO_CTSI_both (DD: 53.37%)
+  DASH_CTSI_both (DD: 55.88%)
+  ETH_CTSI_both (DD: 55.35%)
+  GTC_CTSI_both (DD: 58.09%)
+  LTC_CTSI_both (DD: 55.27%)
+  SOL_CTSI_both (DD: 52.50%)
+  SPELL_CTSI_both (DD: 52.68%)
+  STG_CTSI_both (DD: 51.02%)
+  ZEC_CTSI_both (DD: 52.62%)
+  IMX_ENJ_both (DD: 50.23%)
+  LDO_GRT_both (DD: 56.65%)
+  COMP_GTC_both (DD: 52.40%)
+  ... and 40 more
+
+REJECTED BY TRADES FILTER (0 pairs):
+------------------------------
+
+FINAL SELECTED PAIRS (982 pairs):
+------------------------------
+  IOTA_1000LUNC_both
+  LINK_1000LUNC_both
+  SXP_1000LUNC_both
+  ADA_1000SHIB_both
+  ALGO_1000SHIB_both
+  FIL_1000SHIB_both
+  FLOW_1000SHIB_both
+  IMX_1000SHIB_both
+  INJ_1000SHIB_both
+  OP_1000SHIB_both
+  SNX_1000SHIB_both
+  STG_1000SHIB_both
+  THETA_1000SHIB_both
+  TRB_1000SHIB_both
+  WOO_1000SHIB_both
+  ALGO_1INCH_both
+  IOTA_1INCH_both
+  LINK_1INCH_both
+  MKR_1INCH_both
+  ROSE_1INCH_both
+  ZIL_1INCH_both
+  AR_AAVE_both
+  INJ_AAVE_both
+  XMR_AAVE_both
+  OP_ADA_both
+  AAVE_ALICE_both
+  ADA_ALICE_both
+  ALGO_ALICE_both
+  ANKR_ALICE_both
+  APT_ALICE_both
+  ATOM_ALICE_both
+  AVAX_ALICE_both
+  BAKE_ALICE_both
+  BAT_ALICE_both
+  COMP_ALICE_both
+  DASH_ALICE_both
+  DEFI_ALICE_both
+  DOT_ALICE_both
+  DUSK_ALICE_both
+  FIL_ALICE_both
+  FLOW_ALICE_both
+  GRT_ALICE_both
+  ICX_ALICE_both
+  IMX_ALICE_both
+  INJ_ALICE_both
+  IOTX_ALICE_both
+  JASMY_ALICE_both
+  LDO_ALICE_both
+  LINK_ALICE_both
+  MANA_ALICE_both
+  NEAR_ALICE_both
+  OGN_ALICE_both
+  ONE_ALICE_both
+  OP_ALICE_both
+  QTUM_ALICE_both
+  ROSE_ALICE_both
+  RSR_ALICE_both
+  SAND_ALICE_both
+  SKL_ALICE_both
+  SNX_ALICE_both
+  SPELL_ALICE_both
+  THETA_ALICE_both
+  TRB_ALICE_both
+  UNI_ALICE_both
+  VET_ALICE_both
+  WOO_ALICE_both
+  XTZ_ALICE_both
+  ZEC_ALICE_both
+  ZEN_ALICE_both
+  ZIL_ALICE_both
+  ZRX_ALICE_both
+  ANKR_ALPHA_both
+  INJ_ALPHA_both
+  LINK_ALPHA_both
+  ROSE_ALPHA_both
+  VET_ALPHA_both
+  ZEC_ALPHA_both
+  ADA_ANKR_both
+  INJ_ANKR_both
+  LDO_ANKR_both
+  ALGO_APE_both
+  ALPHA_APE_both
+  ANKR_APE_both
+  APT_APE_both
+  AR_APE_both
+  BAND_APE_both
+  CELR_APE_both
+  CRV_APE_both
+  DUSK_APE_both
+  FIL_APE_both
+  FLOW_APE_both
+  GALA_APE_both
+  GRT_APE_both
+  IMX_APE_both
+  IOTX_APE_both
+  KSM_APE_both
+  LDO_APE_both
+  LUNA2_APE_both
+  NEO_APE_both
+  OP_APE_both
+  ROSE_APE_both
+  SAND_APE_both
+  SNX_APE_both
+  SOL_APE_both
+  THETA_APE_both
+  VET_APE_both
+  ZIL_APE_both
+  ADA_API3_both
+  FIL_API3_both
+  MASK_API3_both
+  SOL_API3_both
+  FLOW_AR_both
+  INJ_AR_both
+  ALGO_ATA_both
+  ANKR_ATA_both
+  API3_ATA_both
+  APT_ATA_both
+  AR_ATA_both
+  AVAX_ATA_both
+  BAND_ATA_both
+  BEL_ATA_both
+  CELO_ATA_both
+  DASH_ATA_both
+  ENS_ATA_both
+  FIL_ATA_both
+  FLOW_ATA_both
+  GRT_ATA_both
+  IMX_ATA_both
+  INJ_ATA_both
+  IOTX_ATA_both
+  LDO_ATA_both
+  ONT_ATA_both
+  OP_ATA_both
+  QNT_ATA_both
+  ROSE_ATA_both
+  RSR_ATA_both
+  SKL_ATA_both
+  SNX_ATA_both
+  SUSHI_ATA_both
+  UNI_ATA_both
+  WOO_ATA_both
+  XMR_ATA_both
+  ZEC_ATA_both
+  ZEN_ATA_both
+  ZRX_ATA_both
+  ALGO_ATOM_both
+  LDO_ATOM_both
+  OP_ATOM_both
+  WOO_ATOM_both
+  ALGO_AXS_both
+  CRV_AXS_both
+  DASH_AXS_both
+  GTC_AXS_both
+  INJ_AXS_both
+  LDO_AXS_both
+  NEAR_AXS_both
+  OP_AXS_both
+  ROSE_AXS_both
+  SPELL_AXS_both
+  TRB_AXS_both
+  ALGO_BAND_both
+  AR_BAND_both
+  FIL_BAND_both
+  GTC_BAND_both
+  INJ_BAND_both
+  JASMY_BAND_both
+  LDO_BAND_both
+  MASK_BAND_both
+  1INCH_BAT_both
+  ADA_BAT_both
+  ALGO_BAT_both
+  ANKR_BAT_both
+  AR_BAT_both
+  AVAX_BAT_both
+  AXS_BAT_both
+  BCH_BAT_both
+  CELO_BAT_both
+  DASH_BAT_both
+  DEFI_BAT_both
+  DOT_BAT_both
+  ENS_BAT_both
+  ETC_BAT_both
+  ETH_BAT_both
+  FIL_BAT_both
+  FLOW_BAT_both
+  GTC_BAT_both
+  HOT_BAT_both
+  INJ_BAT_both
+  JASMY_BAT_both
+  LDO_BAT_both
+  LINK_BAT_both
+  LTC_BAT_both
+  MANA_BAT_both
+  MASK_BAT_both
+  MKR_BAT_both
+  NEAR_BAT_both
+  OP_BAT_both
+  PEOPLE_BAT_both
+  ROSE_BAT_both
+  RSR_BAT_both
+  RUNE_BAT_both
+  SAND_BAT_both
+  SOL_BAT_both
+  SPELL_BAT_both
+  STORJ_BAT_both
+  THETA_BAT_both
+  TRB_BAT_both
+  VET_BAT_both
+  WOO_BAT_both
+  XMR_BAT_both
+  ZEN_BAT_both
+  ZIL_BAT_both
+  ZRX_BAT_both
+  1000XEC_BEL_both
+  1INCH_BEL_both
+  ADA_BEL_both
+  ALGO_BEL_both
+  ANKR_BEL_both
+  API3_BEL_both
+  APT_BEL_both
+  AR_BEL_both
+  ARPA_BEL_both
+  ATOM_BEL_both
+  AVAX_BEL_both
+  BAKE_BEL_both
+  BAND_BEL_both
+  BCH_BEL_both
+  CELO_BEL_both
+  CHR_BEL_both
+  COMP_BEL_both
+  COTI_BEL_both
+  DASH_BEL_both
+  DEFI_BEL_both
+  DENT_BEL_both
+  DOT_BEL_both
+  DUSK_BEL_both
+  EGLD_BEL_both
+  FIL_BEL_both
+  FLM_BEL_both
+  FLOW_BEL_both
+  GRT_BEL_both
+  GTC_BEL_both
+  ICX_BEL_both
+  INJ_BEL_both
+  IOTA_BEL_both
+  KSM_BEL_both
+  LINK_BEL_both
+  MANA_BEL_both
+  MASK_BEL_both
+  MKR_BEL_both
+  MTL_BEL_both
+  NEAR_BEL_both
+  NEO_BEL_both
+  ONT_BEL_both
+  OP_BEL_both
+  QTUM_BEL_both
+  RUNE_BEL_both
+  RVN_BEL_both
+  SAND_BEL_both
+  SFP_BEL_both
+  SNX_BEL_both
+  SOL_BEL_both
+  STORJ_BEL_both
+  SXP_BEL_both
+  THETA_BEL_both
+  TRB_BEL_both
+  UNI_BEL_both
+  VET_BEL_both
+  XMR_BEL_both
+  ZEC_BEL_both
+  ZRX_BEL_both
+  BTCDOM_BNB_both
+  ROSE_BNB_both
+  ALGO_C98_both
+  APT_C98_both
+  AR_C98_both
+  BAND_C98_both
+  COTI_C98_both
+  FLOW_C98_both
+  GRT_C98_both
+  ICP_C98_both
+  IMX_C98_both
+  LDO_C98_both
+  OP_C98_both
+  RSR_C98_both
+  SKL_C98_both
+  SPELL_C98_both
+  STG_C98_both
+  WOO_C98_both
+  XMR_C98_both
+  ADA_CELR_both
+  ALGO_CELR_both
+  FIL_CELR_both
+  FLOW_CELR_both
+  XMR_CELR_both
+  INJ_CHR_both
+  ADA_CHZ_both
+  ALGO_CHZ_both
+  APT_CHZ_both
+  FLOW_CHZ_both
+  GRT_CHZ_both
+  LDO_CHZ_both
+  OP_CHZ_both
+  ALGO_COMP_both
+  ANKR_COMP_both
+  AR_COMP_both
+  BAND_COMP_both
+  BAT_COMP_both
+  BCH_COMP_both
+  BTCDOM_COMP_both
+  CELO_COMP_both
+  CTSI_COMP_both
+  DUSK_COMP_both
+  FLM_COMP_both
+  FLOW_COMP_both
+  GRT_COMP_both
+  INJ_COMP_both
+  IOTA_COMP_both
+  IOTX_COMP_both
+  LINK_COMP_both
+  ONT_COMP_both
+  OP_COMP_both
+  ROSE_COMP_both
+  RVN_COMP_both
+  SAND_COMP_both
+  SNX_COMP_both
+  SOL_COMP_both
+  SPELL_COMP_both
+  THETA_COMP_both
+  WOO_COMP_both
+  XMR_COMP_both
+  XTZ_COMP_both
+  ZIL_COMP_both
+  ALGO_COTI_both
+  RSR_COTI_both
+  LDO_CRV_both
+  LUNA2_CRV_both
+  ANKR_CTSI_both
+  ATOM_CTSI_both
+  AXS_CTSI_both
+  BAND_CTSI_both
+  BTCDOM_CTSI_both
+  CELO_CTSI_both
+  DEFI_CTSI_both
+  ENS_CTSI_both
+  FLOW_CTSI_both
+  GRT_CTSI_both
+  INJ_CTSI_both
+  IOST_CTSI_both
+  KSM_CTSI_both
+  LINK_CTSI_both
+  MTL_CTSI_both
+  NEAR_CTSI_both
+  OP_CTSI_both
+  ROSE_CTSI_both
+  RVN_CTSI_both
+  SKL_CTSI_both
+  SNX_CTSI_both
+  TRB_CTSI_both
+  VET_CTSI_both
+  WOO_CTSI_both
+  XTZ_CTSI_both
+  LDO_DEFI_both
+  ADA_DENT_both
+  ALGO_DENT_both
+  ANKR_DENT_both
+  API3_DENT_both
+  AVAX_DENT_both
+  BAND_DENT_both
+  CELO_DENT_both
+  CELR_DENT_both
+  COMP_DENT_both
+  COTI_DENT_both
+  CRV_DENT_both
+  CTSI_DENT_both
+  DASH_DENT_both
+  DOT_DENT_both
+  ETH_DENT_both
+  FIL_DENT_both
+  FLOW_DENT_both
+  GRT_DENT_both
+  GTC_DENT_both
+  ICP_DENT_both
+  INJ_DENT_both
+  IOST_DENT_both
+  IOTA_DENT_both
+  IOTX_DENT_both
+  KSM_DENT_both
+  LINK_DENT_both
+  LTC_DENT_both
+  MANA_DENT_both
+  MTL_DENT_both
+  NEAR_DENT_both
+  NEO_DENT_both
+  ONE_DENT_both
+  OP_DENT_both
+  PEOPLE_DENT_both
+  QTUM_DENT_both
+  ROSE_DENT_both
+  SAND_DENT_both
+  SKL_DENT_both
+  SNX_DENT_both
+  SOL_DENT_both
+  SPELL_DENT_both
+  STG_DENT_both
+  THETA_DENT_both
+  TRB_DENT_both
+  VET_DENT_both
+  WOO_DENT_both
+  ZEN_DENT_both
+  ZIL_DENT_both
+  1000SHIB_DOGE_both
+  1INCH_DOGE_both
+  ADA_DOGE_both
+  ANKR_DOGE_both
+  AVAX_DOGE_both
+  GRT_DOGE_both
+  LINK_DOGE_both
+  MKR_DOGE_both
+  ALGO_DOT_both
+  LDO_DOT_both
+  OP_DOT_both
+  ANKR_DUSK_both
+  IOTX_DUSK_both
+  LDO_DUSK_both
+  MTL_DUSK_both
+  ROSE_DUSK_both
+  SKL_DUSK_both
+  NEO_EGLD_both
+  OP_EGLD_both
+  1000LUNC_ENJ_both
+  ADA_ENJ_both
+  ALGO_ENJ_both
+  ALICE_ENJ_both
+  ANKR_ENJ_both
+  AR_ENJ_both
+  ATOM_ENJ_both
+  AVAX_ENJ_both
+  COTI_ENJ_both
+  CRV_ENJ_both
+  DASH_ENJ_both
+  DEFI_ENJ_both
+  DOT_ENJ_both
+  FIL_ENJ_both
+  FLOW_ENJ_both
+  GRT_ENJ_both
+  GTC_ENJ_both
+  ICX_ENJ_both
+  INJ_ENJ_both
+  IOTX_ENJ_both
+  JASMY_ENJ_both
+  KSM_ENJ_both
+  LDO_ENJ_both
+  LINK_ENJ_both
+  MANA_ENJ_both
+  MTL_ENJ_both
+  NEAR_ENJ_both
+  NEO_ENJ_both
+  OP_ENJ_both
+  ROSE_ENJ_both
+  SAND_ENJ_both
+  SPELL_ENJ_both
+  VET_ENJ_both
+  WOO_ENJ_both
+  ZIL_ENJ_both
+  ZRX_ENJ_both
+  AVAX_ENS_both
+  BTCDOM_ENS_both
+  COMP_ENS_both
+  GRT_ENS_both
+  INJ_ENS_both
+  LDO_ENS_both
+  OP_ENS_both
+  QNT_ENS_both
+  SOL_ENS_both
+  LDO_ETC_both
+  OP_ETC_both
+  XMR_ETC_both
+  OP_FIL_both
+  DOT_FLOW_both
+  FIL_FLOW_both
+  OP_FLOW_both
+  ROSE_FLOW_both
+  ADA_GALA_both
+  ALGO_GMT_both
+  FIL_GMT_both
+  NEAR_GMT_both
+  ADA_GTC_both
+  APT_GTC_both
+  ENS_GTC_both
+  FIL_GTC_both
+  FLOW_GTC_both
+  INJ_GTC_both
+  LDO_GTC_both
+  OP_GTC_both
+  TRB_GTC_both
+  VET_GTC_both
+  XMR_GTC_both
+  1000SHIB_HOT_both
+  ADA_HOT_both
+  ALGO_HOT_both
+  AVAX_HOT_both
+  COTI_HOT_both
+  CRV_HOT_both
+  DEFI_HOT_both
+  DOT_HOT_both
+  ENS_HOT_both
+  ETH_HOT_both
+  FIL_HOT_both
+  FLOW_HOT_both
+  GRT_HOT_both
+  IMX_HOT_both
+  INJ_HOT_both
+  IOTX_HOT_both
+  LINK_HOT_both
+  NEAR_HOT_both
+  OP_HOT_both
+  ROSE_HOT_both
+  RSR_HOT_both
+  SNX_HOT_both
+  SOL_HOT_both
+  SPELL_HOT_both
+  SXP_HOT_both
+  THETA_HOT_both
+  VET_HOT_both
+  WOO_HOT_both
+  XRP_HOT_both
+  1000LUNC_ICP_both
+  AVAX_ICP_both
+  COTI_ICP_both
+  FLOW_ICP_both
+  INJ_ICP_both
+  LINK_ICP_both
+  SFP_ICP_both
+  STG_ICP_both
+  WOO_ICP_both
+  LDO_ICX_both
+  LINK_ICX_both
+  LDO_IMX_both
+  OP_IMX_both
+  BTCDOM_INJ_both
+  LDO_INJ_both
+  ALGO_IOST_both
+  ALPHA_IOST_both
+  ANKR_IOST_both
+  OP_IOST_both
+  SOL_IOST_both
+  TRB_IOST_both
+  VET_IOST_both
+  ZRX_IOST_both
+  ADA_JASMY_both
+  ALGO_JASMY_both
+  ANKR_JASMY_both
+  BTCDOM_JASMY_both
+  FIL_JASMY_both
+  FLOW_JASMY_both
+  GRT_JASMY_both
+  HBAR_JASMY_both
+  IMX_JASMY_both
+  INJ_JASMY_both
+  KSM_JASMY_both
+  LDO_JASMY_both
+  LINK_JASMY_both
+  OGN_JASMY_both
+  OP_JASMY_both
+  ROSE_JASMY_both
+  SNX_JASMY_both
+  STG_JASMY_both
+  AAVE_KAVA_both
+  ADA_KAVA_both
+  ALGO_KAVA_both
+  ALICE_KAVA_both
+  ALPHA_KAVA_both
+  ANKR_KAVA_both
+  APE_KAVA_both
+  API3_KAVA_both
+  APT_KAVA_both
+  AR_KAVA_both
+  ATOM_KAVA_both
+  AVAX_KAVA_both
+  BAND_KAVA_both
+  BAT_KAVA_both
+  BCH_KAVA_both
+  BEL_KAVA_both
+  BNB_KAVA_both
+  C98_KAVA_both
+  CELO_KAVA_both
+  CHR_KAVA_both
+  COMP_KAVA_both
+  COTI_KAVA_both
+  CRV_KAVA_both
+  CTSI_KAVA_both
+  DASH_KAVA_both
+  DEFI_KAVA_both
+  DENT_KAVA_both
+  DOT_KAVA_both
+  DUSK_KAVA_both
+  ENJ_KAVA_both
+  ENS_KAVA_both
+  ETC_KAVA_both
+  FIL_KAVA_both
+  FLM_KAVA_both
+  FLOW_KAVA_both
+  GALA_KAVA_both
+  GRT_KAVA_both
+  GTC_KAVA_both
+  HBAR_KAVA_both
+  HOT_KAVA_both
+  ICP_KAVA_both
+  IMX_KAVA_both
+  IOST_KAVA_both
+  IOTX_KAVA_both
+  JASMY_KAVA_both
+  KNC_KAVA_both
+  KSM_KAVA_both
+  LDO_KAVA_both
+  LPT_KAVA_both
+  LTC_KAVA_both
+  MANA_KAVA_both
+  MTL_KAVA_both
+  NEAR_KAVA_both
+  OGN_KAVA_both
+  ONE_KAVA_both
+  ONT_KAVA_both
+  OP_KAVA_both
+  QTUM_KAVA_both
+  ROSE_KAVA_both
+  RSR_KAVA_both
+  RUNE_KAVA_both
+  RVN_KAVA_both
+  SAND_KAVA_both
+  SFP_KAVA_both
+  SKL_KAVA_both
+  SNX_KAVA_both
+  SOL_KAVA_both
+  SPELL_KAVA_both
+  SXP_KAVA_both
+  THETA_KAVA_both
+  TRB_KAVA_both
+  VET_KAVA_both
+  XLM_KAVA_both
+  XTZ_KAVA_both
+  YFI_KAVA_both
+  ZEC_KAVA_both
+  ZEN_KAVA_both
+  ZIL_KAVA_both
+  ZRX_KAVA_both
+  SNX_KNC_both
+  ALGO_LRC_both
+  ALPHA_LRC_both
+  APT_LRC_both
+  ATOM_LRC_both
+  BAND_LRC_both
+  BTCDOM_LRC_both
+  CELR_LRC_both
+  DASH_LRC_both
+  FLOW_LRC_both
+  GTC_LRC_both
+  INJ_LRC_both
+  LDO_LRC_both
+  LINK_LRC_both
+  MANA_LRC_both
+  MKR_LRC_both
+  OP_LRC_both
+  ROSE_LRC_both
+  SNX_LRC_both
+  SOL_LRC_both
+  SPELL_LRC_both
+  UNI_LRC_both
+  XMR_LRC_both
+  1000SHIB_LUNA2_both
+  1INCH_LUNA2_both
+  ADA_LUNA2_both
+  ALPHA_LUNA2_both
+  ANKR_LUNA2_both
+  ATOM_LUNA2_both
+  AXS_LUNA2_both
+  BAKE_LUNA2_both
+  BTC_LUNA2_both
+  BTCDOM_LUNA2_both
+  CELO_LUNA2_both
+  COMP_LUNA2_both
+  COTI_LUNA2_both
+  CTSI_LUNA2_both
+  DASH_LUNA2_both
+  DEFI_LUNA2_both
+  DENT_LUNA2_both
+  DOT_LUNA2_both
+  DYDX_LUNA2_both
+  ENS_LUNA2_both
+  ETH_LUNA2_both
+  FLM_LUNA2_both
+  FLOW_LUNA2_both
+  GMT_LUNA2_both
+  GRT_LUNA2_both
+  GTC_LUNA2_both
+  HOT_LUNA2_both
+  ICX_LUNA2_both
+  IMX_LUNA2_both
+  INJ_LUNA2_both
+  IOTA_LUNA2_both
+  IOTX_LUNA2_both
+  JASMY_LUNA2_both
+  KSM_LUNA2_both
+  LDO_LUNA2_both
+  LINK_LUNA2_both
+  NEO_LUNA2_both
+  OGN_LUNA2_both
+  ONE_LUNA2_both
+  ONT_LUNA2_both
+  OP_LUNA2_both
+  PEOPLE_LUNA2_both
+  QNT_LUNA2_both
+  QTUM_LUNA2_both
+  ROSE_LUNA2_both
+  RSR_LUNA2_both
+  RVN_LUNA2_both
+  SNX_LUNA2_both
+  SOL_LUNA2_both
+  SPELL_LUNA2_both
+  STORJ_LUNA2_both
+  THETA_LUNA2_both
+  TRB_LUNA2_both
+  TRX_LUNA2_both
+  VET_LUNA2_both
+  WOO_LUNA2_both
+  ZEN_LUNA2_both
+  ZIL_LUNA2_both
+  OP_MANA_both
+  WOO_MANA_both
+  ZIL_MANA_both
+  ALGO_NKN_both
+  ANKR_NKN_both
+  API3_NKN_both
+  AR_NKN_both
+  BEL_NKN_both
+  CTSI_NKN_both
+  FLOW_NKN_both
+  INJ_NKN_both
+  LDO_NKN_both
+  MKR_NKN_both
+  ROSE_NKN_both
+  RUNE_NKN_both
+  SPELL_NKN_both
+  UNI_NKN_both
+  ANKR_OGN_both
+  INJ_OGN_both
+  IOTX_OGN_both
+  OP_OGN_both
+  SOL_OGN_both
+  THETA_OGN_both
+  ZEN_OGN_both
+  ALGO_ONE_both
+  BAT_ONE_both
+  DOT_ONE_both
+  FLOW_ONE_both
+  INJ_ONE_both
+  IOTX_ONE_both
+  LDO_ONE_both
+  MANA_ONE_both
+  NEAR_ONE_both
+  OP_ONE_both
+  ROSE_ONE_both
+  SAND_ONE_both
+  SKL_ONE_both
+  SOL_ONE_both
+  WOO_ONE_both
+  FLOW_ONT_both
+  INJ_ONT_both
+  QTUM_ONT_both
+  1000LUNC_PEOPLE_both
+  ALGO_PEOPLE_both
+  APT_PEOPLE_both
+  BTCDOM_PEOPLE_both
+  DASH_PEOPLE_both
+  DEFI_PEOPLE_both
+  DYDX_PEOPLE_both
+  FIL_PEOPLE_both
+  FLOW_PEOPLE_both
+  GRT_PEOPLE_both
+  IOTX_PEOPLE_both
+  LINK_PEOPLE_both
+  ROSE_PEOPLE_both
+  SOL_PEOPLE_both
+  THETA_PEOPLE_both
+  TRB_PEOPLE_both
+  VET_PEOPLE_both
+  ADA_QNT_both
+  BTCDOM_QNT_both
+  XRP_QNT_both
+  APT_RLC_both
+  BTCDOM_RLC_both
+  INJ_RLC_both
+  QNT_RLC_both
+  APT_RVN_both
+  BCH_RVN_both
+  GRT_RVN_both
+  ICP_RVN_both
+  LDO_RVN_both
+  OP_RVN_both
+  XTZ_RVN_both
+  ZEN_RVN_both
+  ADA_SAND_both
+  ALGO_SAND_both
+  COTI_SAND_both
+  GRT_SAND_both
+  LDO_SAND_both
+  OP_SAND_both
+  ROSE_SAND_both
+  WOO_SAND_both
+  ZIL_SAND_both
+  ALGO_SKL_both
+  FLOW_SKL_both
+  LDO_SKL_both
+  INJ_SNX_both
+  1000SHIB_SPELL_both
+  1INCH_SPELL_both
+  ADA_SPELL_both
+  ALGO_SPELL_both
+  ANKR_SPELL_both
+  API3_SPELL_both
+  AR_SPELL_both
+  ATOM_SPELL_both
+  BAKE_SPELL_both
+  BAND_SPELL_both
+  BCH_SPELL_both
+  BEL_SPELL_both
+  BTC_SPELL_both
+  BTCDOM_SPELL_both
+  CELO_SPELL_both
+  COMP_SPELL_both
+  COTI_SPELL_both
+  CRV_SPELL_both
+  CTSI_SPELL_both
+  DEFI_SPELL_both
+  DOT_SPELL_both
+  DUSK_SPELL_both
+  DYDX_SPELL_both
+  ENS_SPELL_both
+  FIL_SPELL_both
+  FLM_SPELL_both
+  FLOW_SPELL_both
+  GRT_SPELL_both
+  GTC_SPELL_both
+  ICP_SPELL_both
+  ICX_SPELL_both
+  IMX_SPELL_both
+  INJ_SPELL_both
+  IOST_SPELL_both
+  IOTA_SPELL_both
+  IOTX_SPELL_both
+  JASMY_SPELL_both
+  KSM_SPELL_both
+  LDO_SPELL_both
+  LINK_SPELL_both
+  LTC_SPELL_both
+  MTL_SPELL_both
+  NEAR_SPELL_both
+  NEO_SPELL_both
+  OGN_SPELL_both
+  ONE_SPELL_both
+  ONT_SPELL_both
+  ROSE_SPELL_both
+  RSR_SPELL_both
+  RUNE_SPELL_both
+  SAND_SPELL_both
+  SFP_SPELL_both
+  SNX_SPELL_both
+  SOL_SPELL_both
+  STG_SPELL_both
+  STORJ_SPELL_both
+  SUSHI_SPELL_both
+  THETA_SPELL_both
+  TRB_SPELL_both
+  UNI_SPELL_both
+  VET_SPELL_both
+  WOO_SPELL_both
+  XMR_SPELL_both
+  XRP_SPELL_both
+  ZEC_SPELL_both
+  ZIL_SPELL_both
+  ZRX_SPELL_both
+  BTCDOM_STORJ_both
+  1000LUNC_SUSHI_both
+  APT_SUSHI_both
+  AR_SUSHI_both
+  LUNA2_SUSHI_both
+  TRB_SUSHI_both
+  COMP_SXP_both
+  GRT_SXP_both
+  APE_TRX_both
+  ROSE_TRX_both
+  LDO_UNI_both
+  XMR_UNI_both
+  AVAX_VET_both
+  BTCDOM_VET_both
+  INJ_VET_both
+  LDO_VET_both
+  OP_VET_both
+  WOO_VET_both
+  XMR_VET_both
+  1000LUNC_XMR_both
+  AR_XMR_both
+  BTCDOM_XMR_both
+  COTI_XMR_both
+  CTSI_XMR_both
+  EGLD_XMR_both
+  ENS_XMR_both
+  FIL_XMR_both
+  GRT_XMR_both
+  ICP_XMR_both
+  ICX_XMR_both
+  INJ_XMR_both
+  LUNA2_XMR_both
+  MTL_XMR_both
+  NEAR_XMR_both
+  QNT_XMR_both
+  QTUM_XMR_both
+  ROSE_XMR_both
+  SKL_XMR_both
+  SNX_XMR_both
+  SPELL_XMR_both
+  TRB_XMR_both
+  WOO_XMR_both
+  ZEN_XMR_both
+  COMP_XRP_both
+  GTC_XRP_both
+  OP_XRP_both
+  ALGO_XTZ_both
+  ANKR_XTZ_both
+  ATOM_XTZ_both
+  AVAX_XTZ_both
+  BEL_XTZ_both
+  DOT_XTZ_both
+  FIL_XTZ_both
+  FLOW_XTZ_both
+  GRT_XTZ_both
+  GTC_XTZ_both
+  LDO_XTZ_both
+  LINK_XTZ_both
+  OP_XTZ_both
+  ROSE_XTZ_both
+  RSR_XTZ_both
+  SKL_XTZ_both
+  SNX_XTZ_both
+  SOL_XTZ_both
+  SPELL_XTZ_both
+  THETA_XTZ_both
+  TRB_XTZ_both
+  ALGO_ZEC_both
+  LTC_ZEC_both
+  XMR_ZEC_both
+  BCH_ZEN_both
+  COMP_ZEN_both
+  DASH_ZEN_both
+  LTC_ZEN_both
+  ROSE_ZEN_both
+  ALGO_ZIL_both
+  ANKR_ZIL_both
+  BAKE_ZIL_both
+  CELR_ZIL_both
+  COTI_ZIL_both
+  DASH_ZIL_both
+  DOT_ZIL_both
+  FLOW_ZIL_both
+  GRT_ZIL_both
+  ICP_ZIL_both
+  IOTX_ZIL_both
+  LDO_ZIL_both
+  MKR_ZIL_both
+  OP_ZIL_both
+  RUNE_ZIL_both
+  SKL_ZIL_both
+  SOL_ZIL_both
+  TRB_ZIL_both
+  VET_ZIL_both
+  WOO_ZIL_both
+  ZEN_ZIL_both
+  ZRX_ZIL_both
+  ROSE_ZRX_both
+  RUNE_ZRX_both
+  ZEC_ZRX_both
