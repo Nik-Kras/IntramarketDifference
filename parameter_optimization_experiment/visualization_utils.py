@@ -68,8 +68,8 @@ def create_portfolio_equity_curve(portfolio_df: pd.DataFrame, initial_capital: f
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, output_path: str, max_trades: int = None):
-    """Create budget allocation timeline visualization with active trades."""
+def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, max_trades: int, output_path: str):
+    """Create budget allocation timeline visualization with weekly aggregated active trades."""
     
     set_professional_style()
     
@@ -90,28 +90,33 @@ def create_budget_allocation_timeline(portfolio_df: pd.DataFrame, output_path: s
     plt.legend()
     plt.grid(True, alpha=0.3)
     
-    # Bottom subplot: Active trades timeline
+    # Bottom subplot: Active trades timeline (Weekly Average)
     plt.subplot(2, 1, 2)
     
     # Use correct column name based on what's available
     trades_col = 'active_trades_count' if 'active_trades_count' in portfolio_df.columns else 'num_active_trades'
     
     if trades_col in portfolio_df.columns:
-        plt.plot(portfolio_df.index, portfolio_df[trades_col], 
-                color=COLORS['warning'], linewidth=2, label='Active Trades')
-        if max_trades:
-            plt.axhline(y=max_trades, color=COLORS['danger'], linestyle='--', alpha=0.7, 
-                       label=f'Max Concurrent ({max_trades})')
+        # Resample to weekly average
+        weekly_trades = portfolio_df[trades_col].resample('W').mean()
         
-        plt.title('Active Trades Over Time', fontsize=12, fontweight='bold')
+        plt.plot(weekly_trades.index, weekly_trades.values, 
+                color=COLORS['warning'], linewidth=2, label='Weekly Avg Active Trades')
+        
+        # Calculate max weekly average instead of max concurrent
+        max_weekly_avg = weekly_trades.max()
+        plt.axhline(y=max_weekly_avg, color=COLORS['danger'], linestyle='--', alpha=0.7, 
+                   label=f'Max Weekly Avg ({max_weekly_avg:.1f})')
+        
+        plt.title('Active Trades Over Time (Weekly Average)', fontsize=12, fontweight='bold')
         plt.xlabel('Date', fontsize=11)
-        plt.ylabel('Number of Active Trades', fontsize=11)
+        plt.ylabel('Avg Number of Active Trades', fontsize=11)
         plt.legend()
         plt.grid(True, alpha=0.3)
     else:
         plt.text(0.5, 0.5, 'Active trades data not available', 
                 ha='center', va='center', transform=plt.gca().transAxes)
-        plt.title('Active Trades Over Time', fontsize=12, fontweight='bold')
+        plt.title('Active Trades Over Time (Weekly Average)', fontsize=12, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
@@ -202,22 +207,29 @@ def create_combined_portfolio_visualization(portfolio_df: pd.DataFrame, initial_
     ax2.legend(loc='lower left')
     ax2.grid(True, alpha=0.3)
     
-    # Bottom subplot: Active Trades Timeline
+    # Bottom subplot: Active Trades Timeline (Weekly Average)
     trades_col = 'active_trades_count' if 'active_trades_count' in portfolio_df.columns else 'num_active_trades'
     
     if trades_col in portfolio_df.columns:
-        ax3.plot(portfolio_df.index, portfolio_df[trades_col], 
-                color=COLORS['warning'], linewidth=2, label='Active Trades')
-        ax3.axhline(y=max_trades, color=COLORS['danger'], linestyle='--', alpha=0.7, 
-                   label=f'Max Concurrent ({max_trades})')
-        ax3.set_title('Active Trades Over Time', fontsize=14, fontweight='bold')
-        ax3.set_ylabel('Number of Active Trades', fontsize=11)
+        # Resample to weekly average
+        weekly_trades = portfolio_df[trades_col].resample('W').mean()
+        
+        ax3.plot(weekly_trades.index, weekly_trades.values, 
+                color=COLORS['warning'], linewidth=2, label='Weekly Avg Active Trades')
+        
+        # Calculate max weekly average instead of max concurrent
+        max_weekly_avg = weekly_trades.max()
+        ax3.axhline(y=max_weekly_avg, color=COLORS['danger'], linestyle='--', alpha=0.7, 
+                   label=f'Max Weekly Avg ({max_weekly_avg:.1f})')
+        
+        ax3.set_title('Active Trades Over Time (Weekly Average)', fontsize=14, fontweight='bold')
+        ax3.set_ylabel('Avg Number of Active Trades', fontsize=11)
         ax3.legend(loc='upper left')
         ax3.grid(True, alpha=0.3)
     else:
         ax3.text(0.5, 0.5, 'Active trades data not available', 
                 ha='center', va='center', transform=ax3.transAxes)
-        ax3.set_title('Active Trades Over Time', fontsize=14, fontweight='bold')
+        ax3.set_title('Active Trades Over Time (Weekly Average)', fontsize=14, fontweight='bold')
     
     ax3.set_xlabel('Date', fontsize=11)
     
@@ -249,7 +261,7 @@ def create_interactive_combined_portfolio(portfolio_df: pd.DataFrame, initial_ca
         rows=3, cols=1,
         shared_xaxes=True,
         vertical_spacing=0.08,
-        subplot_titles=('Portfolio Equity Curve', 'Portfolio Drawdown (%)', 'Active Trades'),
+        subplot_titles=('Portfolio Equity Curve', 'Portfolio Drawdown (%)', 'Active Trades (Weekly Average)'),
         row_heights=[0.4, 0.3, 0.3]
     )
     
@@ -293,28 +305,32 @@ def create_interactive_combined_portfolio(portfolio_df: pd.DataFrame, initial_ca
         row=2, col=1
     )
     
-    # 3. Active Trades
+    # 3. Active Trades (Weekly Average)
     if trades_col in portfolio_df.columns:
+        # Resample to weekly average
+        weekly_trades = portfolio_df[trades_col].resample('W').mean()
+        max_weekly_avg = weekly_trades.max()
+        
         fig.add_trace(
             go.Scatter(
-                x=portfolio_df.index,
-                y=portfolio_df[trades_col],
+                x=weekly_trades.index,
+                y=weekly_trades.values,
                 mode='lines',
-                name='Active Trades',
+                name='Weekly Avg Active Trades',
                 line=dict(color=COLORS['warning'], width=2),
-                hovertemplate='Date: %{x}<br>Active: %{y}<extra></extra>'
+                hovertemplate='Date: %{x}<br>Weekly Avg: %{y:.1f}<extra></extra>'
             ),
             row=3, col=1
         )
         
         fig.add_trace(
             go.Scatter(
-                x=portfolio_df.index,
-                y=[max_trades] * len(portfolio_df),
+                x=weekly_trades.index,
+                y=[max_weekly_avg] * len(weekly_trades),
                 mode='lines',
-                name=f'Max Concurrent ({max_trades})',
+                name=f'Max Weekly Avg ({max_weekly_avg:.1f})',
                 line=dict(color=COLORS['danger'], width=1, dash='dash'),
-                hovertemplate='Max: %{y}<extra></extra>'
+                hovertemplate='Max: %{y:.1f}<extra></extra>'
             ),
             row=3, col=1
         )
@@ -367,7 +383,7 @@ def create_interactive_combined_portfolio(portfolio_df: pd.DataFrame, initial_ca
             # Create a simplified figure for PNG with sampled data
             fig_png = make_subplots(
                 rows=3, cols=1,
-                subplot_titles=('Portfolio Equity Curve', 'Portfolio Drawdown (%)', 'Active Trades'),
+                subplot_titles=('Portfolio Equity Curve', 'Portfolio Drawdown (%)', 'Active Trades (Weekly Average)'),
                 vertical_spacing=0.08,
                 row_heights=[0.4, 0.3, 0.3]
             )
